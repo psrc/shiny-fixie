@@ -29,6 +29,13 @@ library(DTedit)
 library(psrc.travelsurvey)
 library(shinyjs)
 
+
+df <- data.frame(
+  Buy = c('Tea', 'Biscuits', 'Apples'),
+  Quantity = c(7, 2, 5),
+  stringsAsFactors = FALSE
+)
+
 # Run Modules Files ---------------------------------------------------------------------------
 # This section runs the modules and unless the folder name changes, it doesn't need to be changed
 # It also loads in useful functions for dashboard creation
