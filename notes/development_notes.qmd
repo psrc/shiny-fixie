@@ -1,0 +1,79 @@
+---
+title: "Fixie Shiny Development"
+date: today
+format: 
+  html:
+    mainfont: Poppins
+    theme: cosmo
+    toc: true
+    df-print: kable
+    warning: false
+    echo: false
+---
+
+## reference 
+- [FixieUI guide]( 
+https://psrcwa.sharepoint.com/:w:/r/sites/DataScience/Shared%20Documents/Household%20Survey%20Data%20Cleaning/2021/FixieUI%20guide.docx?d=w0a989867236c4a8bb5387890699ab93b&csf=1&web=1&e=yQFyzG)
+- [travel-survey-QC-Clean/survey_data_cleaning/fixie_sprocs.sql](https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/fixie_sprocs.sql)
+
+## existing functionalities
+- **tabs**: each tab shows the view for a particular error type or circumstance. <br>
+only persons with error flags will be displayed. <br>
+within each tab, each page shows a person and all their trips
+  - [ ] basic information for the person: personid, hhid, pernum, Age, Works(Y/N), Studies(Y/N)
+  - [ ] columns in trips table (`FROM [hhts_cleaning].[HHSurvey].[data2fixie]`): 
+  <details>
+  <summary>list of all columns</summary>
+    - tripnum
+    - modes_desc
+    - daynum
+    - depart_dhm
+    - arrive_dhm
+    - miles
+    - mph
+    - linear_miles
+    - linear_mph
+    - Error
+    - cotravelers
+    - origin_purpose
+    - dest_name
+    - dest_purpose
+    - duration_at_dest
+    - origin_coord
+    - dest_coord
+    - rc
+    - elevate_issue
+  </details>
+
+- **popup tables**: additional recordsets for person trips
+  - [ ] Click on `arrival_hhmm` field: the traces for that trip.
+  - [ ] Click on `cotravelers` field: where other household members were or traveling to at that same time
+  - [ ] Click on `revision_code` field: the ingredients of a linked trip (revision_code = 8)
+    
+
+::: {.callout-important}
+- What are the datasets for the popup tables and where?
+- see if it is possible to click on cells or show popup table by hovering over cells?
+:::
+
+
+
+- **trip record editor**
+  <details>
+  <summary>screenshot of trip record editor in Fixie Access</summary>
+    ![trip record editor in Fixie Access](Screenshot_Access_trip_record_editor.png)
+  </details>
+  - **buttons**
+    - [ ] Dismiss Flag
+    - [ ] Elevate + Elevate text box
+    - [ ] Delete Trip
+    - [ ] Split from Traces: This will either split or shorten a trip with a long dwell, depending on whether the dwell was at a different location than the origin or destination.
+    - [ ] Link: This links trips if the recids are listed, comma separated, in the Elevate text box.
+    - [ ] Unlink: This unlinks trips PSRC has linked--I.e. those with revision_code = 8. It does not split trips that were provided that way to us by RSG.
+  
+  - **backend processing**: update the derived fields and error flags for that person every time trip editor is closed
+
+
+
+## potential new functionalities
+- [ ] place
