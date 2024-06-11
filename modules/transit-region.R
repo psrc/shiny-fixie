@@ -5,7 +5,7 @@ transit_region_ui <- function(id) {
   
 }
 
-transit_region_server <- function(id) {
+transit_region_server <- function(id, mydata) {
   
   moduleServer(id, function(input, output, session){
     ns <- session$ns
@@ -15,7 +15,7 @@ transit_region_server <- function(id) {
              output = output,
              name = id,
              id = id,
-             thedata = df)
+             thedata = mydata)
     )
     
       

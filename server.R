@@ -12,7 +12,7 @@ shinyServer(function(input, output) {
   
   # Regional NTD metrics
   ## the module below is how to place dtedit inside a module ----
-  transit_region_server('REGIONtransit')
+  transit_region_server('REGIONtransit', mydata = df)
   
   ## "dtedit_server" is already a module, straight from the DTedit package. "df" is defined in global.R ----
   dtedit_server(id = 'dtedit_example',
