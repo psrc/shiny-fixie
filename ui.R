@@ -26,10 +26,10 @@ shinyUI(
                     tabsetPanel(type = "pills",
                                 tabPanel("Overview", transit_overview_ui('OVERVIEWtransit')),
                                 
-                                ## "dtedit_ui" is already a module, straight from DTedit package ----
+                                ## Option B: "dtedit_ui" is already a module, straight from DTedit package ----
                                 tabPanel("Mode Error", dtedit_ui('dtedit_example')),
                                 
-                                ## the module below is how to place dtedit inside a module ----
+                                ## Option A: the module below is how to place dtedit inside a module ----
                                 tabPanel("Mode Error 2", transit_region_ui('REGIONtransit')),
                                 
                                 tabPanel("PUDO, no +/- traveler", transit_mode_ui('MODEtransit')))
