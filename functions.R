@@ -184,14 +184,3 @@ create_line_chart <- function(df, x, y, fill, esttype="number", dec=0, color, le
   return(c)
   
 }
-
-# shiny output binding for a widget named 'foo'
-dteditOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "DTedit", width, height, package = "DTedit")
-}
-
-# shiny render function for a widget named 'foo'
-renderDtedit <- function(expr, env = parent.frame(), quoted = FALSE) {
-  if (!quoted) { expr <- substitute(expr) } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, dteditOutput, env, quoted = TRUE)
-}

@@ -1,4 +1,4 @@
-dtedit_test <- function(input, output, name, thedata, id,
+dtedit <- function(input, output, name, thedata, id,
                    view.cols = names(thedata),
                    edit.cols = names(thedata),
                    edit.label.cols = edit.cols,

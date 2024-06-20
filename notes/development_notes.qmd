@@ -16,6 +16,10 @@ format:
 https://psrcwa.sharepoint.com/:w:/r/sites/DataScience/Shared%20Documents/Household%20Survey%20Data%20Cleaning/2021/FixieUI%20guide.docx?d=w0a989867236c4a8bb5387890699ab93b&csf=1&web=1&e=yQFyzG)
 - [travel-survey-QC-Clean/survey_data_cleaning/fixie_sprocs.sql](https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/fixie_sprocs.sql)
 
+
+## goal for Fixie Shiny:
+integrate existing SQL procedures and sprocs to the new shiny app
+
 ## existing functionalities
 - **tabs**: each tab shows the view for a particular error type or circumstance. <br>
 only persons with error flags will be displayed. <br>
@@ -45,16 +49,6 @@ within each tab, each page shows a person and all their trips
     - elevate_issue
   </details>
 
-- **popup tables**: additional recordsets for person trips
-  - [ ] Click on `arrival_hhmm` field: the traces for that trip.
-  - [ ] Click on `cotravelers` field: where other household members were or traveling to at that same time
-  - [ ] Click on `revision_code` field: the ingredients of a linked trip (revision_code = 8)
-    
-
-::: {.callout-important}
-- What are the datasets for the popup tables and where?
-- see if it is possible to click on cells or show popup table by hovering over cells?
-:::
 
 
 
@@ -67,13 +61,33 @@ within each tab, each page shows a person and all their trips
     - [ ] Dismiss Flag
     - [ ] Elevate + Elevate text box
     - [ ] Delete Trip
+    - [ ] Link: This links trips if the recids are listed (comma separated)
+    - [ ] Unlink
     - [ ] Split from Traces: This will either split or shorten a trip with a long dwell, depending on whether the dwell was at a different location than the origin or destination.
-    - [ ] Link: This links trips if the recids are listed, comma separated, in the Elevate text box.
-    - [ ] Unlink: This unlinks trips PSRC has linked--I.e. those with revision_code = 8. It does not split trips that were provided that way to us by RSG.
-  
-  - **backend processing**: update the derived fields and error flags for that person every time trip editor is closed
+  - **other invisible commands**: turn them into visible buttons or additional features for the "new" button
+    - [ ] ADD RETURN HOME (requires return tome)
+    - [ ] what else!
+  - **connect proedures for buttons and commands**
 
 
+## potential add-on functionalities
 
-## potential new functionalities
-- [ ] place
+- **popup tables**: additional recordsets for person trips
+  - [ ] Click on `arrival_hhmm` field: the traces for that trip. (`HHSurvey.trace_this_trip`)
+    - code not working because 2023 trace data has different columns than before
+  - [ ] Click on `cotravelers` field: where other household members were or traveling to at that same time (`HHSurvey.find_your_family`)
+  - [ ] Click on `revision_code` field: the ingredients of a linked trip (revision_code = 8)
+    
+
+::: {.callout-note}
+- see if it is possible to click on cells or show popup table by hovering over cells?
+:::
+
+## backend stuff
+
+- main dataset: `HHSurvey.data2fixie`
+  - [fixie_views.sql](https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/fixie_views.sql): script to create the dataset and each form for specific error type or circumstance
+- after edit procedures: 
+  - need to run an **update query** to save the edited data back to the DB
+  - **Fixie procedures** (`hhts_cleaning/Programmability/Stored Procedure`): existing procedures for closing an editor and for each button 
+  - **Rulesy procedures** [(rulesy_recalculate_after_edit.sq)](https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/rulesy_recalculate_after_edit.sql): trip num reordering/ linking/ error flag generation 

@@ -25,7 +25,8 @@ shinyUI(
     fluidRow(column(12, style='padding-left:25px; padding-right:50px;',
                     tabsetPanel(type = "pills",
                                 tabPanel("Overview", transit_overview_ui('OVERVIEWtransit')),
-                                tabPanel("Mode Error", transit_region_ui('REGIONtransit')),
+                                # tabPanel("Mode Error",transit_region_ui('REGIONtransit')),
+                                tabPanel("Mode Error2", edit_platform_ui('test-table')),
                                 tabPanel("PUDO, no +/- traveler", transit_mode_ui('MODEtransit')))
                     )),
     

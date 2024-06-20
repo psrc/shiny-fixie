@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-06-10">
+<meta name="dcterms.date" content="2024-06-12">
 
 <title>Fixie Shiny Development</title>
 <style>
@@ -47,8 +47,10 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#reference" id="toc-reference" class="nav-link active" data-scroll-target="#reference">reference</a></li>
+  <li><a href="#goal-for-fixie-shiny" id="toc-goal-for-fixie-shiny" class="nav-link" data-scroll-target="#goal-for-fixie-shiny">goal for Fixie Shiny:</a></li>
   <li><a href="#existing-functionalities" id="toc-existing-functionalities" class="nav-link" data-scroll-target="#existing-functionalities">existing functionalities</a></li>
-  <li><a href="#potential-new-functionalities" id="toc-potential-new-functionalities" class="nav-link" data-scroll-target="#potential-new-functionalities">potential new functionalities</a></li>
+  <li><a href="#potential-add-on-functionalities" id="toc-potential-add-on-functionalities" class="nav-link" data-scroll-target="#potential-add-on-functionalities">potential add-on functionalities</a></li>
+  <li><a href="#backend-stuff" id="toc-backend-stuff" class="nav-link" data-scroll-target="#backend-stuff">backend stuff</a></li>
   </ul>
 </nav>
 </div>
@@ -67,7 +69,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 10, 2024</p>
+      <p class="date">June 12, 2024</p>
     </div>
   </div>
   
@@ -85,6 +87,10 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="https://psrcwa.sharepoint.com/:w:/r/sites/DataScience/Shared%20Documents/Household%20Survey%20Data%20Cleaning/2021/FixieUI%20guide.docx?d=w0a989867236c4a8bb5387890699ab93b&amp;csf=1&amp;web=1&amp;e=yQFyzG">FixieUI guide</a></li>
 <li><a href="https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/fixie_sprocs.sql">travel-survey-QC-Clean/survey_data_cleaning/fixie_sprocs.sql</a></li>
 </ul>
+</section>
+<section id="goal-for-fixie-shiny" class="level2">
+<h2 class="anchored" data-anchor-id="goal-for-fixie-shiny">goal for Fixie Shiny:</h2>
+<p>integrate existing SQL procedures and sprocs to the new shiny app</p>
 </section>
 <section id="existing-functionalities" class="level2">
 <h2 class="anchored" data-anchor-id="existing-functionalities">existing functionalities</h2>
@@ -120,30 +126,6 @@ list of all columns
 </ul>
 </details></li>
 </ul></li>
-<li><strong>popup tables</strong>: additional recordsets for person trips
-<ul class="task-list">
-<li><label><input type="checkbox">Click on <code>arrival_hhmm</code> field: the traces for that trip.</label></li>
-<li><label><input type="checkbox">Click on <code>cotravelers</code> field: where other household members were or traveling to at that same time</label></li>
-<li><label><input type="checkbox">Click on <code>revision_code</code> field: the ingredients of a linked trip (revision_code = 8)</label></li>
-</ul></li>
-</ul>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>What are the datasets for the popup tables and where?</li>
-<li>see if it is possible to click on cells or show popup table by hovering over cells?</li>
-</ul>
-</div>
-</div>
-<ul>
 <li><strong>trip record editor</strong>
 <details>
 <summary>
@@ -162,18 +144,61 @@ screenshot of trip record editor in Fixie Access
 <li><label><input type="checkbox">Dismiss Flag</label></li>
 <li><label><input type="checkbox">Elevate + Elevate text box</label></li>
 <li><label><input type="checkbox">Delete Trip</label></li>
+<li><label><input type="checkbox">Link: This links trips if the recids are listed (comma separated)</label></li>
+<li><label><input type="checkbox">Unlink</label></li>
 <li><label><input type="checkbox">Split from Traces: This will either split or shorten a trip with a long dwell, depending on whether the dwell was at a different location than the origin or destination.</label></li>
-<li><label><input type="checkbox">Link: This links trips if the recids are listed, comma separated, in the Elevate text box.</label></li>
-<li><label><input type="checkbox">Unlink: This unlinks trips PSRC has linked–I.e. those with revision_code = 8. It does not split trips that were provided that way to us by RSG.</label></li>
 </ul></li>
-<li><strong>backend processing</strong>: update the derived fields and error flags for that person every time trip editor is closed</li>
+<li><strong>other invisible commands</strong>: turn them into visible buttons or additional features for the “new” button
+<ul class="task-list">
+<li><label><input type="checkbox">ADD RETURN HOME (requires return tome)</label></li>
+<li><label><input type="checkbox">what else!</label></li>
+</ul></li>
+<li><strong>connect proedures for buttons and commands</strong></li>
 </ul></li>
 </ul>
 </section>
-<section id="potential-new-functionalities" class="level2">
-<h2 class="anchored" data-anchor-id="potential-new-functionalities">potential new functionalities</h2>
+<section id="potential-add-on-functionalities" class="level2">
+<h2 class="anchored" data-anchor-id="potential-add-on-functionalities">potential add-on functionalities</h2>
+<ul>
+<li><strong>popup tables</strong>: additional recordsets for person trips
 <ul class="task-list">
-<li><label><input type="checkbox">place</label></li>
+<li><label><input type="checkbox">Click on <code>arrival_hhmm</code> field: the traces for that trip. (<code>HHSurvey.trace_this_trip</code>)</label>
+<ul>
+<li>code not working because 2023 trace data has different columns than before</li>
+</ul></li>
+<li><label><input type="checkbox">Click on <code>cotravelers</code> field: where other household members were or traveling to at that same time (<code>HHSurvey.find_your_family</code>)</label></li>
+<li><label><input type="checkbox">Click on <code>revision_code</code> field: the ingredients of a linked trip (revision_code = 8)</label></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>see if it is possible to click on cells or show popup table by hovering over cells?</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="backend-stuff" class="level2">
+<h2 class="anchored" data-anchor-id="backend-stuff">backend stuff</h2>
+<ul>
+<li>main dataset: <code>HHSurvey.data2fixie</code>
+<ul>
+<li><a href="https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/fixie_views.sql">fixie_views.sql</a>: script to create the dataset and each form for specific error type or circumstance</li>
+</ul></li>
+<li>after edit procedures:
+<ul>
+<li>need to run an <strong>update query</strong> to save the edited data back to the DB</li>
+<li><strong>Fixie procedures</strong> (<code>hhts_cleaning/Programmability/Stored Procedure</code>): existing procedures for closing an editor and for each button</li>
+<li><strong>Rulesy procedures</strong> <a href="https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/rulesy_recalculate_after_edit.sql">(rulesy_recalculate_after_edit.sq)</a>: trip num reordering/ linking/ error flag generation</li>
+</ul></li>
 </ul>
 </section>
 

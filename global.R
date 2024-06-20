@@ -27,6 +27,7 @@ library(openxlsx)
 
 library(DTedit)
 library(psrc.travelsurvey)
+library(psrcelmer)
 library(shinyjs)
 
 # Run Modules Files ---------------------------------------------------------------------------
@@ -35,6 +36,7 @@ library(shinyjs)
 module_files <- list.files('modules', full.names = TRUE)
 sapply(module_files, source)
 source("functions.R")
+source("db_connection.R")
 
 
 # Page Information --------------------------------------------------------
@@ -56,20 +58,18 @@ ntd_data <- readRDS("data/ntd_data.rds")
 
 
 
-# HTS Data ------------------------------------------------------
-# trip_data_17_19 <- get_hhts("2017_2019", "t", vars=c("trip_id","driver","mode_1",'dest_purpose_cat', 'origin_purpose_cat',
-#                                                      "google_duration", 'trip_path_distance'))
-# trip_data <- trip_data_17_19 %>%
-#   dplyr::filter(household_id == 17100024) %>%
-#   dplyr::select(c(13,2:8,)) %>%
-#   dplyr::mutate(person_id = as.character(person_id))
-# trip_data$mode_1 <- factor(trip_data$mode_1, levels=unique(trip_data_17_19$mode_1))
-
-
 
 # Values for Drop Downs ---------------------------------------------------
 # Section for creating the values needed in any dropdowns, lists, etc.
 ntd_metric_list <- as.character(unique(ntd_data$metric))
 ntd_mode_list <- ntd_data |> select("variable") |> filter(variable != "All Transit Modes") |> distinct() |> pull()
 
-# person_list <- unique(trip_data$person_id)
+
+
+# my lists ----
+view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles","mph","Error",
+               "cotravelers","origin_purpose","dest_purpose","dest_name","duration_at_dest",
+               "origin_coord","dest_coord","recid","rc","elevate_issue")
+
+
+
