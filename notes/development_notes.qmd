@@ -10,6 +10,11 @@ format:
     warning: false
     echo: false
 ---
+## to-do list
+
+- [ ] protection mechanism to keep analyst from editing the same data point
+- [ ] auto detect error type tabs in HHSurvey
+
 
 ## reference 
 - [FixieUI guide]( 

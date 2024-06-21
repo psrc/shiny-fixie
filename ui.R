@@ -26,7 +26,8 @@ shinyUI(
                     tabsetPanel(type = "pills",
                                 tabPanel("Overview", transit_overview_ui('OVERVIEWtransit')),
                                 # tabPanel("Mode Error",transit_region_ui('REGIONtransit')),
-                                tabPanel("Mode Error2", edit_platform_ui('test-table')),
+                                tabPanel("all error", edit_interface_ui('test-table')),
+                                tabPanel("another error", edit_interface_ui('test-table2')),
                                 tabPanel("PUDO, no +/- traveler", transit_mode_ui('MODEtransit')))
                     )),
     

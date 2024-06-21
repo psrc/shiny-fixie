@@ -48,3 +48,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 /notes/development_notes_files
+/notes/shiny_resource_files
+*.html
+*.html

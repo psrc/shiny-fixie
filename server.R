@@ -12,7 +12,8 @@ shinyServer(function(input, output) {
   
   # Regional NTD metrics
   # transit_region_server('REGIONtransit')
-  edit_platform_server('test-table', thedata=trip_data)
+  edit_interface_server('test-table',edit_persons="person_all")
+  edit_interface_server('test-table2',edit_persons="person_Abdi")
   
   
   # Regional NTD metrics by Mode
