@@ -27,7 +27,7 @@ shinyUI(
                                 tabPanel("Overview", transit_overview_ui('OVERVIEWtransit')),
                                 # tabPanel("Mode Error",transit_region_ui('REGIONtransit')),
                                 tabPanel("all error", edit_interface_ui('test-table')),
-                                tabPanel("another error", edit_interface_ui('test-table2')),
+                                tabPanel("too long at dest?", edit_interface_ui('test-table2')),
                                 tabPanel("PUDO, no +/- traveler", transit_mode_ui('MODEtransit')))
                     )),
     

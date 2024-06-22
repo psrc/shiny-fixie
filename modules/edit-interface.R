@@ -12,43 +12,29 @@ edit_interface_server <- function(id, edit_persons) {
     ns <- session$ns
     
     # person control panel ----
-    person_list <- reactive({get_person_list(view_name=edit_persons)})
-    person_data <- reactive({get_data(view_name=edit_persons, person_id = input$personID)})
-    output$persontable <- DT::renderDT(
-      person_data(), 
-      rownames = FALSE,
-      options =list(ordering = F, # disable sorting
-                    dom = 't',  # show only the table (no search and no page length dropdown)
-                    selection = 'single',
-                    stripe = FALSE))
+    personID <- person_panel_server("test_personpanel", edit_persons)
     
-    # the table ----
+    # data cleaning tools ----
+    edit_modal_server("test_button")
+    
+    # the trip table ----
     # person data from database
-    edit_dt <- reactive({get_data(person_id = input$personID)})
+    edit_dt <- reactive({get_data(person_id = personID())})
     
     output$thetable <- DT::renderDT(
       edit_dt()[,view.cols],
       rownames = FALSE, 
-      options =list(ordering = F, # disable sorting
-                    dom = 't',  # show only the table (no search and no page length dropdown)
-                    selection = 'single'))
+      options =list(ordering = F, dom = 't', selection = 'single'))
     
     # the output ----
     output$editplatform <- renderUI({
       tagList(
-        # Center Selection
-        fluidRow(
-          wellPanel(style ='padding-left:25px; padding-right:25px;',
-            fluidRow(column(3, selectInput( inputId = ns("personID"),  label="Select Person:",  choices=person_list(),  selected = person_list()[1]))),
-            fluidRow(column(6, DT::DTOutput(ns("persontable")))))
-          ),
-        # fluidRow(column(3, selectInput( inputId = ns("personID"),  label="Select Person:",  choices=person_list(),  selected = person_list()[1]))),
-        # fluidRow(column(6, DT::DTOutput(ns("persontable")))),
-        fluidRow(column(3, actionButton(paste0(id, '_edit'), "Edit trip"))),
+        fluidRow(column(12, person_panel_ui(ns("test_personpanel")))),
+        fluidRow(column(3,  edit_modal_ui(ns('test_button')))),
         fluidRow(column(12, DT::DTOutput(ns("thetable"))))
         )
       }) 
-    
+   
     })  # end moduleServer
 }
 
