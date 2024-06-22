@@ -22,11 +22,12 @@ shinyUI(
     
     hr(style = "border-top: 1px solid #000000;"),
     
+    br(),
     fluidRow(column(12, style='padding-left:25px; padding-right:50px;',
                     tabsetPanel(type = "pills",
-                                tabPanel("Overview", overview_ui('OVERVIEW')),
-                                tabPanel("all error", edit_interface_ui('errortab_1')),
-                                tabPanel("too long at dest?", edit_interface_ui('errortab_2')))
+                                tabPanel("overview", overview_ui('tab-overview')),
+                                tabPanel("all error", edit_interface_ui('tab-error1')),
+                                tabPanel("too long at dest?", edit_interface_ui('tab-error2')))
                     )),
     
     tags$footer(footer_ui('psrcfooter'))
