@@ -18,17 +18,15 @@ shinyUI(
                                            # style="margin-top: 10px;",
                                            height = "60")
                                   ), href="https://www.psrc.org", target="_blank")),
-             column(10, br(), strong(tags$div(class="mainpage_title", "Fixie Shiny")))),
+             column(10, br(), strong(tags$div(class="mainpage_title", "Shiny Fixie")))),
     
     hr(style = "border-top: 1px solid #000000;"),
     
     fluidRow(column(12, style='padding-left:25px; padding-right:50px;',
                     tabsetPanel(type = "pills",
-                                tabPanel("Overview", transit_overview_ui('OVERVIEWtransit')),
-                                # tabPanel("Mode Error",transit_region_ui('REGIONtransit')),
-                                tabPanel("all error", edit_interface_ui('test-table')),
-                                tabPanel("too long at dest?", edit_interface_ui('test-table2')),
-                                tabPanel("PUDO, no +/- traveler", transit_mode_ui('MODEtransit')))
+                                tabPanel("Overview", overview_ui('OVERVIEW')),
+                                tabPanel("all error", edit_interface_ui('errortab_1')),
+                                tabPanel("too long at dest?", edit_interface_ui('errortab_2')))
                     )),
     
     tags$footer(footer_ui('psrcfooter'))

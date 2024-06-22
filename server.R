@@ -5,18 +5,12 @@ shinyServer(function(input, output) {
   footer_server('psrcfooter')
   
   # Main Panel
-  left_panel_server('leftMain', page_nm = "Main")
   
   # Dashboard Overview
-  transit_overview_server('OVERVIEWtransit')
+  overview_server('OVERVIEW')
   
   # Regional NTD metrics
-  # transit_region_server('REGIONtransit')
-  edit_interface_server('test-table',edit_persons="person_all")
-  edit_interface_server('test-table2',edit_persons="person_Abdi")
-  
-  
-  # Regional NTD metrics by Mode
-  transit_mode_server('MODEtransit')
+  edit_interface_server('errortab_1',edit_persons="person_all")
+  edit_interface_server('errortab_2',edit_persons="person_Abdi")
   
 })    

@@ -1,13 +1,6 @@
 library(psrcelmer)
 
 
-get_person_list <- function(view_name="data2fixie"){
-  # get list of person_ids from database for edit platform dropdown
-  
-  query <- paste0("select distinct personid from HHSurvey.",view_name)
-  return(get_query(sql = query, db_name = "hhts_cleaning"))
-}
-
 get_data <- function(person_id=NULL, view_name="data2fixie"){
   # get person-level data from database for edit platform
   

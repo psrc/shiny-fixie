@@ -33,9 +33,11 @@ library(shinyjs)
 # Run Modules Files ---------------------------------------------------------------------------
 # This section runs the modules and unless the folder name changes, it doesn't need to be changed
 # It also loads in useful functions for dashboard creation
-module_files <- list.files('modules', full.names = TRUE)
+module_files <- c(
+  list.files('modules', full.names = TRUE),
+  list.files('modules_edit_components', full.names = TRUE))
 sapply(module_files, source)
-source("functions.R")
+# source("functions.R")
 source("db_connection.R")
 
 
