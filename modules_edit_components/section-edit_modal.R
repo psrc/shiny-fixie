@@ -29,7 +29,7 @@ edit_modal_ui <- function(id) {
   )
 }
 
-edit_modal_server <- function(id) {
+edit_modal_server <- function(id, label_name) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
@@ -44,7 +44,7 @@ edit_modal_server <- function(id) {
 
     output$editbutton <- renderUI({
       tagList(
-        fluidRow(column(12, actionButton(ns("clickedit"), "Edit trip")))
+        fluidRow(column(12, actionButton(ns("clickedit"), label_name)))
       )
     }) 
   })  # end moduleServer

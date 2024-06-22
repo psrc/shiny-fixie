@@ -12,10 +12,11 @@ edit_interface_server <- function(id, edit_persons) {
     ns <- session$ns
     
     # person control panel ----
-    personID <- person_panel_server("test_personpanel", edit_persons)
+    personID <- person_panel_server("panel-person", edit_persons)
     
     # data cleaning tools ----
-    edit_modal_server("test_button")
+    edit_modal_server("button-edit", label_name="Edit trip")
+    edit_modal_server("button-new", label_name="Add new trip")
     
     # the trip table ----
     # person data from database
@@ -29,8 +30,10 @@ edit_interface_server <- function(id, edit_persons) {
     # the output ----
     output$editplatform <- renderUI({
       tagList(
-        fluidRow(column(12, person_panel_ui(ns("test_personpanel")))),
-        fluidRow(column(3,  edit_modal_ui(ns('test_button')))),
+        fluidRow(column(12, person_panel_ui(ns("panel-person")))),
+        fluidRow(column(12, div(edit_modal_ui(ns('button-new')),
+                                edit_modal_ui(ns('button-edit'))
+                               ))),
         fluidRow(column(12, DT::DTOutput(ns("thetable"))))
         )
       }) 

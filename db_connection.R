@@ -1,6 +1,3 @@
-library(psrcelmer)
-
-
 get_data <- function(person_id=NULL, view_name="data2fixie"){
   # get person-level data from database for edit platform
   
