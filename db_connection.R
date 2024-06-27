@@ -1,4 +1,4 @@
-get_data <- function(person_id=NULL, view_name="data2fixie"){
+get_data <- function(view_name="data2fixie", person_id=NULL){
   # get person-level data from database for edit platform
   
   if(is.null(person_id)){
