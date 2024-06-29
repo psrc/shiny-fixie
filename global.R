@@ -29,5 +29,5 @@ view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles"
                "cotravelers","origin_purpose","dest_purpose","dest_name","duration_at_dest",
                "origin_coord","dest_coord","recid","rc","elevate_issue")
 
-
+list_mode_choice <- get_query(sql = "select * from HHSurvey.trip_mode", db_name = "hhts_cleaning")$mode_desc
 

@@ -7,11 +7,11 @@ person_panel_ui <- function(id) {
 }
 
 # person control panel
-person_panel_server <- function(id, edit_persons) {
+person_panel_server <- function(id, view_name) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    all_person_data <- get_data(view_name=edit_persons) # TODO: check back to make sure that this can be rerun when error is fixed
+    all_person_data <- get_data(view_name=view_name) # TODO: check back to make sure that this can be rerun when error is fixed
     person_list <- reactive({ all_person_data %>% select(personid) %>% unique() })
     
     # show table: basic summary of selected person
