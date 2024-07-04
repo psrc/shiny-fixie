@@ -4,12 +4,10 @@ get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL){
   if(!is.null(person_id)){
     # to get data for a person_id
     query <- paste0("select * from HHSurvey.",view_name, " where personid='", person_id,"'")
-    print(query)
   }
   else if(!is.null(recid)){
     # to get data for a trip
     query <- paste0("select * from HHSurvey.",view_name, " where recid='", recid,"'")
-    print(query)
   }
   else {
     # to get data for all persons

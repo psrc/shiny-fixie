@@ -26,9 +26,9 @@ edit_interface_server <- function(id, edit_persons) {
     
     # data cleaning tools ----
     selected_recid <- reactive({ edit_dt()[input$thetable_rows_selected,"recid"] })
-    modal_new_trip_server("button-new", label_name="Add new trip", selected_row = selected_recid())
-    modal_edit_trip_server("button-edit", label_name="Edit trip", selected_row = selected_recid())
-    delete_trip_server("button-delete", label_name="Delete trip", selected_row = selected_recid())
+    modal_new_trip_server("button-new", label_name="Add new trip", selected_row = reactive(selected_recid()))
+    modal_edit_trip_server("button-edit", label_name="Edit trip", selected_row = reactive(selected_recid()))
+    delete_trip_server("button-delete", label_name="Delete trip", selected_row = reactive(selected_recid()))
     
     # the output ----
     output$editplatform <- renderUI({
