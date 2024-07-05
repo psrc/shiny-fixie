@@ -32,8 +32,8 @@ view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles"
 list_mode_choice <- get_query(sql = "select * from HHSurvey.trip_mode", db_name = "hhts_cleaning")$mode_desc
 
 # get variable values
-codebook_2023 <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/data_published/PSRC_Codebook_2023_v1.xlsx", 
-                                   sheet = 'value_labels')
+codebook_2023 <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/old_stuff/data_deliverable_81823/codebook_guide/PSRC_Combined_Codebook_2023_08162023.xlsx", 
+                                   sheet = 'value_labels_2023')
 
 
 # val_list_mode_1 <- value_labels %>% filter(variable =="mode_1") %>%

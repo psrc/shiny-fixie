@@ -10,10 +10,10 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
-    output$print_row <- renderPrint({
-      cat('These rows were selected:\n\n')
-      cat(selected_row())
-    })
+    # output$print_row <- renderPrint({
+    #   cat('These rows were selected:\n\n')
+    #   cat(selected_row())
+    # })
     
     trip_data <- reactive({ get_data(view_name="Trip", recid=selected_row()) })
     
@@ -27,23 +27,49 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
     
     # data cleaning tools ----
     observeEvent(input$clickedit, { showModal(
-      modalDialog(title = "Trip Editor",
-
-                  # print trip recid ----
-                  "This is where the trip editing panel going to be!",
-                  div(verbatimTextOutput(ns('print_row'))),
-
-                  # show trip table ----
-                  DT::DTOutput(ns("triprecord")),
-
-                  # variable editing list ----
-                  numericInput("numinput_distance_miles", "distance_miles", value = trip_data()[1,c("distance_miles")]),
-                  selectInputSingle(df = trip_data(), var_name = "mode_acc"),
-                  selectInputSingle(df = trip_data(), var_name = "mode_1"), # inputId = paste0("select_",var_name)
-                  selectInputSingle(df = trip_data(), var_name = "mode_2"),
-                  selectInputSingle(df = trip_data(), var_name = "mode_3"),
-                  selectInputSingle(df = trip_data(), var_name = "mode_4"),
-                  selectInputSingle(df = trip_data(), var_name = "mode_egr"),
+      modalDialog(title = "Trip Record Editor",
+                  
+                  tagList(
+                    # show trip table ----
+                    DT::DTOutput(ns("triprecord")),
+                    br(),
+  
+                    # variable editing list ----
+                    
+                    ## time and distance ----
+                    tags$div("time and distance"),hr(style = "border-top: 1px solid #000000;"),
+                    fluidRow(column(6,textInputSimple(df = trip_data(), var_name = "depart_time_timestamp"),
+                                    textInputSimple(df = trip_data(), var_name = "arrival_time_timestamp")),
+                             column(6,numericInputSimple(df = trip_data(), var_name = "distance_miles"))),
+                    br(),
+                    
+                    ## trip origin and destination ----
+                    tags$div("trip origin and destination"),hr(style = "border-top: 1px solid #000000;"),
+                    fluidRow(column(5,
+                                    selectInputSingle(df = trip_data(), var_name = "origin_purpose"),
+                                    selectInputSingle(df = trip_data(), var_name = "dest_purpose")),
+                             column(3,
+                                    textInputSimple(df = trip_data(), var_name = "origin_label"),
+                                    textInputSimple(df = trip_data(), var_name = "dest_label")),
+                             column(2,
+                                    numericInputSimple(df = trip_data(), var_name = "origin_lat"),
+                                    numericInputSimple(df = trip_data(), var_name = "dest_lat")),
+                             column(2,
+                                    numericInputSimple(df = trip_data(), var_name = "origin_lng"),
+                                    numericInputSimple(df = trip_data(), var_name = "dest_lng"))
+                             ),
+                    br(),
+                    
+                    ## mode type ----
+                    tags$div("mode type"),hr(style = "border-top: 1px solid #000000;"),
+                    fluidRow(column(6,selectInputSingle(df = trip_data(), var_name = "mode_1"),# inputId = paste0("select_",var_name)
+                                      selectInputSingle(df = trip_data(), var_name = "mode_2"),
+                                      selectInputSingle(df = trip_data(), var_name = "mode_3"),
+                                      selectInputSingle(df = trip_data(), var_name = "mode_4")),
+                             column(6,selectInputSingle(df = trip_data(), var_name = "mode_acc"),
+                                      selectInputSingle(df = trip_data(), var_name = "mode_egr")))
+                    
+                  ),
 
                   footer = column(modalButton('Cancel'),
                                   modalButton('Update Trip'),

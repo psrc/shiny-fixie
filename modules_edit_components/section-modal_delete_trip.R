@@ -12,7 +12,7 @@ delete_trip_server <- function(id, label_name, thedata, selected_row) {
     
     output$print_row <- renderPrint({
       cat('These rows were selected:\n\n')
-      cat(selected_row)
+      cat(selected_row())
     })
     
     # data cleaning tools ----
