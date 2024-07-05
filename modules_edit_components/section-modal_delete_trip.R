@@ -1,4 +1,4 @@
-delete_trip_ui <- function(id) {
+modal_delete_trip_ui <- function(id) {
   ns <- NS(id)
   
   tagList(
@@ -6,7 +6,7 @@ delete_trip_ui <- function(id) {
   )
 }
 
-delete_trip_server <- function(id, label_name, thedata, selected_row) {
+modal_delete_trip_server <- function(id, label_name, thedata, selected_row) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
