@@ -14,11 +14,10 @@ shinyUI(
     theme = "styles.css", # Loads in the custom CSS
     
     # This section adds the PSRC logo on the top left of the page and the Page Title
-    fluidRow(column(2, tags$a(div(tags$img(src='psrc-logo.png',
+    fluidRow(column(12, tags$a(tags$img(src='psrc-logo.png',
                                            # style="margin-top: 10px;",
-                                           height = "60")
-                                  ), href="https://www.psrc.org", target="_blank")),
-             column(10, br(), strong(tags$div(class="mainpage_title", "Shiny Fixie")))),
+                                           height = "60"), href="https://www.psrc.org", target="_blank"),
+                    strong(tags$div(class="mainpage_title", "Shiny Fixie")))),
     
     hr(style = "border-top: 1px solid #000000;"),
     

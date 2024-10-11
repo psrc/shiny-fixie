@@ -50,13 +50,32 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
                     br(),
                     
                     ## mode type ----
-                    tags$div("mode type"), hr(style = "border-top: 1px solid #000000;"),
-                    fluidRow(column(6, selectInputSingle(df = trip_data(), var_name = "mode_1"),# inputId = paste0("select_",var_name)
+                    
+                    fluidRow(column(5, tags$div("mode type"), hr(style = "border-top: 1px solid #000000;"),
+                                       selectInputSingle(df = trip_data(), var_name = "mode_acc"),
+                                       selectInputSingle(df = trip_data(), var_name = "mode_1"),# inputId = paste0("select_",var_name)
                                        selectInputSingle(df = trip_data(), var_name = "mode_2"),
                                        selectInputSingle(df = trip_data(), var_name = "mode_3"),
-                                       selectInputSingle(df = trip_data(), var_name = "mode_4")),
-                             column(6, selectInputSingle(df = trip_data(), var_name = "mode_acc"),
-                                       selectInputSingle(df = trip_data(), var_name = "mode_egr")))
+                                       selectInputSingle(df = trip_data(), var_name = "mode_4"),
+                                       selectInputSingle(df = trip_data(), var_name = "mode_egr")),
+                             column(7, tags$div("travelers"), hr(style = "border-top: 1px solid #000000;"),
+                                    column(7,selectInputSingle(df = trip_data(), var_name = "driver"),
+                                       selectInputSingle(df = trip_data(), var_name = "travelers_total"),
+                                       selectInputSingle(df = trip_data(), var_name = "travelers_hh"),
+                                       selectInputSingle(df = trip_data(), var_name = "travelers_nonhh")),
+                                    column(5, 
+                                       tags$style("div {font-weight: bold;}"),
+                                       tags$div("hhmembers"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember1", label_name = "1"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember2", label_name = "2"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember3", label_name = "3"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember4", label_name = "4"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember5", label_name = "5"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember6", label_name = "6"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember7", label_name = "7"),
+                                       numericInputSimple(df = trip_data(), var_name = "hhmember8", label_name = "8"))),
+                             
+                             )
                     
                   ),
 

@@ -11,7 +11,7 @@ shinyServer(function(input, output) {
   
   # error tabs
   # TODO: is it possible to auto detect number of tabs to match the number of error type views in database?
-  edit_interface_server('tab-error1',edit_persons="person_all")
-  edit_interface_server('tab-error2',edit_persons="person_Abdi")
+  edit_interface_server('tab-error1',edit_persons=edit_persons_view_name[1])
+  edit_interface_server('tab-error2',edit_persons=edit_persons_view_name[2])
   
 })    
