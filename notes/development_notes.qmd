@@ -76,6 +76,7 @@ within each tab, each page shows a person and all their trips
 
 
 ## potential add-on functionalities
+- fix mode and purpose with information typed by user (ex. `dest_purpose_other`)
 
 - **popup tables**: additional recordsets for person trips
   - [ ] Click on `arrival_hhmm` field: the traces for that trip. (`HHSurvey.trace_this_trip`)
@@ -95,4 +96,11 @@ within each tab, each page shows a person and all their trips
 - after edit procedures: 
   - need to run an **update query** to save the edited data back to the DB
   - **Fixie procedures** (`hhts_cleaning/Programmability/Stored Procedure`): existing procedures for closing an editor and for each button 
-  - **Rulesy procedures** [(rulesy_recalculate_after_edit.sq)](https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/rulesy_recalculate_after_edit.sql): trip num reordering/ linking/ error flag generation 
+  - **Rulesy procedures** [(rulesy_recalculate_after_edit.sq)](https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/rulesy_recalculate_after_edit.sql): trip num reordering/ linking/ error flag generation
+  
+## App styling
+- Edit trip modal dialog
+  - [ ] Increase modal dialog witdh
+  - [ ] Move labels left of input boxes
+  - [ ] Unbold labels
+  - [ ] Make white space between the different origin/destination information smaller

@@ -23,7 +23,7 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_row) {
                   div(verbatimTextOutput(ns('print_row'))),
                   
                   footer = column(modalButton('Cancel'),
-                                  modalButton('Delete Trip'),
+                                  modalButton('Delete Trip'), # TODO: replace delete button
                                   width=12),
                   easyClose = TRUE
       )

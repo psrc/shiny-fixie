@@ -1,0 +1,141 @@
+modal_edit_trip_ui <- function(id) {
+  ns <- NS(id)
+  
+  tagList(
+    uiOutput(ns("editbutton"))
+  )
+}
+
+modal_edit_trip_server <- function(id, label_name, selected_row) {
+  moduleServer(id, function(input, output, session){
+    ns <- session$ns
+    
+    trip_record <- reactive({ get_data(view_name="Trip", recid=selected_row()) })
+    
+    # featured buttons ----
+    modal_copy_latlong_server("button-copy_origin", df = trip_record(), lat_var_name="origin_lat", long_var_name="origin_lng")
+    modal_copy_latlong_server("button-copy_dest", df = trip_record(), lat_var_name="dest_lat", long_var_name="dest_lng")
+    modal_update_trip_server("button-update_db", trip_record(), "Apply")
+    
+    # show basic trip information ----
+    output$triprecord <- DT::renderDT(
+      trip_record() %>% select(hhid,pernum,person_id,tripnum,recid), 
+      rownames = FALSE,
+      options =list(ordering = F, dom = 't',  selection = 'single'))
+    
+    # Trip Record Editor ----
+    observeEvent(input$clickedit, { showModal(
+      modalDialog(title = "Trip Record Editor",
+                  
+                  tagList(
+                    # show trip table ----
+                    DT::DTOutput(ns("triprecord")),
+                    br(),
+  
+                    # variable editing list ----
+                    
+                    ## time and distance ----
+                    tags$div("time and distance"), hr(style = "border-top: 1px solid #000000;"),
+                    ## ----------------------
+                    fluidRow(
+                      # timestamps
+                      column(6, textInputSimple(df = trip_record(), var_name = "depart_time_timestamp"),
+                                textInputSimple(df = trip_record(), var_name = "arrival_time_timestamp")),
+                      # trip distance
+                      column(6, numericInputSimple(df = trip_record(), var_name = "distance_miles", min = 0))),
+                    br(),
+                    
+                    ## trip origin and destination ----
+                    fluidRow(
+                      column(8, tags$div("trip origin and destination")),
+                      # button for mapping direction
+                      # TODO: update lat/long if user edits
+                      column(4, actionButton_google_direction("get_directions", df = trip_record()))
+                      ),
+                    hr(style = "border-top: 1px solid #000000;"),
+                    ## --------------------------------
+                    fluidRow(
+                      # button for mapping origin
+                      actionButton_google_place("open_origin", label = "Open origin location in Google Maps", 
+                                                df = trip_record(), lat_var_name = "origin_lat", long_var_name = "origin_lng")),
+                    fluidRow(
+                      # origin purpose
+                      column(5, selectInputSingle(df = trip_record(), var_name = "origin_purpose")),
+                      # origin label
+                      column(3, textInputSimple(df = trip_record(), var_name = "origin_label")),
+                      # origin lat/long
+                      column(4, 
+                             fluidRow(column(6, numericInputSimple(df = trip_record(), var_name = "origin_lat")),
+                                      column(6, numericInputSimple(df = trip_record(), var_name = "origin_lng"))),
+                             # button for copying origin lat/long to clipboard
+                             fluidRow(modal_copy_latlong_ui(ns('button-copy_origin'))))
+                      ),
+                    br(),
+                    fluidRow(
+                      # button for mapping destination
+                      actionButton_google_place("open_dest", label = "Open destination location in Google Maps", 
+                                                df = trip_record(), lat_var_name = "dest_lat", long_var_name = "dest_lng")),
+                    fluidRow(
+                      # destination purpose
+                      column(5, selectInputSingle(df = trip_record(), var_name = "dest_purpose")),
+                      # destination label
+                      column(3, textInputSimple(df = trip_record(), var_name = "dest_label")),
+                      # destination lat/long
+                      column(4, 
+                             fluidRow(column(6, numericInputSimple(df = trip_record(), var_name = "dest_lat")),
+                                      column(6, numericInputSimple(df = trip_record(), var_name = "dest_lng"))),
+                             # button for copying destination lat/long to clipboard
+                             fluidRow(modal_copy_latlong_ui(ns('button-copy_dest'))))
+                    ),
+                    br(),
+                    
+                    ## mode type ----
+                    
+                    fluidRow(column(5, tags$div("mode type"), hr(style = "border-top: 1px solid #000000;"),
+                                       selectInputSingle(df = trip_record(), var_name = "mode_1"),# inputId = paste0("select_",var_name)
+                                       selectInputSingle(df = trip_record(), var_name = "mode_2"),
+                                       selectInputSingle(df = trip_record(), var_name = "mode_3"),
+                                       selectInputSingle(df = trip_record(), var_name = "mode_4"),
+                                       selectInputSingle(df = trip_record(), var_name = "mode_acc"),
+                                       selectInputSingle(df = trip_record(), var_name = "mode_egr")),
+                             column(7, tags$div("travelers"), hr(style = "border-top: 1px solid #000000;"),
+                                    column(7,selectInputSingle(df = trip_record(), var_name = "driver"),
+                                       selectInputSingle(df = trip_record(), var_name = "travelers_total"),
+                                       selectInputSingle(df = trip_record(), var_name = "travelers_hh"),
+                                       selectInputSingle(df = trip_record(), var_name = "travelers_nonhh")),
+                                    column(5, 
+                                       tags$style("div {font-weight: bold;}"),
+                                       tags$div("hhmembers"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember1", label_name = "1"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember2", label_name = "2"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember3", label_name = "3"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember4", label_name = "4"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember5", label_name = "5"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember6", label_name = "6"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember7", label_name = "7"),
+                                       numericInputSimple(df = trip_record(), var_name = "hhmember8", label_name = "8")))
+                             )
+                  ),
+                  fluidRow(modal_update_trip_ui(ns("button-update_db"))),
+                  
+                  footer = column(modalButton('Cancel'),
+                                  # TODO: add update button that validates data and replace data in DB
+                                  width=12),
+                  # easyClose = TRUE,
+                  size = "l"
+      )
+    ) })
+    
+    
+    updated_cols <- reactive({ data.frame(map(edit.cols, ~input[[.x]])) })
+    output$test_value <- renderPrint({ 
+      updated_cols
+    })
+
+    output$editbutton <- renderUI({
+      tagList(
+        fluidRow(column(12, actionButton(ns("clickedit"), label_name)))
+      )
+    }) 
+  })  # end moduleServer
+}

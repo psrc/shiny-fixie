@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-06-12">
+<meta name="dcterms.date" content="2024-10-15">
 
 <title>Fixie Shiny Development</title>
 <style>
@@ -46,11 +46,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#reference" id="toc-reference" class="nav-link active" data-scroll-target="#reference">reference</a></li>
+  <li><a href="#to-do-list" id="toc-to-do-list" class="nav-link active" data-scroll-target="#to-do-list">to-do list</a></li>
+  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">reference</a></li>
   <li><a href="#goal-for-fixie-shiny" id="toc-goal-for-fixie-shiny" class="nav-link" data-scroll-target="#goal-for-fixie-shiny">goal for Fixie Shiny:</a></li>
   <li><a href="#existing-functionalities" id="toc-existing-functionalities" class="nav-link" data-scroll-target="#existing-functionalities">existing functionalities</a></li>
   <li><a href="#potential-add-on-functionalities" id="toc-potential-add-on-functionalities" class="nav-link" data-scroll-target="#potential-add-on-functionalities">potential add-on functionalities</a></li>
   <li><a href="#backend-stuff" id="toc-backend-stuff" class="nav-link" data-scroll-target="#backend-stuff">backend stuff</a></li>
+  <li><a href="#app-styling" id="toc-app-styling" class="nav-link" data-scroll-target="#app-styling">App styling</a></li>
   </ul>
 </nav>
 </div>
@@ -69,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 12, 2024</p>
+      <p class="date">October 15, 2024</p>
     </div>
   </div>
   
@@ -81,6 +83,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="to-do-list" class="level2">
+<h2 class="anchored" data-anchor-id="to-do-list">to-do list</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">protection mechanism to keep analyst from editing the same data point</label></li>
+<li><label><input type="checkbox">auto detect error type tabs in HHSurvey</label></li>
+</ul>
+</section>
 <section id="reference" class="level2">
 <h2 class="anchored" data-anchor-id="reference">reference</h2>
 <ul>
@@ -160,7 +169,8 @@ screenshot of trip record editor in Fixie Access
 <section id="potential-add-on-functionalities" class="level2">
 <h2 class="anchored" data-anchor-id="potential-add-on-functionalities">potential add-on functionalities</h2>
 <ul>
-<li><strong>popup tables</strong>: additional recordsets for person trips
+<li><p>fix mode and purpose with information typed by user (ex. <code>dest_purpose_other</code>)</p></li>
+<li><p><strong>popup tables</strong>: additional recordsets for person trips</p>
 <ul class="task-list">
 <li><label><input type="checkbox">Click on <code>arrival_hhmm</code> field: the traces for that trip. (<code>HHSurvey.trace_this_trip</code>)</label>
 <ul>
@@ -198,6 +208,18 @@ Note
 <li>need to run an <strong>update query</strong> to save the edited data back to the DB</li>
 <li><strong>Fixie procedures</strong> (<code>hhts_cleaning/Programmability/Stored Procedure</code>): existing procedures for closing an editor and for each button</li>
 <li><strong>Rulesy procedures</strong> <a href="https://github.com/psrc/travel-survey-QC-Clean/blob/91926e9c0392a5c48f11dd5f1a0956539f0bbdc9/survey_data_cleaning/rulesy_recalculate_after_edit.sql">(rulesy_recalculate_after_edit.sq)</a>: trip num reordering/ linking/ error flag generation</li>
+</ul></li>
+</ul>
+</section>
+<section id="app-styling" class="level2">
+<h2 class="anchored" data-anchor-id="app-styling">App styling</h2>
+<ul>
+<li>Edit trip modal dialog
+<ul class="task-list">
+<li><label><input type="checkbox">Increase modal dialog witdh</label></li>
+<li><label><input type="checkbox">Move labels left of input boxes</label></li>
+<li><label><input type="checkbox">Unbold labels</label></li>
+<li><label><input type="checkbox">Make white space between the different origin/destination information smaller</label></li>
 </ul></li>
 </ul>
 </section>
@@ -239,18 +261,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -282,7 +293,47 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -317,7 +368,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');

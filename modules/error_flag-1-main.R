@@ -43,6 +43,6 @@ edit_interface_server <- function(id, edit_persons) {
         )
       }) 
    
-    })  # end moduleServer
+    }) 
 }
 
