@@ -26,18 +26,18 @@ edit_interface_server <- function(id, edit_persons) {
     
     # data cleaning tools ----
     selected_recid <- reactive({ edit_dt()[input$thetable_rows_selected,"recid"] })
-    modal_new_trip_server("button-new",       label_name="Add new trip", selected_row = reactive(selected_recid()))
-    modal_edit_trip_server("button-edit",     label_name="Edit trip",    selected_row = reactive(selected_recid()))
-    modal_delete_trip_server("button-delete", label_name="Delete trip",  selected_row = reactive(selected_recid()))
+    modal_new_trip_server("button_new",       label_name="Add new trip", selected_row = reactive(selected_recid()))
+    modal_edit_trip_server("button_edit",     label_name="Edit trip",    selected_row = reactive(selected_recid()))
+    modal_delete_trip_server("button_delete", label_name="Delete trip",  selected_row = reactive(selected_recid()))
     
     # the output ----
     output$editplatform <- renderUI({
       tagList(
         fluidRow(column(12, person_panel_ui(ns("panel-person")))),
         br(),
-        fluidRow(column(12, modal_new_trip_ui(ns('button-new')),
-                            modal_edit_trip_ui(ns('button-edit')),
-                            modal_delete_trip_ui(ns('button-delete')))),
+        fluidRow(column(12, modal_new_trip_ui(ns('button_new')),
+                            modal_edit_trip_ui(ns('button_edit')),
+                            modal_delete_trip_ui(ns('button_delete')))),
         br(),
         fluidRow(column(12, DT::dataTableOutput(ns("thetable"))))
         )

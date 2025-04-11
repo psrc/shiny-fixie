@@ -12,7 +12,7 @@ person_panel_server <- function(id, view_name) {
     ns <- session$ns
     
     all_person_data <- get_data(view_name=view_name) # TODO: check back to make sure that this can be rerun when error is fixed
-    person_list <- reactive({ all_person_data %>% select(personid) %>% unique() })
+    person_list <- reactive({ unique(all_person_data$personid) })
     
     # show table: basic summary of selected person
     output$persontable <- DT::renderDT(

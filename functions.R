@@ -13,38 +13,52 @@ get_var_value_list <- function(value_labels = codebook, var_name){
 # dropdown for single selection
 selectInputSingle <- function(df, var_name, label_name = NULL, ...) {
   
+  var_str <- gsub("^.*-", "", var_name)
   if(is.null(label_name)){
-    label_name = var_name
+    label_name = var_str
   }
   
   selectInput(inputId = var_name,
               label = label_name,
-              choices = get_var_value_list(var_name=var_name), 
-              selected = df[1,c(var_name)], 
+              choices = get_var_value_list(var_name=var_str), 
+              selected = df[1,c(var_str)], 
               selectize = TRUE,
               ...)
 }
 
 # text input
-textInputSimple <- function(df, var_name, ...){
+textInputSimple <- function(df, var_name, label_name = NULL, ...){
+  
+  var_str <- gsub("^.*-", "", var_name)
+  if(is.null(label_name)){
+    label_name = var_str
+  }
+  
   textInput(inputId = var_name, 
-            label = var_name, 
-            value = df[1,c(var_name)],
+            label = label_name, 
+            value = df[1,c(var_str)],
             ...)
 }
 
 # number input
 numericInputSimple <- function(df, var_name, label_name = NULL, min = NA, max = NA, ...){
   
+  var_str <- gsub("^.*-", "", var_name)
   if(is.null(label_name)){
-    label_name = var_name
+    label_name = var_str
   }
   
   numericInput(inputId = var_name,
-               label = label_name, 
-               value = df[1,c(var_name)],
-               min = min, max = max, 
+               label = label_name,
+               value = df[1,c(var_str)],
+               min = min, max = max,
                ...)
+  
+  # numericInput(inputId = paste0("trip_record_",var_name),
+  #              label = label_name, 
+  #              value = df[1,c(var_name)],
+  #              min = min, max = max, 
+  #              ...)
 }
 
 # link to google maps showing direction from origin to destination
