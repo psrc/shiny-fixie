@@ -12,10 +12,22 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
     
     trip_record <- reactive({ get_data(view_name="Trip", recid=selected_row()) })
     
+    my_df_of_inputs <- reactive({
+      # convert list of inputs into a df to display in modal
+      myvalues <- NULL
+      for(i in 1:length(names(input)[1:10])){
+        myvalues <- as.data.frame(rbind(myvalues,(cbind(names(input)[i],input[[names(input)[i]]]))))
+      }
+      
+      names(myvalues) <- c("Variable","Selected_Value")
+      
+      myvalues
+    })
+    
     # featured buttons ----
     modal_copy_latlong_server("button-copy_origin", df = trip_record(), lat_var_name="origin_lat", long_var_name="origin_lng")
     modal_copy_latlong_server("button-copy_dest", df = trip_record(), lat_var_name="dest_lat", long_var_name="dest_lng")
-    modal_update_trip_server("button-update_db", all_input=input, recid=selected_row(), "Apply")
+    modal_update_trip_server("button-update_db", all_input = my_df_of_inputs(), recid=selected_row(), "Apply")
     
     # show basic trip information ----
     output$trip_summary <- DT::renderDT(

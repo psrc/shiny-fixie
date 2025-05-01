@@ -11,7 +11,11 @@ modal_update_trip_server <- function(id, all_input, recid, label_name) {
     ns <- session$ns
     
     trip_record <- reactive({ get_data(view_name="Trip", recid=recid()) })
-    all_cols <- reactive({ str_remove(names(all_input)[grepl("data_edit-", names(all_input))],"data_edit-")})
+    # all_cols <- reactive({ str_remove(names(all_input)[grepl("data_edit-", names(all_input))],"data_edit-")})
+    
+    test_all_inputs <- reactive({
+      all_input
+    })
     
     # result <- reactiveValues()
     # result$df <- trip_record
@@ -26,11 +30,15 @@ modal_update_trip_server <- function(id, all_input, recid, label_name) {
       # }
     # }
     
-    # print all input variables
-    output$print_cols <- renderPrint({
-      cat('These cols were edited:\n\n')
-      cat(paste0(all_cols(),",\n"))
+    output$print_cols <- renderDT({
+      datatable(test_all_inputs())
     })
+    
+    # # print all input variables
+    # output$print_cols <- renderPrint({
+    #   cat('These cols were edited:\n\n')
+    #   cat(paste0(all_cols(),",\n"))
+    # })
     
     observeEvent(input$clickupdate, { showModal(
       modalDialog(title = "Update Trip Record Preview",
@@ -40,7 +48,10 @@ modal_update_trip_server <- function(id, all_input, recid, label_name) {
                   #   DT::DTOutput(ns("trip_table"))
                   #   
                   # ),
-                  div(verbatimTextOutput(ns('print_cols'))),
+                  div(
+                    DTOutput(ns('print_cols'))
+                  ),
+                  # div(verbatimTextOutput(ns('print_cols'))),
                   
                   footer = column(modalButton('Close'),
                                   width=12),
