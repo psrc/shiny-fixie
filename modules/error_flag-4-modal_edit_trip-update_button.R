@@ -46,16 +46,24 @@ modal_update_trip_server <- function(id, all_input, recid, label_name) {
       myvalues
       })
     
-    
+ 
     # print all input variables
     output$print_cols <- renderDataTable(
-      test_all_inputs(),
-      options =list(ordering = F, dom = 't', pageLength =-1)
+      datatable(test_all_inputs(),
+                options =list(ordering = F, dom = 't', pageLength =-1,
+                              # hide mod column
+                              columnDefs = list(list(targets = 4,visible = FALSE)))
+                ) %>% 
+        formatStyle(
+        'mod',
+        target = 'row',
+        backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
+      )
      )
     
     observeEvent(input$clickupdate, { showModal(
       modalDialog(title = "Update Trip Record Preview",
-                  
+                  #TODO: add trip summary
                   div(
                     DTOutput(ns('print_cols'))
                   ),
