@@ -13,28 +13,6 @@ modal_update_trip_server <- function(id, all_input, recid, label_name) {
     trip_record <- reactive({ get_data(view_name="Trip", recid=recid) })
     table_colnames <- c("Variable","Original Value","Updated Value")
     
-    # test_all_inputs <- reactive({
-    #   
-    #   # get all editable variables
-    #   all_vars_input_names <- names(all_input)[grepl("data_edit-", names(all_input))]
-    #   all_vars <- str_remove(all_vars_input_names,"data_edit-")
-    # 
-    #   # create df with original and updated values
-    #   ## original values
-    #   compare_values <- trip_record() %>%
-    #     select(all_of(all_vars)) %>%
-    #     mutate(type="original")
-    #   ## updated values
-    #   new_values <- list()
-    #   for(var_input_name in all_vars_input_names){
-    #     new_values <- append(new_values, all_input[[var_input_name]])
-    #   }
-    #   ## concat
-    #   compare_values[2,] <- append(new_values,"updated")
-    #   compare_values
-    #   
-    # })
-    
     test_all_inputs <- reactive({
       
       # get all editable variables

@@ -127,28 +127,6 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
       )
     ) })
     
-    # TODO: identify changed columns
-    
-    # my_df_of_inputs <- reactive({
-    #   
-    #   all_vars_input_names <- names(input)[grepl("data_edit-", names(input))]
-    #   all_vars <- str_remove(all_vars_input_names,"data_edit-")
-    #   
-    #   # convert list of inputs into a df to display in modal
-    #   compare_values <- trip_record() %>% 
-    #     select(all_of(all_vars)) %>%
-    #     mutate(type="original")
-    #   
-    #   new_values <- list()
-    #   for(var_input_name in all_vars_input_names){
-    #     new_values <- append(new_values, input[[var_input_name]])
-    #       # as.data.frame(rbind(myvalues,(cbind(names(input)[i],input[[names(input)[i]]]))))
-    #   }
-    #   
-    #   compare_values[2,] <- append(new_values,"updated")
-    #   
-    #   compare_values
-    # })
 
     output$editbutton <- renderUI({
       tagList(
