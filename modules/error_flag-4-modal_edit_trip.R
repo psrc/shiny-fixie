@@ -13,8 +13,8 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
     trip_record <- reactive({ get_data(view_name="Trip", recid=selected_row()) })
     
     # featured buttons ----
-    modal_copy_latlong_server("button-copy_origin", df = trip_record(), lat_var_name="origin_lat", long_var_name="origin_lng")
-    modal_copy_latlong_server("button-copy_dest", df = trip_record(), lat_var_name="dest_lat", long_var_name="dest_lng")
+    modal_copy_latlong_server("button-copy_origin", lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
+    modal_copy_latlong_server("button-copy_dest", lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
     modal_update_trip_server("button-update_db", all_input=input, recid=selected_row(), "Apply")
     
     # show basic trip information ----
@@ -39,6 +39,7 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
                     ## ----------------------
                     fluidRow(
                       # timestamps
+                      # TODO: find better way to select date and time
                       column(6, textInputSimple(df = trip_record(), var_name = ns("data_edit-depart_time_timestamp")),
                                 textInputSimple(df = trip_record(), var_name = ns("data_edit-arrival_time_timestamp"))),
                       # trip distance
@@ -62,7 +63,7 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
                       # origin purpose
                       column(5, selectInputSingle(df = trip_record(), var_name = ns("data_edit-origin_purpose"))),
                       # origin label
-                      column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-origin_label"))),
+                      # column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-origin_label"))),
                       # origin lat/long
                       column(4, 
                              fluidRow(column(6, numericInputSimple(df = trip_record(), var_name = ns("data_edit-origin_lat"))),
@@ -79,7 +80,7 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
                       # destination purpose
                       column(5, selectInputSingle(df = trip_record(), var_name = ns("data_edit-dest_purpose"))),
                       # destination label
-                      column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-dest_label"))),
+                      # column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-dest_label"))),
                       # destination lat/long
                       column(4, 
                              fluidRow(column(6, numericInputSimple(df = trip_record(), var_name = ns("data_edit-dest_lat"))),
@@ -126,11 +127,28 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
       )
     ) })
     
+    # TODO: identify changed columns
     
-    updated_cols <- reactive({ data.frame(map(edit.cols, ~input[[.x]])) })
-    output$test_value <- renderPrint({ 
-      updated_cols
-    })
+    # my_df_of_inputs <- reactive({
+    #   
+    #   all_vars_input_names <- names(input)[grepl("data_edit-", names(input))]
+    #   all_vars <- str_remove(all_vars_input_names,"data_edit-")
+    #   
+    #   # convert list of inputs into a df to display in modal
+    #   compare_values <- trip_record() %>% 
+    #     select(all_of(all_vars)) %>%
+    #     mutate(type="original")
+    #   
+    #   new_values <- list()
+    #   for(var_input_name in all_vars_input_names){
+    #     new_values <- append(new_values, input[[var_input_name]])
+    #       # as.data.frame(rbind(myvalues,(cbind(names(input)[i],input[[names(input)[i]]]))))
+    #   }
+    #   
+    #   compare_values[2,] <- append(new_values,"updated")
+    #   
+    #   compare_values
+    # })
 
     output$editbutton <- renderUI({
       tagList(

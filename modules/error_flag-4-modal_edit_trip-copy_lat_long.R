@@ -7,11 +7,11 @@ modal_copy_latlong_ui <- function(id) {
   )
 }
 
-modal_copy_latlong_server <- function(id, df, lat_var_name, long_var_name) {
+modal_copy_latlong_server <- function(id, lat_input, long_input) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    latlong <- reactive({ paste0(df[1,c(lat_var_name)], ", ", df[1,c(long_var_name)]) })
+    latlong <- reactive({ paste0(lat_input, ", ", long_input) })
     
     output$copybutton <- renderUI({
       rclipboard::rclipButton(

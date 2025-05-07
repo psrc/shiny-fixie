@@ -10,37 +10,41 @@ modal_update_trip_server <- function(id, all_input, recid, label_name) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    trip_record <- reactive({ get_data(view_name="Trip", recid=recid()) })
-    all_cols <- reactive({ str_remove(names(all_input)[grepl("data_edit-", names(all_input))],"data_edit-")})
+    trip_record <- reactive({ get_data(view_name="Trip", recid=recid) })
     
-    # result <- reactiveValues()
-    # result$df <- trip_record
-    # for(cols in edit.cols){
-    #   
-    #   result[1,cols] <- reactive({ all_input[[paste0("data_edit-",cols)]] })
+    test_all_inputs <- reactive({
       
-      # result$og_value <- reactive({ trip_record()[1,c(cols)] })
-      # result$new_value <- reactive({ all_input[[paste0("data_edit-",cols)]] })
-      # if(result$og_value==result$new_value){
-      #   result$df[1,cols] <- reactive({ all_input[[paste0("data_edit-",cols)]] })
-      # }
-    # }
+      # get all editable variables
+      all_vars_input_names <- names(all_input)[grepl("data_edit-", names(all_input))]
+      all_vars <- str_remove(all_vars_input_names,"data_edit-")
+
+      # create df with original and updated values
+      ## original values
+      compare_values <- trip_record() %>%
+        select(all_of(all_vars)) %>%
+        mutate(type="original")
+      ## updated values
+      new_values <- list()
+      for(var_input_name in all_vars_input_names){
+        new_values <- append(new_values, all_input[[var_input_name]])
+      }
+      ## concat
+      compare_values[2,] <- append(new_values,"updated")
+      compare_values
+      
+    })
     
     # print all input variables
-    output$print_cols <- renderPrint({
-      cat('These cols were edited:\n\n')
-      cat(paste0(all_cols(),",\n"))
+    output$print_cols <- renderDT({
+      datatable(test_all_inputs())
     })
     
     observeEvent(input$clickupdate, { showModal(
       modalDialog(title = "Update Trip Record Preview",
                   
-                  # tagList(
-                  #   # show trip table ----
-                  #   DT::DTOutput(ns("trip_table"))
-                  #   
-                  # ),
-                  div(verbatimTextOutput(ns('print_cols'))),
+                  div(
+                    DTOutput(ns('print_cols'))
+                  ),
                   
                   footer = column(modalButton('Close'),
                                   width=12),
