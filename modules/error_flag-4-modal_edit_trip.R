@@ -6,22 +6,28 @@ modal_edit_trip_ui <- function(id) {
   )
 }
 
-modal_edit_trip_server <- function(id, label_name, selected_row) {
+modal_edit_trip_server <- function(id, selected_row, updated_trip = NULL) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    trip_record <- reactive({ get_data(view_name="Trip", recid=selected_row()) })
+    if(!is.null(updated_trip)){ # if updated_trip is provided
+      trip_record <- reactive({ updated_trip() })
+    }
+    else(
+      trip_record <- reactive({ get_data(view_name="Trip", recid=selected_row()) })
+    )
+    
     
     # featured buttons ----
     modal_copy_latlong_server("button-copy_origin", lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
     modal_copy_latlong_server("button-copy_dest", lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
-    modal_update_trip_server("button-update_db", all_input=input, recid=selected_row(), "Apply")
+    modal_update_trip_server("button-update_db", all_input=input, recid=selected_row())
     
     # show basic trip information ----
     output$trip_summary <- DT::renderDT(
       trip_record() %>% select(hhid,pernum,person_id,tripnum,recid), 
       rownames = FALSE,
-      options =list(ordering = F, dom = 't',  selection = 'single'))
+      options =list(ordering = F, dom = 't',  selection = 'single', pageLength =-1))
     
     # Trip Record Editor ----
     observeEvent(input$clickedit, { showModal(
@@ -130,7 +136,7 @@ modal_edit_trip_server <- function(id, label_name, selected_row) {
 
     output$editbutton <- renderUI({
       tagList(
-        fluidRow(column(12, actionButton(ns("clickedit"), label_name)))
+        fluidRow(column(12, actionButton(ns("clickedit"), "Edit trip")))
       )
     }) 
   })  # end moduleServer

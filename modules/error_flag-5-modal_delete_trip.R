@@ -31,7 +31,7 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_row) {
 
     output$editbutton <- renderUI({
       tagList(
-        fluidRow(column(12, actionButton(ns("clickedit"), label_name)))
+        fluidRow(column(12, actionButton(ns("clickedit"), "Delete trip")))
       )
     }) 
   })  # end moduleServer
