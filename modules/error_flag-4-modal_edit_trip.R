@@ -10,7 +10,7 @@ modal_edit_trip_server <- function(id, selected_row, updated_trip = NULL) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    if(!is.null(updated_trip)){ # if updated_trip is provided
+    if(!is.null(updated_trip)){ # updated_trip is provided when coming back from update preview modal
       trip_record <- reactive({ updated_trip() })
     }
     else(

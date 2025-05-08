@@ -52,6 +52,7 @@ modal_update_trip_server <- function(id, all_input, recid) {
     update_trip <- reactive({
       
       # get all editable variables
+      all_vars_input_names <- names(all_input)[grepl("data_edit-", names(all_input))]
       all_vars <- str_remove(all_vars_input_names,"data_edit-")
       
       trip <- NULL
