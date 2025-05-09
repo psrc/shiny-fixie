@@ -9,7 +9,7 @@ shinyUI(
     
     id = "AppID", # Shiny App ID
     tags$style("@import url(https://use.fontawesome.com/releases/v6.3.0/css/all.css);"),
-    title = "My Shiny App", # Internal Shiny title
+    title = "Shiny-Fixie", # Internal Shiny title
     
     theme = "styles.css", # Loads in the custom CSS
     
@@ -17,7 +17,7 @@ shinyUI(
     fluidRow(column(12, tags$a(tags$img(src='psrc-logo.png',
                                            # style="margin-top: 10px;",
                                            height = "60"), href="https://www.psrc.org", target="_blank"),
-                    strong(tags$div(class="mainpage_title", "Shiny Fixie")))),
+                    strong(tags$div(class="mainpage_title", "Shiny-Fixie")))),
     
     hr(style = "border-top: 1px solid #000000;"),
     

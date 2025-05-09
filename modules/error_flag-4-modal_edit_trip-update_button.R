@@ -1,9 +1,8 @@
 modal_update_trip_ui <- function(id) {
   ns <- NS(id)
   
-  tagList(
     uiOutput(ns("updatebutton"))
-  )
+  
 }
 
 modal_update_trip_server <- function(id, all_input, recid) {
@@ -106,11 +105,7 @@ modal_update_trip_server <- function(id, all_input, recid) {
       )
     ) })
     
-    output$updatebutton <- renderUI({
-      tagList(
-        fluidRow(column(12, actionButton(ns("clickupdate"), "Apply")))
-      )
-    }) 
+    output$updatebutton <- renderUI({ actionButton(ns("clickupdate"), "Apply Changes") }) 
     
   })  # end moduleServer
 }

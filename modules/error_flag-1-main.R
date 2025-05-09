@@ -32,16 +32,29 @@ edit_interface_server <- function(id, edit_persons) {
     modal_edit_trip_server("button_edit",     selected_row = reactive(selected_recid()))
     ## button to delete trip
     modal_delete_trip_server("button_delete", selected_row = reactive(selected_recid()))
+    ## trip linking interface
+    modal_trip_linking_server("button_link", selected_row = reactive(selected_recid()))
     
-    # the output ----
+    # platform layout ----
     output$editplatform <- renderUI({
       tagList(
+        # person panel
         fluidRow(column(12, person_panel_ui(ns("panel-person")))),
         br(),
-        fluidRow(column(12, modal_new_trip_ui(ns('button_new')),
-                            modal_edit_trip_ui(ns('button_edit')),
-                            modal_delete_trip_ui(ns('button_delete')))),
+        # trip editing panel
+        fluidRow(column(6, wellPanel(style ='padding-left:25px; padding-right:25px;',
+                                     modal_new_trip_ui(ns('button_new')),
+                                     modal_edit_trip_ui(ns('button_edit')),
+                                     modal_delete_trip_ui(ns('button_delete'))
+                                     )
+                        ),
+                 column(6, wellPanel(style ='padding-left:25px; padding-right:25px;',
+                                     modal_trip_linking_ui(ns('button_link'))
+                                     )
+                        )
+                 ),
         br(),
+        # person trip table
         fluidRow(column(12, DT::dataTableOutput(ns("thetable"))))
         )
       }) 

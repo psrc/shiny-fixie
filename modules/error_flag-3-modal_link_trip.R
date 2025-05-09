@@ -1,11 +1,11 @@
-modal_delete_trip_ui <- function(id) {
+modal_trip_linking_ui <- function(id) {
   ns <- NS(id)
   
-  uiOutput(ns("editbutton"))
+  uiOutput(ns("linkbutton"))
   
 }
 
-modal_delete_trip_server <- function(id, label_name, thedata, selected_row) {
+modal_trip_linking_server <- function(id, thedata, selected_row) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
@@ -15,20 +15,19 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_row) {
     })
     
     # data cleaning tools ----
-    observeEvent(input$clickedit, { showModal(
-      modalDialog(title = "Delete Trip",
+    observeEvent(input$clicklink, { showModal(
+      modalDialog(title = "Trip Linking Editor",
                   
-                  "Are you sure you want to delete this trip?",
+                  "Placeholder for trip linking!",
                   div(verbatimTextOutput(ns('print_row'))),
                   
                   footer = column(modalButton('Cancel'),
-                                  modalButton('Delete Trip'), # TODO: replace delete button
                                   width=12),
                   easyClose = TRUE
       )
     ) })
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Delete trip") }) 
-                                             
+    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "Link selected trips") })
+    
   })  # end moduleServer
 }

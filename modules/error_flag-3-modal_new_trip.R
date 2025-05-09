@@ -1,9 +1,8 @@
 modal_new_trip_ui <- function(id) {
   ns <- NS(id)
   
-  tagList(
-    uiOutput(ns("editbutton"))
-  )
+  uiOutput(ns("editbutton"))
+  
 }
 
 modal_new_trip_server <- function(id, thedata, selected_row) {
@@ -29,10 +28,7 @@ modal_new_trip_server <- function(id, thedata, selected_row) {
       )
     ) })
 
-    output$editbutton <- renderUI({
-      tagList(
-        fluidRow(column(12, actionButton(ns("clickedit"), "Add new trip")))
-      )
-    }) 
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Add new trip") })
+    
   })  # end moduleServer
 }

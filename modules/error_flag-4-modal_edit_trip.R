@@ -1,9 +1,8 @@
 modal_edit_trip_ui <- function(id) {
   ns <- NS(id)
   
-  tagList(
-    uiOutput(ns("editbutton"))
-  )
+  uiOutput(ns("editbutton"))
+  
 }
 
 modal_edit_trip_server <- function(id, selected_row, updated_trip = NULL) {
@@ -124,20 +123,16 @@ modal_edit_trip_server <- function(id, selected_row, updated_trip = NULL) {
                              )
                   ),
                   br(),
-                  fluidRow(modal_update_trip_ui(ns("button-update_db"))),
                   
-                  footer = column(modalButton('Cancel'),
-                                  width=12),
+                  footer = column(12, modal_update_trip_ui(ns("button-update_db")),
+                                  modalButton('Cancel')),
                   # easyClose = TRUE,
                   size = "l"
       )
     ) })
     
 
-    output$editbutton <- renderUI({
-      tagList(
-        fluidRow(column(12, actionButton(ns("clickedit"), "Edit trip")))
-      )
-    }) 
+    output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") }) 
+    
   })  # end moduleServer
 }
