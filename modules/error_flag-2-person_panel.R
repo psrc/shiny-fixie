@@ -22,10 +22,10 @@ person_panel_server <- function(id, view_name) {
     
     output$personpanel <- renderUI({
       tagList(
-        # wellPanel(style ='padding-left:25px; padding-right:25px;',
-                  fluidRow(column(3, selectInput( inputId = ns("personID"),  label="Select Person:",  choices=person_list(),  selected = person_list()[1]))),
-                  fluidRow(column(6, DT::DTOutput(ns("persontable")))))
-      # )
+        wellPanel(style ='padding-left:25px; padding-right:25px;',
+                  fluidRow(column(6, selectInput( inputId = ns("personID"),  label="Select Person:",  choices=person_list(),  selected = person_list()[1]))),
+                  fluidRow(column(12, DT::DTOutput(ns("persontable")))))
+      )
     }) 
     return(reactive({input$personID}))
   })  # end moduleServer

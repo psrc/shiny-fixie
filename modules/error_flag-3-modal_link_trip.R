@@ -27,7 +27,7 @@ modal_trip_linking_server <- function(id, thedata, selected_row) {
       )
     ) })
 
-    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "Link selected trips") })
+    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "(Link selected trips)") })
     
   })  # end moduleServer
 }

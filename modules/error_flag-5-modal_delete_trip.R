@@ -28,7 +28,7 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_row) {
       )
     ) })
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Delete trip") }) 
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "(Delete trip)") }) 
                                              
   })  # end moduleServer
 }

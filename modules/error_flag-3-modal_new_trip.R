@@ -28,7 +28,7 @@ modal_new_trip_server <- function(id, thedata, selected_row) {
       )
     ) })
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Add new trip") })
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "(Add new trip)") })
     
   })  # end moduleServer
 }

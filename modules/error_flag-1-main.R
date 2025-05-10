@@ -38,23 +38,21 @@ edit_interface_server <- function(id, edit_persons) {
     # platform layout ----
     output$editplatform <- renderUI({
       tagList(
-        # person panel
-        fluidRow(column(12, person_panel_ui(ns("panel-person")))),
-        br(),
-        # trip editing panel
-        fluidRow(column(6, wellPanel(style ='padding-left:25px; padding-right:25px;',
+        fluidRow(# person panel
+                 column(6, person_panel_ui(ns("panel-person"))),
+                 # trip editing panel
+                 column(2, wellPanel(style ='padding-left:25px; padding-right:25px;',
+                                     "Select one trip in trip table below to edit: ",
                                      modal_new_trip_ui(ns('button_new')),
                                      modal_edit_trip_ui(ns('button_edit')),
                                      modal_delete_trip_ui(ns('button_delete'))
-                                     )
-                        ),
-                 column(6, wellPanel(style ='padding-left:25px; padding-right:25px;',
+                                     )),
+                 # person trip table
+                 column(4, wellPanel(style ='padding-left:25px; padding-right:25px;',
+                                     "Select multiple consecutive trips in trip table below to link: ",
                                      modal_trip_linking_ui(ns('button_link'))
-                                     )
-                        )
-                 ),
-        br(),
-        # person trip table
+                                     ))
+        ),
         fluidRow(column(12, DT::dataTableOutput(ns("thetable"))))
         )
       }) 

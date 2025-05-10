@@ -1,3 +1,5 @@
+# buttons lead to sql sprocs: https://github.com/psrc/travel-survey-QC-Clean/blob/main/survey_data_cleaning/fixie_sprocs.sql
+
 modal_edit_trip_ui <- function(id) {
   ns <- NS(id)
   
@@ -123,8 +125,12 @@ modal_edit_trip_server <- function(id, selected_row, updated_trip = NULL) {
                              )
                   ),
                   br(),
-                  
-                  footer = column(12, modal_update_trip_ui(ns("button-update_db")),
+                  fluidRow(modal_update_trip_ui(ns("button-update_db"))),
+                  footer = column(12, 
+                                  modalButton('(Elevate: describe issue)'),
+                                  modalButton('(Dismiss flag)'),
+                                  modalButton('(Delete trip)'),
+                                  modalButton('(Split from traces)'),
                                   modalButton('Cancel')),
                   # easyClose = TRUE,
                   size = "l"
