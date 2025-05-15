@@ -3,7 +3,7 @@
 modal_edit_trip_ui <- function(id) {
   ns <- NS(id)
   
-  uiOutput(ns("editbutton"))
+  # uiOutput(ns("editbutton"))
   
 }
 
@@ -31,7 +31,9 @@ modal_edit_trip_server <- function(id, selected_row, updated_trip = NULL) {
       options =list(ordering = F, dom = 't',  selection = 'single', pageLength =-1))
     
     # Trip Record Editor ----
-    observeEvent(input$clickedit, { showModal(
+    # observeEvent(input$clickedit, {
+    observe({
+    showModal(
       modalDialog(title = "Trip Record Editor",
                   
                   tagList(
@@ -135,10 +137,11 @@ modal_edit_trip_server <- function(id, selected_row, updated_trip = NULL) {
                   # easyClose = TRUE,
                   size = "l"
       )
-    ) })
+    ) 
+    })
     
 
-    output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") }) 
+    # output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") }) 
     
   })  # end moduleServer
 }
