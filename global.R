@@ -23,16 +23,10 @@ module_files <- c(
   list.files('modules', full.names = TRUE))
 sapply(module_files, source)
 source("functions.R")
+source("execute_sprocs.R")
 source("db_connection.R")
 source("configuration.R")
 
 list_mode_choice <- get_query(sql = "select * from HHSurvey.trip_mode", db_name = "hhts_cleaning")$mode_desc
 
 
-# val_list_mode_1 <- value_labels %>% filter(variable =="mode_1") %>%
-#   rowwise() %>%
-#   mutate(value_label = paste0(value, ": ", label)) %>%
-#   ungroup() %>%
-#   select(value, value_label)
-#   
-# get_var_value_list(var_name="mode_1")
