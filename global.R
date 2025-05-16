@@ -19,12 +19,10 @@ library(shinyvalidate)
 # This section runs the modules and unless the folder name changes, it doesn't need to be changed
 # It also loads in useful functions for dashboard creation
 getwd()
-module_files <- c(
-  list.files('modules', full.names = TRUE))
+module_files <- c( list.files('modules', full.names = TRUE) )
+function_files <- c( list.files('functions', full.names = TRUE) )
 sapply(module_files, source)
-source("functions.R")
-source("execute_sprocs.R")
-source("db_connection.R")
+sapply(function_files, source)
 source("configuration.R")
 
 list_mode_choice <- get_query(sql = "select * from HHSurvey.trip_mode", db_name = "hhts_cleaning")$mode_desc
