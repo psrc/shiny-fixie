@@ -54,11 +54,6 @@ numericInputSimple <- function(df, var_name, label_name = NULL, min = NA, max = 
                min = min, max = max,
                ...)
   
-  # numericInput(inputId = paste0("trip_record_",var_name),
-  #              label = label_name, 
-  #              value = df[1,c(var_name)],
-  #              min = min, max = max, 
-  #              ...)
 }
 
 # link to google maps showing direction from origin to destination
