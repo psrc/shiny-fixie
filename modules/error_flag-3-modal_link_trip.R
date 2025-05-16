@@ -5,13 +5,13 @@ modal_trip_linking_ui <- function(id) {
   
 }
 
-modal_trip_linking_server <- function(id, thedata, selected_row) {
+modal_trip_linking_server <- function(id, thedata, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
     output$print_row <- renderPrint({
       cat('These rows were selected:\n\n')
-      cat(selected_row())
+      cat(selected_recid())
     })
     
     # data cleaning tools ----
