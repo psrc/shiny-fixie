@@ -42,7 +42,8 @@ i {
 .mainpage_title {
   color: #2F3030;
   font-family: "Poppins";
-  font-size: 5rem;
+  font-size: 4rem;
+  font-weight: 700;
   margin-left: 2rem;
   width: 75%;
   align-self: flex-end;
