@@ -42,11 +42,18 @@ i {
 .mainpage_title {
   color: #2F3030;
   font-family: "Poppins";
-  font-size: 15pt;
+  font-size: 5rem;
+  margin-left: 2rem;
+  width: 75%;
+  align-self: flex-end;
 }
 
 .person_table {
   color: #2F3030;
   font-family: "Poppins";
   font-size: 1pt;
+}
+
+.psrc-logo {
+  width: 15%;
 }
