@@ -79,3 +79,25 @@ i {
   margin-top: 2rem;
 }
 
+.control-label {
+  /* inputText labels */
+  font-weight: 400;
+}
+
+.bottom-spacing {
+  margin-bottom: 2rem;
+}
+
+.modal-header {
+  border-bottom: 1px solid #000000;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.section-padding {
+  padding: 1.5rem 0;
+}
+
+.purpose {
+  align-self: flex-end;
+}
