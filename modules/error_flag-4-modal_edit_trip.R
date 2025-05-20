@@ -11,12 +11,21 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    trip_record <-  reactive({ get_data(view_name="Trip", recid=selected_recid()) })
+    trip_record <-  reactive({
+      
+      if(!is.null(updated_trip)){ # updated_trip is provided when coming back from update preview modal
+        updated_trip()
+      }
+      else{
+        get_data(view_name="Trip", recid=selected_recid())
+      }
+      
+    })
     
     # featured buttons ----
     modal_copy_latlong_server("button-copy_origin", lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
     modal_copy_latlong_server("button-copy_dest", lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
-    # modal_update_trip_server("button-update_db", all_input=input, recid=selected_recid())
+    modal_update_trip_server("button-update_db", all_input=input, recid=selected_recid())
     
     # show basic trip information ----
     output$trip_summary <- DT::renderDT(
@@ -124,7 +133,7 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
                                    )
                         ),
                         br(),
-                        fluidRow(modalButton('(Change Data)')),
+                        fluidRow(modal_update_trip_ui(ns("button-update_db"))),
                         footer = column(12, 
                                         modalButton('(Elevate: describe issue)'),
                                         modalButton('(Dismiss flag)'),
