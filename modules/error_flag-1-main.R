@@ -12,9 +12,11 @@ edit_interface_server <- function(id, edit_persons) {
     ns <- session$ns
     
     # person control panel ----
+    
     personID <- person_panel_server("panel-person", view_name=edit_persons)
     
     # the trip table ----
+    
     # person data from database
     edit_dt <- reactive({get_data(person_id = personID())})
     output$thetable <- DT::renderDataTable(
@@ -25,6 +27,7 @@ edit_interface_server <- function(id, edit_persons) {
       server=TRUE)
     
     # data cleaning tools ----
+    
     selected_row_recid <- reactive({ edit_dt()[input$thetable_rows_selected,"recid"] })
     
     ## button to add new trip
@@ -37,27 +40,39 @@ edit_interface_server <- function(id, edit_persons) {
     modal_trip_linking_server("button_link",  selected_recid = reactive(selected_row_recid()))
     
     # platform layout ----
+    
     output$editplatform <- renderUI({
       tagList(
-        fluidRow(# person panel
-                 column(6, person_panel_ui(ns("panel-person"))),
-                 # trip editing panel
-                 column(2, wellPanel(style ='padding-left:25px; padding-right:25px;',
-                                     "Select one trip in trip table below to edit: ",
-                                     modal_new_trip_ui(ns('button_new')),
-                                     modal_edit_trip_ui(ns('button_edit')),
-                                     modal_delete_trip_ui(ns('button_delete'))
-                                     )),
-                 # person trip table
-                 column(4, wellPanel(style ='padding-left:25px; padding-right:25px;',
-                                     "Select multiple consecutive trips in trip table below to link: ",
-                                     modal_trip_linking_ui(ns('button_link'))
-                                     ))
-        ),
+        fluidRow(class = "page-format",
+          
+          # person panel
+          column(8, person_panel_ui(ns("panel-person"))),
+          
+          # trip editing panel
+          column(4,
+                 fluidRow(
+                   wellPanel(
+                     p("Select one trip in trip table below to edit"),
+                     div(class = "trip-buttons-panel",
+                         modal_new_trip_ui(ns('button_new')),
+                         modal_edit_trip_ui(ns('button_edit')),
+                         modal_delete_trip_ui(ns('button_delete'))
+                     ) # end div
+                   ), # end wellpanel
+                   wellPanel(
+                     p("Select multiple consecutive trips in trip table below to link"),
+                     modal_trip_linking_ui(ns('button_link'))
+                   ) # end wellpanel
+                 ) # end fluidRow  
+          ), # end column
+          
+        ), # end fluidrow
+        
         fluidRow(column(12, DT::dataTableOutput(ns("thetable"))))
-        )
-      }) 
-   
+      
+      ) # end taglist
     }) 
+    
+  }) 
 }
 
