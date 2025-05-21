@@ -3,8 +3,6 @@
 modal_edit_trip_ui <- function(id) {
   ns <- NS(id)
   
-  uiOutput(ns("editbutton"))
-  
 }
 
 modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NULL) {
@@ -34,11 +32,8 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
       options =list(ordering = F, dom = 't',  selection = 'single', pageLength =-1))
     
     # Trip Record Editor ----
-      observeEvent(input$clickedit, { 
-        
-        # if a row is selected in table: show Trip Record Editor
-        if(!identical(selected_recid(),integer(0))){
-          # browser()
+
+    observe({
           showModal(
             modalDialog(title = "Trip Record Editor",
                         
@@ -180,25 +175,8 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
                                         modalButton('Cancel')),
                         # easyClose = TRUE,
                         size = "l"
-            ))}
-        # if no row is selected
-          else{
-            showModal(
-              modalDialog(
-                title = "0 records have been selected",
-                easy_close = TRUE,
-                "Please select a record from the table below to continue."
-              )
-            )
-          }
-        }
-        
-        )
-      
-      
-    
-
-    output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") }) 
+            ))
+          })
     
   })  # end moduleServer
 }

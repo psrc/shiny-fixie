@@ -11,10 +11,6 @@ modal_update_trip_server <- function(id, all_input, recid) {
     
     trip_record <- reactive({ get_data(view_name="Trip", recid=recid) })
     
-    
-    # featured buttons ----
-    # modal_edit_trip_server("button_edit_again", selected_row = recid(), updated_trip = reactive(update_trip()))
-    
     # create comparison table showing edited data
     compare_table <- reactive({
       
@@ -59,18 +55,16 @@ modal_update_trip_server <- function(id, all_input, recid) {
         if(var_name %in% all_vars){
           trip <- as.data.frame(cbind(trip,
                                       all_input[[paste0("data_edit-",var_name)]]
-                                      ))
+          ))
         } else{
           trip <- as.data.frame(cbind(trip,
                                       trip_record()[[var_name]]
-                                      ))
-          
+          ))
         }
-        
       }
       names(trip) <- names(trip_record())
       
-      trip
+      return(trip)
     })
     
  
@@ -89,23 +83,38 @@ modal_update_trip_server <- function(id, all_input, recid) {
      )
     
     
-    observeEvent(input$clickupdate, { showModal(
-      modalDialog(title = "Update Trip Record Preview",
-                  #TODO: add trip summary
-                  div(
-                    DTOutput(ns('print_cols'))
-                  ),
-                  
-                  footer = column(modalButton('Close'),
-                                  # go back to edit trip modal
-                                  # modal_edit_trip_ui(ns('button_edit_again')),
-                                  width=12),
-                  easyClose = TRUE,
-                  size = "l"
-      )
-    ) })
+    observeEvent(input$clickupdate, { 
+      showModal(
+        modalDialog(title = "Update Trip Record Preview",
+                    #TODO: add trip summary
+                    div(
+                      DTOutput(ns('print_cols'))
+                    ),
+                    
+                    footer = div(
+                      style = "display: flex; justify-content: space-between;",
+                      
+                      actionButton(ns('button_edit_again'),
+                                   label = "Back to Editor"),
+                      
+                      modalButton('Close')
+                    ),
+                    easyClose = TRUE,
+                    size = "l"
+        )
+      ) 
+    })
     
-    output$updatebutton <- renderUI({ actionButton(ns("clickupdate"), "Apply Changes") }) 
+    observeEvent(input$button_edit_again, {
+      modal_edit_trip_server("revise-trip", 
+                             selected_recid = recid(), 
+                             updated_trip = reactive(update_trip()))
+    })
+      
+    output$updatebutton <- renderUI({ 
+      actionButton(ns("clickupdate"), 
+                   "Apply Changes") 
+      }) 
     
   })  # end moduleServer
 }
