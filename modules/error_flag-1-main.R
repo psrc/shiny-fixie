@@ -90,8 +90,8 @@ edit_interface_server <- function(id, edit_persons) {
                      div(class = "trip-buttons-panel",
                          modal_new_trip_ui(ns('button_new')),
                          
-                         actionButton(ns('edit_button'),
-                                      label = "Edit Trip"),
+                         div(actionButton(ns('edit_button'),
+                                          label = "Edit Trip")),
                          
                          modal_delete_trip_ui(ns('button_delete'))
                      ) # end div
