@@ -9,12 +9,6 @@ modal_update_trip_server <- function(id, all_input, recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    v <- reactiveValues(btnedit = 0)
-    
-    observeEvent(input$button_edit_again, {
-      v$btnedit <- v$btnedit + 1
-    })
-    
     orig_trip_record <- reactive({ 
       get_data(view_name = "Trip", recid = recid) 
     })
@@ -121,9 +115,8 @@ modal_update_trip_server <- function(id, all_input, recid) {
     observeEvent(input$button_edit_again, {
       removeModal()
       modal_edit_trip_server("revise-trip", 
-                             selected_recid = recid(), 
+                             selected_recid = reactive(recid), 
                              updated_trip = update_trip())
-                             # updated_trip = reactive(update_trip()))
     })
       
     output$updatebutton <- renderUI({

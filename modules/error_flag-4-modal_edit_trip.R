@@ -12,9 +12,7 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
     trip_record <-  reactive({
       
       if(!is.null(updated_trip)){ # updated_trip is provided when coming back from update preview modal
-        # browser()
         return(updated_trip)
-        # return(updated_trip())
       } else {
         return(get_data(view_name = "Trip", recid = selected_recid()))
       }
@@ -28,8 +26,7 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
     
     # show basic trip information ----
     output$trip_summary <- DT::renderDT({
-      # if(!is.null(updated_trip))browser()
-      
+
       df <- trip_record() %>% 
         select(hhid, pernum, person_id, tripnum, recid)
       
