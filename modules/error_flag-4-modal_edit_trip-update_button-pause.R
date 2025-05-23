@@ -14,7 +14,7 @@ modal_update_trip_server <- function(id, all_input, recid) {
     })
     
     # create comparison table showing edited data
-    compare_table <- eventReactive(input$clickupdate | input$button_edit_again, {
+    compare_table <- eventReactive(input$clickupdate, {
 
       # get all editable variables
       all_vars_input_names <- names(all_input)[grepl("data_edit-", names(all_input))]
