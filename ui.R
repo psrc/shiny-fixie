@@ -40,8 +40,10 @@ shinyUI(
     fluidRow(column(12, style='padding-left:25px; padding-right:50px;',
                     tabsetPanel(type = "pills",
                                 tabPanel("overview", overview_ui('tab_overview')),
-                                tabPanel("all error", edit_interface_ui('tab_error1')),
-                                tabPanel("too long at dest?", edit_interface_ui('tab_error2')))
+                                tabPanel("all persons", edit_interface_ui('tab_error1')),
+                                tabPanel("all errors", edit_interface_ui('tab_error2')),
+                                tabPanel("too long at dest?", edit_interface_ui('tab_error3')),
+                                tabPanel("mode_1 missing", edit_interface_ui('tab_error4')))
                     )),
     
     # tags$footer(footer_ui('psrcfooter'))

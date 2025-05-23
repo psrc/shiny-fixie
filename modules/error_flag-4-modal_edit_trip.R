@@ -96,7 +96,7 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
                                    # origin purpose
                                    column(5, selectInputSingle(df = trip_record(), var_name = ns("data_edit-origin_purpose"))),
                                    # origin label
-                                   # column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-origin_label"))),
+                                   column(3, ),
                                    # origin lat/long
                                    column(4, 
                                           fluidRow(
@@ -125,7 +125,7 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
                             # destination purpose
                             column(5, selectInputSingle(df = trip_record(), var_name = ns("data_edit-dest_purpose"))),
                             # destination label
-                            # column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-dest_label"))),
+                            column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-dest_purpose_other"))),
                             # destination lat/long
                             column(4, 
                                    fluidRow(column(6, numericInputSimple(df = trip_record(), var_name = ns("data_edit-dest_lat"))),
@@ -158,14 +158,14 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
                                              selectInputSingle(df = trip_record(), var_name = ns("data_edit-travelers_nonhh"))),
                                           column(5, 
                                              div("hhmembers"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember1"), label_name = "1"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember2"), label_name = "2"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember3"), label_name = "3"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember4"), label_name = "4"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember5"), label_name = "5"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember6"), label_name = "6"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember7"), label_name = "7"),
-                                             numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember8"), label_name = "8"))
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember1"), label_name = "1"),
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember2"), label_name = "2"),
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember3"), label_name = "3"),
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember4"), label_name = "4"),
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember5"), label_name = "5"),
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember6"), label_name = "6"),
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember7"), label_name = "7"),
+                                             selectInputSingle(df = trip_record(), var_name = ns("data_edit-hhmember8"), label_name = "8"))
                                           ) # end column
                                    )
                         ), # end tagList

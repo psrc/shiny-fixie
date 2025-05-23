@@ -3,7 +3,7 @@
 # names of views for edits
 # have to fix number of tabs in server/ui after changing number of tabs
 # TODO: view name can be typed in by the analyst editing the view
-edit_persons_view_name <- c("person_all","person_Mike")
+edit_persons_view_name <- c("person_all_test","person_all_error","person_too_long_at_dest","person_mode_1_missing")
 
 # list of columns showing in trip table ----
 view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles","mph","Error",
