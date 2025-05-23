@@ -12,10 +12,11 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
     trip_record <-  reactive({
       
       if(!is.null(updated_trip)){ # updated_trip is provided when coming back from update preview modal
-        updated_trip()
-      }
-      else{
-        get_data(view_name="Trip", recid=selected_recid())
+        # browser()
+        return(updated_trip)
+        # return(updated_trip())
+      } else {
+        return(get_data(view_name = "Trip", recid = selected_recid()))
       }
       
     })
@@ -26,10 +27,17 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
     modal_update_trip_server("button-update_db", all_input=input, recid=selected_recid())
     
     # show basic trip information ----
-    output$trip_summary <- DT::renderDT(
-      trip_record() %>% select(hhid,pernum,person_id,tripnum,recid), 
-      rownames = FALSE,
-      options =list(ordering = F, dom = 't',  selection = 'single', pageLength =-1))
+    output$trip_summary <- DT::renderDT({
+      # if(!is.null(updated_trip))browser()
+      
+      df <- trip_record() %>% 
+        select(hhid, pernum, person_id, tripnum, recid)
+      
+      datatable(df, 
+                rownames = FALSE,
+                options =list(ordering = F, dom = 't',  selection = 'single', pageLength =-1)
+      )
+    })
     
     # Trip Record Editor ----
 
