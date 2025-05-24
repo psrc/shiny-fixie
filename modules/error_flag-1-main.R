@@ -18,10 +18,7 @@ edit_interface_server <- function(id, edit_persons) {
     # the trip table ----
     
     # person data from database
-    edit_dt <- reactive({
-      get_data(person_id = personID())
-      })
-    
+    edit_dt <- reactive({get_data(person_id = personID())})
     output$thetable <- DT::renderDataTable(
       edit_dt()[,view.cols],
       options =list(ordering = F, dom = 't'), 
@@ -31,22 +28,16 @@ edit_interface_server <- function(id, edit_persons) {
     
     # data cleaning tools ----
     
-    selected_row_recid <- eventReactive(input$button_edit, { 
-      edit_dt()[input$thetable_rows_selected,"recid"] 
-      })
+    selected_row_recid <- reactive({ edit_dt()[input$thetable_rows_selected,"recid"] })
     
     ## button to add new trip
-    modal_new_trip_server("button_new",
-                          selected_recid = reactive(selected_row_recid()))
+    modal_new_trip_server("button_new",       selected_recid = reactive(selected_row_recid()))
     ## button to edit trip
-    modal_edit_trip_server("button_edit",
-                           selected_recid = reactive(selected_row_recid()))
+    modal_edit_trip_server("button_edit",     selected_recid = reactive(selected_row_recid()))
     ## button to delete trip
-    modal_delete_trip_server("button_delete", 
-                             selected_recid = reactive(selected_row_recid()))
+    modal_delete_trip_server("button_delete", selected_recid = reactive(selected_row_recid()))
     ## trip linking interface
-    modal_trip_linking_server("button_link",
-                              selected_recid = reactive(selected_row_recid()))
+    modal_trip_linking_server("button_link",  selected_recid = reactive(selected_row_recid()))
     
     # platform layout ----
     
