@@ -31,7 +31,7 @@ edit_interface_server <- function(id, edit_persons) {
     
     # data cleaning tools ----
     
-    selected_row_recid <- eventReactive(input$button_edit, { 
+    selected_row_recid <- reactive({ 
       edit_dt()[input$thetable_rows_selected,"recid"] 
       })
     

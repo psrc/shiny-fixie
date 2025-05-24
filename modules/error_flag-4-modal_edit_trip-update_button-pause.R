@@ -15,7 +15,7 @@ modal_update_trip_server <- function(id, all_input, recid) {
     
     
     # featured buttons ----
-    modal_edit_trip_server("revise-trip", selected_recid = reactive(recid), updated_trip = update_trip())
+    # modal_edit_trip_server("revise-trip", selected_recid = reactive(recid), updated_trip = update_trip())
     
     # create comparison table showing edited data
     compare_table <- eventReactive(input$clickupdate, {
@@ -105,7 +105,7 @@ modal_update_trip_server <- function(id, all_input, recid) {
                     
                     footer = column(modalButton('Close'),
                                     # go back to edit trip modal
-                                    modal_edit_trip_ui(ns('revise-trip')),
+                                    # modal_edit_trip_ui(ns('revise-trip')),
                                     width=12),
                     easyClose = TRUE,
                     size = "l"
