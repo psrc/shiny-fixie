@@ -21,7 +21,6 @@ shinyUI(
                    tags$a(
                      tags$img(
                        src = 'RegionalGem2016.png',
-                       #src = 'psrc-logo.png',
                        width = "85%"
                        # width = "100%"
                      ), 
