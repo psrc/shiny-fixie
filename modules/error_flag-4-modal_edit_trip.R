@@ -40,7 +40,7 @@ modal_edit_trip_server <- function(id, selected_recid = NULL, updated_trip = NUL
     })
     
     # Trip Record Editor ----
-    observeEvent(input$clickedit,{ 
+    observe( { 
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(selected_recid(),integer(0))){
