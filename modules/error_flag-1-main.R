@@ -29,19 +29,6 @@ edit_interface_server <- function(id, edit_persons) {
       rownames = FALSE, 
       server=TRUE)
     
-    observeEvent(input$edit_button, {
-      # display modal if 0 records were selected
-      
-      if(is.null(input$thetable_rows_selected)) {
-        showModal(
-          modalDialog(
-            title = "0 records have been selected",
-            easy_close = FALSE,
-            "Please select a record from the table below to continue."
-          )
-        )
-      }
-    })
     
     # data cleaning tools ----
     
@@ -56,13 +43,11 @@ edit_interface_server <- function(id, edit_persons) {
     ## activate Edit Trip modal
     observeEvent(input$edit_button, {
       ## button is separated from the rest of the edit modal 
-      ## show modal if no records were selected
-      
-      if(!is.null(input$thetable_rows_selected))
         
         modal_edit_trip_server("button_edit",
-                               selected_recid = reactive(selected_row_recid())
-        )
+                               selected_recid = reactive(selected_row_recid()),
+                               updated_trip = NULL)
+      
     })
     
     
