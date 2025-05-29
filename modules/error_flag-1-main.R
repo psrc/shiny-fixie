@@ -32,7 +32,7 @@ edit_interface_server <- function(id, edit_persons) {
     
     # data cleaning tools ----
     
-    selected_row_recid <- eventReactive(input$edit_button, {
+    selected_row_recid <- reactive({
       edit_dt()[input$thetable_rows_selected, "recid"]
     })
     
@@ -41,14 +41,8 @@ edit_interface_server <- function(id, edit_persons) {
                           selected_recid = reactive(selected_row_recid()))
 
     ## activate Edit Trip modal
-    observeEvent(input$edit_button, {
-      ## button is separated from the rest of the edit modal 
-        
-        modal_edit_trip_server("button_edit",
-                               selected_recid = reactive(selected_row_recid()),
-                               updated_trip = NULL)
-      
-    })
+    modal_edit_trip_server("button_edit",     
+                           selected_recid = reactive(selected_row_recid()))
     
     
     ## button to delete trip
@@ -75,8 +69,7 @@ edit_interface_server <- function(id, edit_persons) {
                      div(class = "trip-buttons-panel",
                          modal_new_trip_ui(ns('button_new')),
                          
-                         div(actionButton(ns('edit_button'),
-                                          label = "Edit Trip")),
+                         modal_edit_trip_ui(ns('button_edit')),
                          
                          modal_delete_trip_ui(ns('button_delete'))
                      ) # end div
