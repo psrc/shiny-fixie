@@ -90,8 +90,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         fluidRow(class = "section-padding",
                                  # origin purpose
                                  column(5, selectInputSingle(df = trip_record(), var_name = ns("data_edit-origin_purpose"))),
-                                 # origin label
-                                 # column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-origin_label"))),
+                                 # destination label
+                                 column(3, ),
                                  # origin lat/long
                                  column(4, 
                                         fluidRow(
@@ -120,7 +120,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           # destination purpose
                           column(5, selectInputSingle(df = trip_record(), var_name = ns("data_edit-dest_purpose"))),
                           # destination label
-                          # column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-dest_label"))),
+                          column(3, textInputSimple(df = trip_record(), var_name = ns("data_edit-dest_purpose_other"))),
                           # destination lat/long
                           column(4, 
                                  fluidRow(column(6, numericInputSimple(df = trip_record(), var_name = ns("data_edit-dest_lat"))),
