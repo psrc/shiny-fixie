@@ -21,6 +21,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     modal_copy_latlong_server("button-copy_origin", lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
     modal_copy_latlong_server("button-copy_dest", lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
     modal_update_trip_server("button-update_db")
+    modal_dismiss_flag_server("button-dissmiss_flag")
     
     output$trip_summary <- DT::renderDT(
       trip_record() %>% select(hhid,pernum,person_id,tripnum,recid), 
@@ -162,13 +163,29 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                            numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember7"), label_name = "7"),
                                            numericInputSimple(df = trip_record(), var_name = ns("data_edit-hhmember8"), label_name = "8"))
                                         ) # end column
-                                 )
+                                 ), # fluidRow
+                        
+                        ## elevate comment ----
+                        
+                        fluidRow(
+                          column(5, 
+                                 textInputSimple(df = trip_record(), 
+                                                 var_name = ns("data_edit-psrc_comment"), 
+                                                 label_name = "Add comment:"
+                                                 )
+                                 ),
+                          column(3,
+                                 actionButton("button-elevate", 
+                                              label = "Elevate")
+                          )
+                        )
+                        
                       ), # end tagList
                       br(),
                       fluidRow(column(12,
-                                      modal_update_trip_ui(ns("button-update_db")))),
+                                      modal_update_trip_ui(ns("button-update_db")),
+                                      modal_dismiss_flag_ui(ns("button-dissmiss_flag")))),
                       footer = column(12, 
-                                      modalButton('(Elevate: describe issue)'),
                                       modalButton('(Dismiss flag)'),
                                       modalButton('(Delete trip)'),
                                       modalButton('(Split from traces)'),
