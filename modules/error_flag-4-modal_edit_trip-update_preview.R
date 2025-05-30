@@ -15,22 +15,22 @@ modal_update_trip_server <- function(id, all_input, selected_recid) {
                            update_trip = NULL
                            )
     observeEvent(input$clickupdate, {
+      
       rval$recid <- selected_recid()
       rval$orig_trip_record <- get_data(view_name = "Trip", recid = rval$recid)
+      
     })
     
     observeEvent(input$clickupdate, {
       # get all editable variables
-      all_vars_input_names <- names(all_input)[grepl("data_edit-", names(all_input))]
-      all_vars <- str_remove(all_vars_input_names,"data_edit-")
+      input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
       
-      # print("start making compare table")
       compare_table <- NULL
-      for(i in 1:length(all_vars_input_names)){
+      for(i in 1:length(tripeditor.cols)){
         # variable name
-        var_name <- all_vars[i]
-        var_input_name <- all_vars_input_names[i]
-        # print(var_input_name)
+        var_name <- tripeditor.cols[i]
+        var_input_name <- input_tripeditor.cols[i]
+        
         compare_var <- as.data.frame(
           cbind(var_name,
                 # original value
@@ -44,6 +44,7 @@ modal_update_trip_server <- function(id, all_input, selected_recid) {
         compare_table <- rbind(compare_table,
                                compare_var)
       }
+      # browser()
       
       names(compare_table) <- c("Variable","Original Value","Updated Value")
       
@@ -55,7 +56,7 @@ modal_update_trip_server <- function(id, all_input, selected_recid) {
       
       trip <- NULL
       for(var_name in names(rval$orig_trip_record)){
-        if(var_name %in% all_vars){
+        if(var_name %in% tripeditor.cols){
           row <- as.data.frame(all_input[[paste0("data_edit-",var_name)]])
         } else{
           row <- as.data.frame(rval$orig_trip_record[[var_name]])
@@ -74,7 +75,9 @@ modal_update_trip_server <- function(id, all_input, selected_recid) {
       # print("complete update trip")
     })
     
-    
+    # modal_revise_trip_server("button_revise",
+    #                          selected_recid_revise = reactive(rval$recid),
+    #                          updated_trip = reactive(rval$update_trip))
 
     observeEvent(input$clickupdate, {
       removeModal()
@@ -107,8 +110,7 @@ modal_update_trip_server <- function(id, all_input, selected_recid) {
                     footer = div(
                       style = "display: flex; justify-content: space-between;",
 
-                      actionButton(ns('button_edit_again'),
-                                   label = "Back to Editor"),
+                      modal_revise_trip_ui(ns('button_revise')),
 
                       modalButton('Close')
                     ),
@@ -118,12 +120,12 @@ modal_update_trip_server <- function(id, all_input, selected_recid) {
       )
     })
 
-    observeEvent(input$button_edit_again, {
-      removeModal()
-      modal_revise_trip_server("revise-trip",
-                               selected_recid_revise = reactive(rval$recid),
-                               updated_trip = reactive(rval$update_trip))
-    })
+    # observeEvent(input$button_edit_again, {
+    #   removeModal()
+    #   modal_revise_trip_server("revise-trip",
+    #                            selected_recid_revise = reactive(rval$recid),
+    #                            updated_trip = reactive(rval$update_trip))
+    # })
 
     output$updatebutton <- renderUI({
       actionButton(ns("clickupdate"),

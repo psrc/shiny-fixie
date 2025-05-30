@@ -3,6 +3,8 @@
 modal_revise_trip_ui <- function(id) {
   ns <- NS(id)
   
+  uiOutput(ns("revisebutton"))
+  
 }
 
 modal_revise_trip_server <- function(id, selected_recid_revise, updated_trip) {
@@ -18,7 +20,7 @@ modal_revise_trip_server <- function(id, selected_recid_revise, updated_trip) {
     # featured buttons ----
     modal_copy_latlong_server("button-copy_origin", lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
     modal_copy_latlong_server("button-copy_dest", lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
-    modal_update_trip_server("button-update_db", all_input=input, selected_recid=rval$recid)
+    modal_update_trip_server("button-update_db", all_input=input, selected_recid=reactive(selected_recid_revise()))
     
     # show basic trip information ----
     output$trip_summary <- DT::renderDT({
@@ -34,7 +36,7 @@ modal_revise_trip_server <- function(id, selected_recid_revise, updated_trip) {
     
     # Trip Record Editor ----
 
-    observe({
+    observeEvent(input$clickrevise, {
       
       showModal(
         modalDialog(
@@ -197,6 +199,8 @@ modal_revise_trip_server <- function(id, selected_recid_revise, updated_trip) {
         ))
       
       }) # end observe
+    
+    output$revisebutton <- renderUI({  actionButton(ns("clickrevise"), "Back to Editor") }) 
     
   })  # end moduleServer
 }
