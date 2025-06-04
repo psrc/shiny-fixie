@@ -23,11 +23,15 @@ edit_interface_server <- function(id, edit_persons) {
       })
     
     output$thetable <- DT::renderDataTable(
+      
       edit_dt()[,view.cols],
+      
       options =list(ordering = F, dom = 't'), 
       selection = 'single',
       rownames = FALSE, 
-      server=TRUE)
+      server=TRUE
+      
+      )
     
     
     # data cleaning tools ----
@@ -43,7 +47,6 @@ edit_interface_server <- function(id, edit_persons) {
     ## activate Edit Trip modal
     modal_edit_trip_server("button_edit",     
                            selected_recid = reactive(selected_row_recid()))
-    
     
     ## button to delete trip
     modal_delete_trip_server("button_delete", 
@@ -65,20 +68,24 @@ edit_interface_server <- function(id, edit_persons) {
           column(4,
                  fluidRow(
                    wellPanel(
+                     
                      p("Select one trip in trip table below to edit"),
+                     
                      div(class = "trip-buttons-panel",
                          modal_new_trip_ui(ns('button_new')),
-                         
                          modal_edit_trip_ui(ns('button_edit')),
-                         
                          modal_delete_trip_ui(ns('button_delete'))
-                     ) # end div
-                   ), # end wellpanel
+                         ) # end div
+                     
+                     ), # end wellpanel
+                   
                    wellPanel(
+                     
                      p("Select multiple consecutive trips in trip table below to link"),
                      modal_trip_linking_ui(ns('button_link'))
-                   ) # end wellpanel
-                 ) # end fluidRow  
+                     
+                     ) # end wellpanel
+                 )
           ), # end column
           
         ), # end fluidrow

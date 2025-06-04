@@ -5,79 +5,80 @@ modal_update_trip_ui <- function(id) {
 
 }
 
-modal_update_trip_server <- function(id, all_input, selected_recid) {
+modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
-    
-    rval <- reactiveValues(recid = NULL, 
-                           orig_trip_record = NULL, 
-                           compare_table = NULL, 
-                           update_trip = NULL
+
+    rval <- reactiveValues(recid = NULL,
+                           orig_trip_record = NULL,
+                           compare_table = NULL,
+                           updated_trip = NULL
                            )
     observeEvent(input$clickupdate, {
-      
+
       rval$recid <- selected_recid()
       rval$orig_trip_record <- get_data(view_name = "Trip", recid = rval$recid)
-      
+
     })
-    
+
     observeEvent(input$clickupdate, {
+
+      modal_revise_trip_server("button_revise",
+                               selected_recid_revise = reactive(rval$recid),
+                               updated_trip = reactive(rval$updated_trip))
+      
       # get all editable variables
       input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
-      
+
+      # compare table
       compare_table <- NULL
       for(i in 1:length(tripeditor.cols)){
         # variable name
         var_name <- tripeditor.cols[i]
         var_input_name <- input_tripeditor.cols[i]
-        
+
         compare_var <- as.data.frame(
           cbind(var_name,
                 # original value
                 rval$orig_trip_record[[var_name]],
                 # updated value
-                all_input[[var_input_name]]
+                trip_editor_input[[var_input_name]]
                 )
         )
-        
+
         # create df with original and updated values
         compare_table <- rbind(compare_table,
                                compare_var)
       }
       # browser()
-      
+
       names(compare_table) <- c("Variable","Original Value","Updated Value")
-      
+
       # detect if values are modified
       rval$compare_table <- compare_table %>%
         mutate(mod=case_when(`Original Value`==`Updated Value`~0,
                              TRUE~1))
-      # print("complete compare table")
-      
+
+      # update trip
       trip <- NULL
       for(var_name in names(rval$orig_trip_record)){
         if(var_name %in% tripeditor.cols){
-          row <- as.data.frame(all_input[[paste0("data_edit-",var_name)]])
+          row <- as.data.frame(trip_editor_input[[paste0("data_edit-",var_name)]])
         } else{
           row <- as.data.frame(rval$orig_trip_record[[var_name]])
         }
-        
+
         if(is.null(trip)){
           trip <- row
         }
         else{
           trip <- cbind(trip, row)
         }
-        
+
       }
       names(trip) <- names(rval$orig_trip_record)
-      rval$update_trip <- trip
-      # print("complete update trip")
+      rval$updated_trip <- trip
     })
-    
-    # modal_revise_trip_server("button_revise",
-    #                          selected_recid_revise = reactive(rval$recid),
-    #                          updated_trip = reactive(rval$update_trip))
 
     observeEvent(input$clickupdate, {
       removeModal()
@@ -124,7 +125,7 @@ modal_update_trip_server <- function(id, all_input, selected_recid) {
     #   removeModal()
     #   modal_revise_trip_server("revise-trip",
     #                            selected_recid_revise = reactive(rval$recid),
-    #                            updated_trip = reactive(rval$update_trip))
+    #                            updated_trip = reactive(rval$updated_trip))
     # })
 
     output$updatebutton <- renderUI({
