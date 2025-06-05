@@ -210,19 +210,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
           ))}
       # if no row is selected
         else{
-          showModal(
-            modalDialog(
-              title = "0 records have been selected",
-              easy_close = TRUE,
-              "Please select a record from the table below to continue."
-            )
-          )
+          showModal( modal_warning_select_row )
         }
-      }
-
-      )
-
-
+      })
 
 
     output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") })
