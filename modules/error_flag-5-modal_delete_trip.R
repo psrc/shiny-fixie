@@ -1,7 +1,6 @@
 modal_delete_trip_ui <- function(id) {
   ns <- NS(id)
   
-  uiOutput(ns("editbutton"))
   
 }
 
@@ -15,7 +14,7 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
     })
     
     # data cleaning tools ----
-    observeEvent(input$clickedit, { showModal(
+    showModal(
       modalDialog(title = "Delete Trip",
                   
                   "Are you sure you want to delete this trip?",
@@ -26,9 +25,8 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
                                   width=12),
                   easyClose = TRUE
       )
-    ) })
+    ) 
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "(Delete trip)") }) 
                                              
   })  # end moduleServer
 }

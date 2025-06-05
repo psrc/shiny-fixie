@@ -1,7 +1,6 @@
 modal_new_trip_ui <- function(id) {
   ns <- NS(id)
   
-  uiOutput(ns("editbutton"))
   
 }
 
@@ -15,7 +14,7 @@ modal_new_trip_server <- function(id, thedata, selected_recid) {
     })
     
     # data cleaning tools ----
-    observeEvent(input$clickedit, { showModal(
+    showModal(
       modalDialog(title = "New Trip Editor",
                   
                   "This is where the trip editing panel going to be!",
@@ -26,9 +25,8 @@ modal_new_trip_server <- function(id, thedata, selected_recid) {
                                   width=12),
                   easyClose = TRUE
       )
-    ) })
+    ) 
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "(Add new trip)") })
     
   })  # end moduleServer
 }

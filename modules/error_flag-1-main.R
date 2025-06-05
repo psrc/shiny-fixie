@@ -41,19 +41,50 @@ edit_interface_server <- function(id, edit_persons) {
     })
     
     ## button to add new trip
-    modal_new_trip_server("button_new",       
-                          selected_recid = reactive(selected_row_recid()))
+    observeEvent(input$clickadd, {
+      if(!is.null(input$thetable_rows_selected)){
+        modal_new_trip_server("button_new",       
+                              selected_recid = reactive(selected_row_recid()))
+      }
+      else{
+        showModal(modal_row_not_selected)
+      }
+      
+    })
+    
 
     ## activate Edit Trip modal
-    modal_edit_trip_server("button_edit",     
-                           selected_recid = reactive(selected_row_recid()))
+    observeEvent(input$clickedit, {
+      if(!is.null(input$thetable_rows_selected)){
+        modal_edit_trip_server("button_edit",     
+                             selected_recid = reactive(selected_row_recid()))
+      }
+      else{
+        showModal(modal_row_not_selected)
+      }
+      
+    })
+    
     
     ## button to delete trip
-    modal_delete_trip_server("button_delete", 
-                             selected_recid = reactive(selected_row_recid()))
+    observeEvent(input$clickdelete, {
+      if(!is.null(input$thetable_rows_selected)){
+        modal_delete_trip_server("button_delete", 
+                                 selected_recid = reactive(selected_row_recid()))
+      }
+      else{
+        showModal(modal_row_not_selected)
+      }
+      
+    })
+    
     ## trip linking interface
-    modal_trip_linking_server("button_link",  
-                              selected_recid = reactive(selected_row_recid()))
+    observeEvent(input$clicklink, {
+      modal_trip_linking_server("button_link",  
+                                selected_recid = reactive(selected_row_recid()))
+      
+    })
+    
     
     # platform layout ----
     
@@ -72,9 +103,16 @@ edit_interface_server <- function(id, edit_persons) {
                      p("Select one trip in trip table below to edit"),
                      
                      div(class = "trip-buttons-panel",
-                         modal_new_trip_ui(ns('button_new')),
-                         modal_edit_trip_ui(ns('button_edit')),
-                         modal_delete_trip_ui(ns('button_delete'))
+                         
+                         actionButton(ns('clickadd'),
+                                      label = "Add new Trip"),
+                         
+                         actionButton(ns('clickedit'),
+                                      label = "Edit Trip"),
+                         
+                         actionButton(ns('clickdelete'),
+                                      label = "Delete Trip")
+                         
                          ) # end div
                      
                      ), # end wellpanel
@@ -82,7 +120,9 @@ edit_interface_server <- function(id, edit_persons) {
                    wellPanel(
                      
                      p("Select multiple consecutive trips in trip table below to link"),
-                     modal_trip_linking_ui(ns('button_link'))
+                     
+                     actionButton(ns('clicklink'),
+                                  label = "Link selected trips")
                      
                      ) # end wellpanel
                  )
