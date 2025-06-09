@@ -14,5 +14,5 @@ get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
     query <- paste0("select * from HHSurvey.",view_name)
   }
   
-  return(get_query(sql = query, db_name = "hhts_cleaning"))
+  return(get_query(sql = query, db_name = "hhts_cleaning_temporal"))
 }

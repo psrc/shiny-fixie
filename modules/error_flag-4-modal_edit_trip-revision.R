@@ -67,9 +67,8 @@ modal_revise_trip_server <- function(id, selected_recid_revise, updated_trip) {
             fluidRow(
               class = "bottom-spacing",
               # timestamps
-              # TODO: find better way to select date and time
-              column(6, textInputSimple(df = rval$updated_trip, var_name = ns("data_edit-depart_time_timestamp")),
-                     textInputSimple(df = rval$updated_trip, var_name = ns("data_edit-arrival_time_timestamp"))),
+              column(6, datetimeInputSimple(df = rval$updated_trip, var_name = ns("data_edit-depart_time_timestamp")),
+                     datetimeInputSimple(df = rval$updated_trip, var_name = ns("data_edit-arrival_time_timestamp"))),
               # trip distance
               column(6, numericInputSimple(df = rval$updated_trip, var_name = ns("data_edit-distance_miles"), min = 0))),
 
