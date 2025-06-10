@@ -70,14 +70,22 @@ modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
           }
           
           # Compare original datetime with combined updated value
+          # Handle datetime2(0) precision by truncating to seconds for comparison
           is_modified <- if(is.null(orig_val) || is.na(orig_val)) {
             !is.na(combined_datetime)
           } else if(is.na(combined_datetime)) {
             TRUE
           } else {
             tryCatch({
+              # Parse original datetime and truncate to seconds (matching datetime2(0))
               orig_datetime <- as.POSIXct(orig_val)
-              !identical(orig_datetime, combined_datetime)
+              orig_datetime_truncated <- as.POSIXct(format(orig_datetime, "%Y-%m-%d %H:%M:%S"))
+              
+              # Truncate combined datetime to seconds as well
+              combined_datetime_truncated <- as.POSIXct(format(combined_datetime, "%Y-%m-%d %H:%M:%S"))
+              
+              # Compare the truncated values
+              !identical(orig_datetime_truncated, combined_datetime_truncated)
             }, error = function(e) {
               TRUE  # If parsing fails, assume modified
             })

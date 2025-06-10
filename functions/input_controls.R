@@ -51,20 +51,27 @@ datetimeInputSimple <- function(df, var_name, label_name = NULL, ...){
   # Get the datetime value and parse it properly
   datetime_val <- df[1, c(var_str)]
   
-  # Parse datetime value
-  parsed_datetime <- if(is.null(datetime_val) || is.na(datetime_val)) {
-    Sys.time()  # Default to current time if no value
+  # Parse datetime value - handle datetime2(0) precision properly
+  if(is.null(datetime_val) || is.na(datetime_val)) {
+    # If no value, use empty defaults
+    date_part <- Sys.Date()
+    time_part <- ""
   } else {
     tryCatch({
-      as.POSIXct(datetime_val)
+      # Parse the datetime and ensure it matches datetime2(0) precision (seconds only)
+      parsed_datetime <- as.POSIXct(datetime_val)
+      # Truncate to seconds to match database precision
+      parsed_datetime <- as.POSIXct(format(parsed_datetime, "%Y-%m-%d %H:%M:%S"))
+      
+      # Extract date and time components
+      date_part <- as.Date(parsed_datetime)
+      time_part <- format(parsed_datetime, "%H:%M:%S")
     }, error = function(e) {
-      Sys.time()  # Default to current time if parsing fails
+      # If parsing fails, use current date and empty time
+      date_part <- Sys.Date()
+      time_part <- ""
     })
   }
-  
-  # Extract date and time components
-  date_part <- as.Date(parsed_datetime)
-  time_part <- format(parsed_datetime, "%H:%M:%S")
   
   # Create a container with both date and time inputs
   div(
