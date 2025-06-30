@@ -11,12 +11,17 @@ person_panel_server <- function(id, view_name) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    all_person_data <- get_data(view_name=view_name) # TODO: check back to make sure that this can be rerun when error is fixed
-    person_list <- reactive({ unique(all_person_data$personid) })
+    rval <- reactiveValues(error_type = NULL)
+    observe({
+      rval$error_type <- view_name()
+    })
+    
+    all_person_data <- get_data_reactive(view_name=reactive(rval$error_type)) # TODO: check back to make sure that this can be rerun when error is fixed
+    person_list <- reactive({ unique(all_person_data()$personid) })
     
     # show table: basic summary of selected person
     output$persontable <- DT::renderDT(
-      all_person_data %>% filter(personid == input$personID), 
+      all_person_data() %>% filter(personid == input$personID), 
       rownames = FALSE,
       options =list(ordering = F, dom = 't',  selection = 'single'))
     

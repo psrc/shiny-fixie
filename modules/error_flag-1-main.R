@@ -7,13 +7,18 @@ edit_interface_ui <- function(id) {
 }
 
 #' HTS data editor user interface
-edit_interface_server <- function(id, edit_persons) {
+edit_interface_server <- function(id, selected_error_type) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
+    rval <- reactiveValues(error_type = NULL)
+    observe({
+      rval$error_type <- selected_error_type()
+    })
+    
     # person control panel ----
     
-    personID <- person_panel_server("panel-person", view_name=edit_persons)
+    personID <- person_panel_server("panel-person", view_name=reactive(rval$error_type))
     
     # the trip table ----
     

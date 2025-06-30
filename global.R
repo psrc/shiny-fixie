@@ -30,13 +30,14 @@ codebook <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/old_
 
 
 # names of views for edits 
-# to add a tab: remember to also fix number of tabs in server/ui
-edit_persons_view_name <- c("person_all_test","person_all_error","person_too_long_at_dest","person_mode_1_missing")
+edit_persons_view_name <- list("All Persons" = "person_all_test",
+                               "All Errors" = "person_all_error",
+                               "Too Long at Dest." = "person_too_long_at_dest",
+                               "Missing mode_1" = "person_mode_1_missing")
 
 # columns showing in trip table
 view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles","mph","Error",
                "cotravelers","origin_purpose","dest_purpose","dest_name","duration_at_dest",
-               # "origin_coord","dest_coord",
                "recid","rc","elevate_issue")
 
 tripeditor.cols <- c("depart_time_timestamp","arrival_time_timestamp",

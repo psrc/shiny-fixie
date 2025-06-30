@@ -16,3 +16,21 @@ get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
   
   return(get_query(sql = query, db_name = "hhts_cleaning"))
 }
+
+
+get_data_reactive <- function(view_name){
+  # get person-level data from database for edit platform
+  
+  rval <- reactiveValues(view_name = NULL)
+  observe({
+    rval$view_name <- view_name()
+  })
+  
+  data <- reactive({ 
+    get_query(
+      sql = paste0("select * from HHSurvey.",rval$view_name), 
+      db_name = "hhts_cleaning") })
+
+  
+  return(data)
+}

@@ -31,19 +31,25 @@ shinyUI(
                div(class = "mainpage_title", 
                    "Shiny-Fixie"),
                
+               # TODO: do we still want an overview page?
+               # div(tabsetPanel(type = "pills",
+               #                 tabPanel("overview", overview_ui('tab_overview'))
+               #                 )),
+               
+               # select error type
+               div(
+                 selectInput("error_type",
+                             label = "Select Error Type:", 
+                             choices = edit_persons_view_name, 
+                             selected = "person_all_test")
+               ),
+               
                style = "display: flex;"
              ) # end div
       ) # end column
     ),
     
-    fluidRow(column(12, style='padding-left:25px; padding-right:50px;',
-                    tabsetPanel(type = "pills",
-                                tabPanel("overview", overview_ui('tab_overview')),
-                                tabPanel("all persons", edit_interface_ui('tab_error1')),
-                                tabPanel("all errors", edit_interface_ui('tab_error2')),
-                                tabPanel("too long at dest?", edit_interface_ui('tab_error3')),
-                                tabPanel("mode_1 missing", edit_interface_ui('tab_error4')))
-                    )),
+    fluidRow(column(12, edit_interface_ui('main_page') ))
     
     # tags$footer(footer_ui('psrcfooter'))
   

@@ -13,9 +13,9 @@ modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
                            orig_trip_record = NULL,
                            compare_table = NULL,
                            updated_trip = NULL
-                           )
+    )
     observeEvent(input$clickupdate, {
-
+      
       rval$recid <- selected_recid()
       rval$orig_trip_record <- get_data(view_name = "Trip", recid = rval$recid)
 
