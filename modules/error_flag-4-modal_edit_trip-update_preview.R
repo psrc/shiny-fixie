@@ -16,21 +16,18 @@ modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
     )
     observeEvent(input$clickupdate, {
       
+      # browser()
       rval$recid <- selected_recid()
       rval$orig_trip_record <- get_data(view_name = "Trip", recid = rval$recid)
-
-    })
-
-    observeEvent(input$clickupdate, {
-
-      modal_revise_trip_server("button_revise",
-                               selected_recid_revise = reactive(rval$recid),
-                               updated_trip = reactive(rval$updated_trip))
       
       # get all editable variables
       input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
 
-      # compare table
+      modal_revise_trip_server("button_revise",
+                               selected_recid_revise = reactive(rval$recid),
+                               updated_trip = reactive(rval$updated_trip))
+
+      # ---- create compare table ----
       compare_table <- NULL
       for(i in 1:length(tripeditor.cols)){
         # variable name
@@ -50,7 +47,6 @@ modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
         compare_table <- rbind(compare_table,
                                compare_var)
       }
-      # browser()
 
       names(compare_table) <- c("Variable","Original Value","Updated Value")
 
@@ -59,7 +55,7 @@ modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
         mutate(mod=case_when(`Original Value`==`Updated Value`~0,
                              TRUE~1))
 
-      # update trip
+      # ---- generate updated trip record ----
       trip <- NULL
       for(var_name in names(rval$orig_trip_record)){
         if(var_name %in% tripeditor.cols){
@@ -78,12 +74,9 @@ modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
       }
       names(trip) <- names(rval$orig_trip_record)
       rval$updated_trip <- trip
-    })
 
-    observeEvent(input$clickupdate, {
-      removeModal()
 
-      # print all comparison table
+      # ---- print all comparison table ----
       output$print_cols <- renderDT({
 
           datatable(rval$compare_table,
@@ -100,7 +93,8 @@ modal_update_trip_server <- function(id, trip_editor_input, selected_recid) {
             )
 
       })
-
+      
+      # ---- show update preview pane ----
       showModal(
         modalDialog(title = "Update Trip Record Preview",
                     #TODO: add trip summary
