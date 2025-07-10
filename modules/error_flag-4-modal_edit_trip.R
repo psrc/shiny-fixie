@@ -11,7 +11,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
-    rval <- reactiveValues(recid = NULL, trip_record = NULL)
+    rval <- reactiveValues(recid = NULL, trip_record = NULL, compare_table = NULL,updated_trip = NULL)
     observe({
       rval$recid <- selected_recid()
       rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
@@ -37,38 +37,29 @@ modal_edit_trip_server <- function(id, selected_recid) {
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
 
-        # featured buttons ----
+        # featured buttons
         modal_copy_latlong_server("button-copy_origin",
                                   lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
         modal_copy_latlong_server("button-copy_dest",
                                   lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
     
-        modal_update_trip_server("button-update_db",
-                                 trip_editor_input=input, selected_recid=reactive(rval$recid))
-    
         modal_dismiss_flag_server("button-dissmiss_flag")
-
-    
 
         showModal(
           modalDialog(title = "Trip Record Editor",
 
                       tagList(
 
-                        # show trip table ----
+                        # show trip table
                         div(
                           class = "bottom-spacing",
                           DT::DTOutput(ns("trip_summary"))
                         ),
 
-                        # variable editing list ----
-
                         ## time and distance ----
 
                         div(class = "modal-header",
                             "time and distance"),
-
-                        ## ----------------------
 
                         fluidRow(
                           class = "bottom-spacing",
@@ -84,30 +75,26 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
                         div(class = "modal-header",
                             "trip origin and destination"),
-
-                        # TODO: update lat/long if user edits
+                        
+                        # buttons for mapping in google maps
                         fluidRow(class = "bottom-spacing",
                           column(12,
                           actionButton_google_direction("get_directions", df = rval$trip_record)
-                          )
-                        ),
-
-                        ## --------------------------------
-
+                          )),
+                        
                         fluidRow(
-                          # button for mapping origin
                           column(12,
                                  actionButton_google_place("open_origin",
                                                            label = "Open origin location in Google Maps",
                                                            df = rval$trip_record,
                                                            lat_var_name = "origin_lat",
                                                            long_var_name = "origin_lng")
-                                 )
-                          ),
+                                 )),
+                        
                         fluidRow(class = "section-padding",
                                  # origin purpose
                                  column(5, selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-origin_purpose"))),
-                                 # destination label
+                                 # leave space
                                  column(3, ),
                                  # origin lat/long
                                  column(4,
@@ -116,12 +103,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                           column(6, numericInputSimple(df = rval$trip_record, var_name = ns("data_edit-origin_lng")))
                                         ),
                                         # button for copying origin lat/long to clipboard
-                                        fluidRow(
-                                          column(12,
-                                                 modal_copy_latlong_ui(ns('button-copy_origin')))
-                                        )
-                                 ) # end column
-                        ),
+                                        fluidRow( column(12,modal_copy_latlong_ui(ns('button-copy_origin'))) )
+                                        ) # end column
+                                 ),
 
                         fluidRow(
                           # button for mapping destination
@@ -153,7 +137,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
                         ## mode type ----
 
-                        fluidRow(column(5,
+                        fluidRow(column(4,
                                         div(class = "modal-header", "mode type"),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_1")),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_2")),
@@ -162,13 +146,13 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_acc")),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_egr"))
                                         ), # end column
-                                 column(7,
+                                 column(8,
                                         div(class = "modal-header", "travelers"),
-                                        column(7,selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-driver")),
+                                        column(6,selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-driver")),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-travelers_total")),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-travelers_hh")),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-travelers_nonhh"))),
-                                        column(5,
+                                        column(6,
                                            div("hhmembers"),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember1"), label_name = "1"),
                                            selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember2"), label_name = "2"),
@@ -196,7 +180,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       fluidRow(column(12,
                                       div(
                                         class = "trip-buttons-panel",
-                                        modal_update_trip_ui(ns("button-update_db")),
+                                        actionButton(ns("clickupdate"), label = "Preview Edits"),
                                         modal_dismiss_flag_ui(ns("button-dissmiss_flag"))
                                           )
                                       )),
@@ -214,6 +198,105 @@ modal_edit_trip_server <- function(id, selected_recid) {
           showModal( modal_warning_select_row )
         }
       })
+    
+    
+    # ---- show preview pane ----
+    observeEvent(input$clickupdate, {
+      
+      # get all editable variables
+      input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
+      
+      ## ---- create compare table ----
+      compare_table <- NULL
+      for(i in 1:length(tripeditor.cols)){
+        # variable name
+        var_name <- tripeditor.cols[i]
+        var_input_name <- input_tripeditor.cols[i]
+        
+        compare_var <- as.data.frame(
+          cbind(var_name,
+                # original value
+                rval$trip_record[[var_name]],
+                # updated value
+                input[[var_input_name]]
+          )
+        )
+        
+        # create df with original and updated values
+        compare_table <- rbind(compare_table,
+                               compare_var)
+      }
+      
+      names(compare_table) <- c("Variable","Original Value","Updated Value")
+      
+      # detect if values are modified
+      rval$compare_table <- compare_table %>%
+        mutate(mod=case_when(`Original Value`==`Updated Value`~0,
+                             TRUE~1))
+      
+      ## ---- generate updated trip record ----
+      trip <- NULL
+      for(var_name in names(rval$trip_record)){
+        if(var_name %in% tripeditor.cols){
+          row <- as.data.frame(input[[paste0("data_edit-",var_name)]])
+        } else{
+          row <- as.data.frame(rval$trip_record[[var_name]])
+        }
+        
+        if(is.null(trip)){
+          trip <- row
+        }
+        else{
+          trip <- cbind(trip, row)
+        }
+        
+      }
+      names(trip) <- names(rval$trip_record)
+      rval$updated_trip <- trip
+      
+      
+      ## ---- print all comparison table ----
+      output$print_cols <- renderDT({
+        
+        datatable(rval$compare_table,
+                  options =list(ordering = F,
+                                dom = 't',
+                                pageLength = -1,
+                                # hide mod column
+                                columnDefs = list(list(targets = 4,visible = FALSE)))
+        ) %>%
+          formatStyle(
+            'mod',
+            target = 'row',
+            backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
+          )
+        
+      })
+      
+      ## ---- modal dialog: show update preview pane ----
+      showModal(
+        modalDialog(title = "Update Trip Record Preview",
+                    #TODO: add trip summary
+                    div(
+                      DTOutput(ns('print_cols'))
+                    ),
+                    
+                    footer = div(
+                      style = "display: flex; justify-content: space-between;",
+                      # push changes to database
+                      actionButton(ns("clickpush"), label = "Apply Changes"),
+                      modalButton('Close')
+                    ),
+                    easyClose = TRUE,
+                    size = "l"
+        )
+      )
+      
+    })
+    
+    observeEvent(input$clickpush, {
+      removeModal()
+    })
 
 
     output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") })
