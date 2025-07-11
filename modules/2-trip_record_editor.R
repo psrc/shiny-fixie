@@ -362,7 +362,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       modalButton('No')
                     ),
                     easyClose = TRUE,
-                    size = "l")
+                    size = "l") 
         )
       
       # write update query
