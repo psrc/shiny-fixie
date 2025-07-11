@@ -86,8 +86,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         # buttons for mapping in google maps
                         fluidRow(class = "bottom-spacing",
                           column(12,
-                          actionButton_google_direction("get_directions", df = rval$trip_record)
-                          )),
+                                 actionButton_google_direction("get_directions", df = rval$trip_record)
+                                 )),
                         
                         fluidRow(
                           column(12,
@@ -264,12 +264,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
       
       compare_table <- rbind(compare_var, compare_table)
       
-      # names(compare_table) <- c("Variable","Original Value","Updated Value")
-      
       # detect if values are modified
       rval$compare_table <- compare_table %>%
         mutate(mod=case_when(`Original Value`==`Updated Value`~0,
-                             is.na(`Original Value`) & is.na(`Updated Value`)~0,
+                             is.na(`Original Value`) & is.na(`Updated Value`)~0, # for empty text inputs
                              TRUE~1))
       
       ## ---- generate updated trip record ----
