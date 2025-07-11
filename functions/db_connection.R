@@ -1,3 +1,4 @@
+# --- get data from database ----
 get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
   # get person-level data from database for edit platform
   
@@ -14,5 +15,10 @@ get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
     query <- paste0("select * from HHSurvey.",view_name)
   }
   
-  return(get_query(sql = query, db_name = "hhts_cleaning_temporal"))
+  return(get_query(sql = query, db_name = cleaning_database))
+}
+
+# ---- execute SQL query ----
+execute_query <- function(query){
+  sql_execute(query, db_name=cleaning_database)
 }

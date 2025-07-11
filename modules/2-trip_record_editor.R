@@ -338,9 +338,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     # ---- Update Data in Database ----
     observeEvent(input$clickpush, {
-      removeModal()
       
       # write update query
+      sproc_update_data()
       
     })
     

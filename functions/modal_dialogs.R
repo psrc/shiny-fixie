@@ -1,3 +1,4 @@
+# ---- Warning: select trip ----
 modal_warning_select_row <- modalDialog(
   title = "0 records have been selected",
   easy_close = TRUE,

@@ -29,6 +29,8 @@ sapply(function_files, source)
 codebook <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/old_stuff/data_deliverable_81823/codebook_guide/PSRC_Combined_Codebook_2023_08162023.xlsx", 
                               sheet = 'value_labels_2023')
 
+# database name
+cleaning_database <- "hhts_cleaning_temporal"
 
 # names of views for edits 
 edit_persons_view_name <- list("All Persons" = "person_all_test",
