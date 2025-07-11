@@ -17,3 +17,20 @@ sproc_remove_trip <- function(recid){
   sql_execute(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"), db_name=hhts_cleaning)
   
 }
+
+# ---- Dismiss error flag ----
+sproc_dismiss_flag <- function(recid){
+  
+  # sql_execute(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"), db_name=hhts_cleaning)
+  
+  showModal(
+    modalDialog(title = "Successfully Dismissed Error Flag",
+                footer = div(
+                  style = "display: flex; justify-content: space-between;",
+                  modalButton('Ok')
+                ),
+                easyClose = TRUE,
+                size = "l")
+  )
+  
+}

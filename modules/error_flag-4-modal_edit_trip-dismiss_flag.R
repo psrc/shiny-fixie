@@ -5,29 +5,38 @@ modal_dismiss_flag_ui <- function(id) {
   
 }
 
-modal_dismiss_flag_server <- function(id) {
+modal_dismiss_flag_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    # output$print_row <- renderPrint({
-    #   cat('These rows were selected:\n\n')
-    #   cat(reactive(selected_recid))
-    # })
+    rval <- reactiveValues(recid = NULL)
+    
+    output$print_row <- renderPrint({
+      cat('These rows were selected:\n\n')
+      cat(rval$recid)
+    })
     
     # data cleaning tools ----
     observeEvent(input$clickdismiss, { 
+      
+      rval$recid <- selected_recid()
+      
       showModal(
         modalDialog(title = "Dismiss flag",
                     
                     "Are you sure you dismiss this error flag?",
-                    # div(verbatimTextOutput(ns('print_row'))),
+                    div(verbatimTextOutput(ns('print_row'))),
                     
-                    footer = column(modalButton('Yes'),
+                    footer = column(actionButton(ns("clickconfirm"), label = 'Yes'),
                                     modalButton('No'),
                                     width=12),
                     easyClose = TRUE
         )
     ) })
+    
+    # observeEvent(input$clickconfirm, {
+    #   
+    # })
     
     output$dismissbutton <- renderUI({ actionButton(ns("clickdismiss"), "(Dismiss flag)") })
     

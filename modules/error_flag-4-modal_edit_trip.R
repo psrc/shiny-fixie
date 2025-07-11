@@ -23,7 +23,12 @@ modal_edit_trip_server <- function(id, selected_recid) {
     output$trip_summary <- DT::renderDT(
 
       rval$trip_record %>%
-        select(hhid,pernum,person_id,tripnum,recid),
+        select(hhid,pernum,person_id,tripnum,recid) %>%
+        left_join(
+          get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
+            select(recid, error_flag),
+          by = "recid"
+          ),
 
       rownames = FALSE,
       options =list(ordering = F,
@@ -45,8 +50,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                   lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
         modal_copy_latlong_server("button-copy_dest",
                                   lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
-    
-        modal_dismiss_flag_server("button-dissmiss_flag")
 
         showModal(
           modalDialog(title = "Trip Record Editor",
@@ -185,12 +188,12 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       fluidRow(column(12,
                                       div(
                                         class = "trip-buttons-panel",
-                                        actionButton(ns("clickupdate"), label = "Preview Edits"),
-                                        modal_dismiss_flag_ui(ns("button-dissmiss_flag"))
+                                        actionButton(ns("clickupdate"), label = "Preview Edits")
                                           )
                                       )),
                       footer = column(12,
-                                      modalButton('(Dismiss flag)'),
+                                      class = "trip-buttons-panel",
+                                      actionButton(ns("clickdissmissflag"), label = "Dismiss Flag"),
                                       modalButton('(Delete trip)'),
                                       modalButton('(Split from traces)'),
                                       modalButton('Cancel')
@@ -311,6 +314,12 @@ modal_edit_trip_server <- function(id, selected_recid) {
       ## ---- modal dialog: show update preview pane ----
       showModal(
         modalDialog(title = "Update Trip Record Preview",
+                    
+                    # show trip table
+                    div(
+                      class = "bottom-spacing",
+                      DT::DTOutput(ns("trip_summary"))
+                    ),
                     #TODO: add trip summary
                     div(
                       DTOutput(ns('print_cols'))
@@ -329,9 +338,46 @@ modal_edit_trip_server <- function(id, selected_recid) {
       
     })
     
+    # ---- Update Data in Database ----
     observeEvent(input$clickpush, {
       removeModal()
+      
+      # write update query
+      
     })
+    
+    # ---- Dismiss Flag ----
+    observeEvent(input$clickdissmissflag, {
+      
+      showModal(
+        modalDialog(title = "Are you sure you dismiss this error flag?",
+                    
+                    # show trip table
+                    div(
+                      class = "bottom-spacing",
+                      DT::DTOutput(ns("trip_summary"))
+                    ),
+                    footer = div(
+                      style = "display: flex; justify-content: space-between;",
+                      # push changes to database
+                      actionButton(ns("clickdissmissflag_action"), label = 'Yes'),
+                      modalButton('No')
+                    ),
+                    easyClose = TRUE,
+                    size = "l")
+        )
+      
+      # write update query
+      
+    })
+    
+    ## ---- Confirm Dismiss Flag ----
+    observeEvent(input$clickdissmissflag_action, {
+      
+      sproc_dismiss_flag(rval$recid)
+      
+    })
+    
 
 
     output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") })
