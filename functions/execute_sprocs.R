@@ -14,7 +14,17 @@ sproc_recalculate_after_edit <- function(person_id){
 # ---- Trip deletion ----
 sproc_remove_trip <- function(recid){
   
-  sql_execute(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"), db_name=hhts_cleaning)
+  # sql_execute(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"), db_name=hhts_cleaning)
+  
+  showModal(
+    modalDialog(title = "Successfully deleted trip",
+                footer = div(
+                  style = "display: flex; justify-content: space-between;",
+                  modalButton('Ok')
+                ),
+                easyClose = TRUE,
+                size = "l")
+  )
   
 }
 
@@ -24,7 +34,7 @@ sproc_dismiss_flag <- function(recid){
   # sql_execute(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"), db_name=hhts_cleaning)
   
   showModal(
-    modalDialog(title = "Successfully Dismissed Error Flag",
+    modalDialog(title = "Successfully dismissed error flag",
                 footer = div(
                   style = "display: flex; justify-content: space-between;",
                   modalButton('Ok')

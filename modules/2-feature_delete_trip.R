@@ -15,20 +15,25 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
     })
     
     # data cleaning tools ----
-    observeEvent(input$clickedit, { showModal(
-      modalDialog(title = "Delete Trip",
-                  
-                  "Are you sure you want to delete this trip?",
-                  div(verbatimTextOutput(ns('print_row'))),
-                  
-                  footer = column(modalButton('Cancel'),
-                                  modalButton('Delete Trip'), # TODO: replace delete button
-                                  width=12),
-                  easyClose = TRUE
-      )
-    ) })
+    observeEvent(input$clickedit, { 
+      showModal(
+        modalDialog(title = "Delete Trip",
+                    
+                    "Are you sure you want to delete this trip?",
+                    div(verbatimTextOutput(ns('print_row'))),
+                    
+                    footer = column(actionButton(ns("clickdelete"), label = 'Yes'), 
+                                    modalButton('No'),
+                                    width=12),
+                    easyClose = TRUE)
+        ) 
+      })
+    
+    observeEvent(input$clickdelete, { 
+      sproc_remove_trip(selected_recid())
+      })
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "(Delete trip)") }) 
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Delete trip") }) 
                                              
   })  # end moduleServer
 }

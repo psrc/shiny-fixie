@@ -348,7 +348,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickdissmissflag, {
       
       showModal(
-        modalDialog(title = "Are you sure you dismiss this error flag?",
+        modalDialog(title = "Are you sure you want to dismiss this error flag?",
                     
                     # show trip table
                     div(
