@@ -16,15 +16,7 @@ sproc_remove_trip <- function(recid){
   
   # execute_query(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"))
   
-  showModal(
-    modalDialog(title = "Successfully deleted trip",
-                footer = div(
-                  style = "display: flex; justify-content: space-between;",
-                  modalButton('Ok')
-                ),
-                easyClose = TRUE,
-                size = "l")
-  )
+  showModal( modal_confirm_action("Successfully deleted trip") )
   
 }
 
@@ -33,15 +25,7 @@ sproc_dismiss_flag <- function(recid){
   
   # execute_query(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"))
   
-  showModal(
-    modalDialog(title = "Successfully dismissed error flag",
-                footer = div(
-                  style = "display: flex; justify-content: space-between;",
-                  modalButton('Ok')
-                ),
-                easyClose = TRUE,
-                size = "l")
-  )
+  showModal( modal_confirm_action("Successfully dismissed error flag") )
   
 }
 
@@ -52,14 +36,6 @@ sproc_update_data <- function(){
   
   # execute_query(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"))
   
-  showModal(
-    modalDialog(title = "Successfully updated trip",
-                footer = div(
-                  style = "display: flex; justify-content: space-between;",
-                  modalButton('Ok')
-                ),
-                easyClose = TRUE,
-                size = "l")
-  )
+  showModal( modal_confirm_action("Successfully updated trip") )
   
 }
