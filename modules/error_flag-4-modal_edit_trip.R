@@ -11,7 +11,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
-    rval <- reactiveValues(recid = NULL, trip_record = NULL, compare_table = NULL,updated_trip = NULL)
+    rval <- reactiveValues(recid = NULL, 
+                           trip_record = NULL, 
+                           compare_table = NULL,
+                           updated_trip = NULL)
     observe({
       rval$recid <- selected_recid()
       rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
@@ -65,10 +68,11 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           class = "bottom-spacing",
                           # timestamps
                           # TODO: find better way to select date and time
-                          column(6, textInputSimple(df = rval$trip_record, var_name = ns("data_edit-depart_time_timestamp")),
-                                    textInputSimple(df = rval$trip_record, var_name = ns("data_edit-arrival_time_timestamp"))),
+                          column(7, 
+                                 dateTimeInput(ns("data_edit-depart_time_timestamp"), df = rval$trip_record),
+                                 dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$trip_record)),
                           # trip distance
-                          column(6, numericInputSimple(df = rval$trip_record, var_name = ns("data_edit-distance_miles"), min = 0))),
+                          column(5, numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0))),
 
 
                         ## trip origin and destination ----
@@ -93,14 +97,14 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         
                         fluidRow(class = "section-padding",
                                  # origin purpose
-                                 column(5, selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-origin_purpose"))),
+                                 column(5, selectInputSingle(ns("data_edit-origin_purpose"), df = rval$trip_record)),
                                  # leave space
                                  column(3, ),
                                  # origin lat/long
                                  column(4,
                                         fluidRow(
-                                          column(6, numericInputSimple(df = rval$trip_record, var_name = ns("data_edit-origin_lat"))),
-                                          column(6, numericInputSimple(df = rval$trip_record, var_name = ns("data_edit-origin_lng")))
+                                          column(6, numericInputSimple(ns("data_edit-origin_lat"), df = rval$trip_record)),
+                                          column(6, numericInputSimple(ns("data_edit-origin_lng"), df = rval$trip_record))
                                         ),
                                         # button for copying origin lat/long to clipboard
                                         fluidRow( column(12,modal_copy_latlong_ui(ns('button-copy_origin'))) )
@@ -119,13 +123,13 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           ),
                         fluidRow(class = "section-padding",
                           # destination purpose
-                          column(5, selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-dest_purpose"))),
+                          column(5, selectInputSingle(ns("data_edit-dest_purpose"), df = rval$trip_record)),
                           # destination label
-                          column(3, textInputSimple(df = rval$trip_record, var_name = ns("data_edit-dest_purpose_other"))),
+                          column(3, textInputSimple(ns("data_edit-dest_purpose_other"), df = rval$trip_record)),
                           # destination lat/long
                           column(4,
-                                 fluidRow(column(6, numericInputSimple(df = rval$trip_record, var_name = ns("data_edit-dest_lat"))),
-                                          column(6, numericInputSimple(df = rval$trip_record, var_name = ns("data_edit-dest_lng")))),
+                                 fluidRow(column(6, numericInputSimple(ns("data_edit-dest_lat"), df = rval$trip_record)),
+                                          column(6, numericInputSimple(ns("data_edit-dest_lng"), df = rval$trip_record))),
                                  # button for copying destination lat/long to clipboard
                                  fluidRow(
                                    column(12,
@@ -139,29 +143,30 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
                         fluidRow(column(4,
                                         div(class = "modal-header", "mode type"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_1")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_2")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_3")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_4")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_acc")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-mode_egr"))
+                                           selectInputSingle(ns("data_edit-mode_1"), df = rval$trip_record),
+                                           selectInputSingle(ns("data_edit-mode_2"), df = rval$trip_record),
+                                           selectInputSingle(ns("data_edit-mode_3"), df = rval$trip_record),
+                                           selectInputSingle(ns("data_edit-mode_4"), df = rval$trip_record),
+                                           selectInputSingle(ns("data_edit-mode_acc"), df = rval$trip_record),
+                                           selectInputSingle(ns("data_edit-mode_egr"), df = rval$trip_record)
                                         ), # end column
                                  column(8,
                                         div(class = "modal-header", "travelers"),
-                                        column(6,selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-driver")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-travelers_total")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-travelers_hh")),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-travelers_nonhh"))),
+                                        column(6,
+                                               selectInputSingle(ns("data_edit-driver"), df = rval$trip_record),
+                                               selectInputSingle(ns("data_edit-travelers_total"), df = rval$trip_record),
+                                               selectInputSingle(ns("data_edit-travelers_hh"), df = rval$trip_record),
+                                               selectInputSingle(ns("data_edit-travelers_nonhh"), df = rval$trip_record)),
                                         column(6,
                                            div("hhmembers"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember1"), label_name = "1"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember2"), label_name = "2"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember3"), label_name = "3"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember4"), label_name = "4"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember5"), label_name = "5"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember6"), label_name = "6"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember7"), label_name = "7"),
-                                           selectInputSingle(df = rval$trip_record, var_name = ns("data_edit-hhmember8"), label_name = "8"))
+                                           selectInputSingle(ns("data_edit-hhmember1"), df = rval$trip_record, label_name = "1"),
+                                           selectInputSingle(ns("data_edit-hhmember2"), df = rval$trip_record, label_name = "2"),
+                                           selectInputSingle(ns("data_edit-hhmember3"), df = rval$trip_record, label_name = "3"),
+                                           selectInputSingle(ns("data_edit-hhmember4"), df = rval$trip_record, label_name = "4"),
+                                           selectInputSingle(ns("data_edit-hhmember5"), df = rval$trip_record, label_name = "5"),
+                                           selectInputSingle(ns("data_edit-hhmember6"), df = rval$trip_record, label_name = "6"),
+                                           selectInputSingle(ns("data_edit-hhmember7"), df = rval$trip_record, label_name = "7"),
+                                           selectInputSingle(ns("data_edit-hhmember8"), df = rval$trip_record, label_name = "8"))
                                         ) # end column
                                  ), # fluidRow
 
@@ -169,8 +174,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
                         fluidRow(
                           column(5,
-                                 textInputSimple(df = rval$trip_record,
-                                                 var_name = ns("data_edit-psrc_comment"),
+                                 textInputSimple(ns("data_edit-psrc_comment"),
+                                                 df = rval$trip_record,
                                                  label_name = "Add comment:")
                                  )
                         )
@@ -200,7 +205,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
       })
     
     
-    # ---- show preview pane ----
+    # ---- Show Preview Pane & Apply Changes ----
     observeEvent(input$clickupdate, {
       
       # get all editable variables
@@ -213,12 +218,22 @@ modal_edit_trip_server <- function(id, selected_recid) {
         var_name <- tripeditor.cols[i]
         var_input_name <- input_tripeditor.cols[i]
         
+        # updated value
+        if(input[[var_input_name]] == ""){
+          # if text inputs like dest_purpose_other, psrc_comment are kept empty, the output would be ""
+          # change to NA to match DB value
+          updated_value <- NA
+        }
+        else{
+          updated_value <- input[[var_input_name]]
+        }
+        
         compare_var <- as.data.frame(
-          cbind(var_name,
+          cbind(Variable = var_name,
                 # original value
-                rval$trip_record[[var_name]],
+                `Original Value` = rval$trip_record[[var_name]],
                 # updated value
-                input[[var_input_name]]
+                `Updated Value` = updated_value
           )
         )
         
@@ -226,12 +241,32 @@ modal_edit_trip_server <- function(id, selected_recid) {
         compare_table <- rbind(compare_table,
                                compare_var)
       }
+      ## ---- process datetime ----
       
-      names(compare_table) <- c("Variable","Original Value","Updated Value")
+      # updated timestamps
+      depart_datetime <- paste(input[["data_edit-depart_time_timestamp_date"]],
+                               strftime(input[["data_edit-depart_time_timestamp_time"]], format="%H:%M:%S"))
+      arrival_datetime <- paste(input[["data_edit-arrival_time_timestamp_date"]],
+                                strftime(input[["data_edit-arrival_time_timestamp_time"]], format="%H:%M:%S"))
+      
+      compare_var <- as.data.frame(
+        cbind(Variable = c("depart_time_timestamp", "arrival_time_timestamp"),
+              # original value
+              `Original Value` = c(as.character(format(rval$trip_record[["depart_time_timestamp"]], "%Y-%m-%d %H:%M:%S")),
+                                   as.character(format(rval$trip_record[["arrival_time_timestamp"]], "%Y-%m-%d %H:%M:%S"))),
+              # updated value
+              `Updated Value` = c(depart_datetime, arrival_datetime)
+              )
+        )
+      
+      compare_table <- rbind(compare_var, compare_table)
+      
+      # names(compare_table) <- c("Variable","Original Value","Updated Value")
       
       # detect if values are modified
       rval$compare_table <- compare_table %>%
         mutate(mod=case_when(`Original Value`==`Updated Value`~0,
+                             is.na(`Original Value`) & is.na(`Updated Value`)~0,
                              TRUE~1))
       
       ## ---- generate updated trip record ----
