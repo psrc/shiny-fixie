@@ -9,10 +9,31 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    output$print_row <- renderPrint({
-      cat('These rows were selected:\n\n')
-      cat(selected_recid())
+    rval <- reactiveValues(recid = NULL, 
+                           trip_record = NULL)
+    observe({
+      rval$recid <- selected_recid()
+      rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
     })
+    
+    output$trip_summary <- DT::renderDT(
+      
+      rval$trip_record %>%
+        select(hhid,pernum,person_id,tripnum,recid) %>%
+        left_join(
+          get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
+            select(recid, error_flag),
+          by = "recid"
+        ),
+      
+      rownames = FALSE,
+      options =list(ordering = F,
+                    dom = 't',
+                    selection = 'single',
+                    pageLength =-1)
+      
+    )
+    
     
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
@@ -20,7 +41,11 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
         modalDialog(title = "Delete Trip",
                     
                     "Are you sure you want to delete this trip?",
-                    div(verbatimTextOutput(ns('print_row'))),
+                    # show trip table
+                    div(
+                      class = "bottom-spacing",
+                      DT::DTOutput(ns("trip_summary"))
+                    ),
                     
                     footer = column(actionButton(ns("clickdelete"), label = 'Yes'), 
                                     modalButton('No'),
