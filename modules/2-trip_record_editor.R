@@ -150,6 +150,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                            selectInputSingle(ns("data_edit-mode_2"), df = rval$trip_record),
                                            selectInputSingle(ns("data_edit-mode_3"), df = rval$trip_record),
                                            selectInputSingle(ns("data_edit-mode_4"), df = rval$trip_record),
+                                           textInputSimple(ns("data_edit-mode_other_specify"), df = rval$trip_record),
                                            selectInputSingle(ns("data_edit-mode_acc"), df = rval$trip_record),
                                            selectInputSingle(ns("data_edit-mode_egr"), df = rval$trip_record)
                                         ), # end column

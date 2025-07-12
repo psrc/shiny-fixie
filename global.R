@@ -44,7 +44,7 @@ view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles"
                "recid","rc","elevate_issue")
 
 tripeditor.cols <- c(#"depart_time_timestamp","arrival_time_timestamp",
-                     "mode_1","mode_2","mode_3","mode_4","mode_acc","mode_egr",
+                     "mode_1","mode_2","mode_3","mode_4","mode_other_specify","mode_acc","mode_egr",
                      "origin_purpose","dest_purpose","dest_purpose_other",
                      "distance_miles","origin_lat","origin_lng","dest_lat","dest_lng",
                      "driver","travelers_total","travelers_hh","travelers_nonhh",
