@@ -370,9 +370,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     ## ---- Confirm Dismiss Flag ----
     observeEvent(input$clickdissmissflag_action, {
-      
+
       # executes dismiss flag and show success message
-      sproc_dismiss_flag(rval$recid)
+      sproc_dismiss_flag(rval$recid, rval$trip_record[["person_id"]])
       
     })
     
