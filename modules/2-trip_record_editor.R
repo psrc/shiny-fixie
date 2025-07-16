@@ -366,13 +366,12 @@ modal_edit_trip_server <- function(id, selected_recid) {
                     size = "l") 
         )
       
-      # write update query
-      
     })
     
     ## ---- Confirm Dismiss Flag ----
     observeEvent(input$clickdissmissflag_action, {
       
+      # executes dismiss flag and show success message
       sproc_dismiss_flag(rval$recid)
       
     })

@@ -23,7 +23,8 @@ sproc_remove_trip <- function(recid){
 # ---- Dismiss error flag ----
 sproc_dismiss_flag <- function(recid){
   
-  # execute_query(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"))
+  # execute HHSurvey.dismiss_flag stored procedure
+  execute_query(paste0("EXECUTE HHSurvey.dismiss_flag @target_recid = '", recid, "';"))
   
   showModal( modal_confirm_action("Successfully dismissed error flag") )
   
