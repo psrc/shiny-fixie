@@ -29,10 +29,14 @@ person_panel_server <- function(id, view_name) {
       tagList(
         wellPanel(style ='padding-left:25px; padding-right:25px;',
                   fluidRow(column(6, 
-                                  selectInput( inputId = ns("personID"),  
-                                               label="Select Person:",  
-                                               choices=person_list(),  
-                                               selected = person_list()[1] )
+                                  selectizeInput(inputId = ns("personID"), 
+                                                 label = "Select Person:",
+                                                 choices = person_list(),
+                                                 selected = person_list()[1])
+                                  # selectInput( inputId = ns("personID"),  
+                                  #              label="Select Person:",  
+                                  #              choices=person_list(),  
+                                  #              selected = person_list()[1] )
                                   ) # end column
                            ), # end fluidRow
                   fluidRow(column(12, 
