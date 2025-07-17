@@ -48,14 +48,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
                     pageLength =-1)
 
       )
-
-    # observeEvent(input$clickedit,{
-    #   toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table()$error_flag), asis = TRUE)
-    # })
     
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
-      # browser()
 
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
