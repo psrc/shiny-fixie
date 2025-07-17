@@ -15,29 +15,44 @@ modal_edit_trip_server <- function(id, selected_recid) {
                            trip_record = NULL, 
                            compare_table = NULL,
                            updated_trip = NULL)
-    
-    
+
     # data validation
     iv <- InputValidator$new()
-    # origin
-    iv$add_rule("data_edit-origin_lat", sv_lte(90))
-    iv$add_rule("data_edit-origin_lat", sv_gte(-90))
-    iv$add_rule("data_edit-origin_lng", sv_lte(180))
-    iv$add_rule("data_edit-origin_lng", sv_gte(-180))
-    # destination
-    iv$add_rule("data_edit-dest_lat", sv_lte(90))
-    iv$add_rule("data_edit-dest_lat", sv_gte(-90))
-    iv$add_rule("data_edit-dest_lng", sv_lte(180))
-    iv$add_rule("data_edit-dest_lng", sv_gte(-180))
-    # distance
-    iv$add_rule("data_edit-distance_miles", sv_gte(0))
-    
-    iv$enable()
 
 
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
-      # browser()
+      # browser()    
+      
+      # data validation rules
+      # origin
+      iv$add_rule("data_edit-origin_lat", sv_lte(90))
+      iv$add_rule("data_edit-origin_lat", sv_gte(-90))
+      iv$add_rule("data_edit-origin_lng", sv_lte(180))
+      iv$add_rule("data_edit-origin_lng", sv_gte(-180))
+      # destination
+      iv$add_rule("data_edit-dest_lat", sv_lte(90))
+      iv$add_rule("data_edit-dest_lat", sv_gte(-90))
+      iv$add_rule("data_edit-dest_lng", sv_lte(180))
+      iv$add_rule("data_edit-dest_lng", sv_gte(-180))
+      # distance
+      iv$add_rule("data_edit-distance_miles", sv_gte(0))
+      # arrival time later than departure time
+      iv$add_rule("data_edit-arrival_time_timestamp_time", function(value) {
+        
+        depart_datetime_r <- as.POSIXct(paste(input[["data_edit-depart_time_timestamp_date"]],
+                                              strftime(input[["data_edit-depart_time_timestamp_time"]], format="%H:%M:%S"))
+                                        )
+        arrival_datetime_r <- as.POSIXct(paste(input[["data_edit-arrival_time_timestamp_date"]],
+                                               strftime(input[["data_edit-arrival_time_timestamp_time"]], format="%H:%M:%S"))
+                                         )
+
+        if (depart_datetime_r >= arrival_datetime_r) {
+            "Arrival time must be later than departure time"
+        }
+      })
+      
+      iv$enable()
 
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
@@ -176,7 +191,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                         div(class = "modal-header", "travelers"),
                                         column(6,
                                                selectInputSingle(ns("data_edit-driver"), df = rval$trip_record),
-                                               selectInputSingle(ns("data_edit-travelers_total"), df = rval$trip_record),
                                                selectInputSingle(ns("data_edit-travelers_hh"), df = rval$trip_record),
                                                selectInputSingle(ns("data_edit-travelers_nonhh"), df = rval$trip_record)),
                                         column(6,
