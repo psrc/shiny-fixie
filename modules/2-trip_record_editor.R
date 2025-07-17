@@ -36,7 +36,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
       iv$add_rule("data_edit-dest_lng", sv_lte(180))
       iv$add_rule("data_edit-dest_lng", sv_gte(-180))
       # distance
-      iv$add_rule("data_edit-distance_miles", sv_gte(0))
+      iv$add_rule("data_edit-distance_miles", sv_gt(0))
       # arrival time later than departure time
       iv$add_rule("data_edit-arrival_time_timestamp_time", function(value) {
         
