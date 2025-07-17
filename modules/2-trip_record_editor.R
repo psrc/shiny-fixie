@@ -15,6 +15,24 @@ modal_edit_trip_server <- function(id, selected_recid) {
                            trip_record = NULL, 
                            compare_table = NULL,
                            updated_trip = NULL)
+    
+    
+    # data validation
+    iv <- InputValidator$new()
+    # origin
+    iv$add_rule("data_edit-origin_lat", sv_lte(90))
+    iv$add_rule("data_edit-origin_lat", sv_gte(-90))
+    iv$add_rule("data_edit-origin_lng", sv_lte(180))
+    iv$add_rule("data_edit-origin_lng", sv_gte(-180))
+    # destination
+    iv$add_rule("data_edit-dest_lat", sv_lte(90))
+    iv$add_rule("data_edit-dest_lat", sv_gte(-90))
+    iv$add_rule("data_edit-dest_lng", sv_lte(180))
+    iv$add_rule("data_edit-dest_lng", sv_gte(-180))
+    # distance
+    iv$add_rule("data_edit-distance_miles", sv_gte(0))
+    
+    iv$enable()
 
 
     # Trip Record Editor ----
@@ -211,6 +229,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     # ---- Show Preview Pane & Apply Changes ----
     observeEvent(input$clickupdate, {
+      
+      # Don't proceed if any input is invalid
+      req(iv$is_valid())
       
       # get all editable variables
       input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
