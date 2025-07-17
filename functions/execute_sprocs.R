@@ -14,7 +14,7 @@ sproc_recalculate_after_edit <- function(person_id){
 # ---- Trip deletion ----
 sproc_remove_trip <- function(recid){
   
-  # execute_query(paste0("EXECUTE HHSurvey.remove_trip @target_recid = '", recid, "';"))
+  # execute_query(glue("EXECUTE HHSurvey.remove_trip @target_recid = {recid};"))
   
   showModal( modal_confirm_action("Successfully deleted trip") )
   
@@ -36,7 +36,7 @@ sproc_update_data <- function(recid, edit_list){
   # TODO: specify data type for each variable
   all_variable_edits <- paste(names(edit_list), edit_list, sep = " = ", collapse = ", ")
 
-  execute_query(glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};"))
+  # execute_query(glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};"))
   
   showModal( modal_confirm_action("Successfully updated trip") )
   
