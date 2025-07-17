@@ -13,6 +13,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
     rval <- reactiveValues(recid = NULL, 
                            trip_record = NULL, 
+                           trip_summary_table = NULL,
                            compare_table = NULL,
                            updated_trip = NULL)
 
@@ -60,25 +61,17 @@ modal_edit_trip_server <- function(id, selected_recid) {
         rval$recid <- selected_recid()
         rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
         
-        trip_summary_table <- reactive({
-          # browser()
-          rval$trip_record %>%
-            select(hhid,pernum,person_id,tripnum,recid) %>%
-            left_join(
-              get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
-                select(recid, error_flag),
-              by = "recid")
-        })
+        rval$trip_summary_table <- rval$trip_record %>%
+          select(hhid,pernum,person_id,tripnum,recid) %>%
+          left_join(
+            get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
+              select(recid, error_flag),
+            by = "recid")
+            
         
         output$trip_summary <- DT::renderDT(
           
-          rval$trip_record %>%
-            select(hhid,pernum,person_id,tripnum,recid) %>%
-            left_join(
-              get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
-                select(recid, error_flag),
-              by = "recid"
-            ),
+          rval$trip_summary_table,
           
           rownames = FALSE,
           options =list(ordering = F,
@@ -95,7 +88,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                   lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
         
         observe({
-          toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table()$error_flag))
+          toggleState(id = "clickdissmissflag", condition = !is.na(rval$trip_summary_table[['error_flag']]))
         })
         
         showModal(
