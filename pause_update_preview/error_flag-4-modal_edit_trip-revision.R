@@ -12,26 +12,25 @@ modal_revise_trip_server <- function(id, selected_recid_revise, updated_trip) {
     ns <- session$ns
 
     rval <- reactiveValues(recid = NULL, updated_trip=NULL)
-    observe({
-      rval$recid <- selected_recid_revise()
-      rval$updated_trip <- updated_trip()
-    })
-
-    # show basic trip information ----
-    output$trip_summary <- DT::renderDT({
-
-      df <- rval$updated_trip %>%
-        select(hhid, pernum, person_id, tripnum, recid)
-
-      datatable(df,
-                rownames = FALSE,
-                options =list(ordering = F, dom = 't',  selection = 'single', pageLength =-1)
-      )
-    })
 
     # Trip Record Editor ----
 
     observeEvent(input$clickrevise, {
+      
+      rval$recid <- selected_recid_revise()
+      rval$updated_trip <- updated_trip()
+      
+      # show basic trip information ----
+      output$trip_summary <- DT::renderDT({
+        
+        df <- rval$updated_trip %>%
+          select(hhid, pernum, person_id, tripnum, recid)
+        
+        datatable(df,
+                  rownames = FALSE,
+                  options =list(ordering = F, dom = 't',  selection = 'single', pageLength =-1)
+        )
+      })
 
       # featured buttons ----
       modal_copy_latlong_server("button-copy_origin",

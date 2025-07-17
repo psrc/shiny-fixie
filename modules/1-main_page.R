@@ -23,9 +23,7 @@ edit_interface_server <- function(id, selected_error_type) {
     # the trip table ----
     
     # person data from database
-    edit_dt <- reactive({
-      get_data(person_id = personID())
-      })
+    edit_dt <- reactive({ get_data(person_id = personID()) })
     
     output$thetable <- DT::renderDataTable(
       
@@ -41,9 +39,7 @@ edit_interface_server <- function(id, selected_error_type) {
     
     # data cleaning tools ----
     
-    selected_row_recid <- reactive({
-      edit_dt()[input$thetable_rows_selected, "recid"]
-    })
+    selected_row_recid <- reactive({ edit_dt()[input$thetable_rows_selected, "recid"] })
     
     ## button to add new trip
     modal_new_trip_server("button_new",       

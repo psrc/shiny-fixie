@@ -11,17 +11,18 @@ person_panel_server <- function(id, view_name) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    rval <- reactiveValues(error_type = NULL)
+    rval <- reactiveValues(error_type = NULL, all_person_data = NULL, person_list = NULL)
     observe({
       rval$error_type <- view_name()
+      rval$all_person_data <- get_data(view_name=rval$error_type) # TODO: check back to make sure that this can be rerun when error is fixed
+      rval$person_list <- unique(rval$all_person_data[["personid"]])
     })
     
-    all_person_data <- get_data_reactive(view_name=reactive(rval$error_type)) # TODO: check back to make sure that this can be rerun when error is fixed
-    person_list <- reactive({ unique(all_person_data()$personid) })
+    
     
     # show table: basic summary of selected person
     output$persontable <- DT::renderDT(
-      all_person_data() %>% filter(personid == input$personID), 
+      rval$all_person_data %>% filter(personid == input$personID), 
       rownames = FALSE,
       options =list(ordering = F, dom = 't',  selection = 'single'))
     
@@ -31,8 +32,8 @@ person_panel_server <- function(id, view_name) {
                   fluidRow(column(6, 
                                   selectInput( inputId = ns("personID"),  
                                                label="Select Person:",  
-                                               choices=person_list(),  
-                                               selected = person_list()[1] )
+                                               choices=rval$person_list,  
+                                               selected = rval$person_list[1] )
                                   ) # end column
                            ), # end fluidRow
                   fluidRow(column(12, 
