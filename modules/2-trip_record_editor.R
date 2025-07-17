@@ -340,8 +340,14 @@ modal_edit_trip_server <- function(id, selected_recid) {
     # ---- Update Data in Database ----
     observeEvent(input$clickpush, {
       
+      # create a named list of all edits
+      df <- rval$compare_table
+      
+      edit_list <- df[df$mod == 1, "Updated Value"]
+      names(edit_list) <- df[df$mod == 1, "Variable"]
+      
       # write update query
-      sproc_update_data()
+      sproc_update_data(rval$recid, edit_list)
       
     })
     
