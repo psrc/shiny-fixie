@@ -11,6 +11,7 @@ library(shinyjs)
 library(shinyTime)
 
 library(tidyverse)
+library(glue)
 library(DT)
 library(psrcelmer)
 library(rclipboard)
