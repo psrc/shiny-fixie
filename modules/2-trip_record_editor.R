@@ -60,6 +60,16 @@ modal_edit_trip_server <- function(id, selected_recid) {
         rval$recid <- selected_recid()
         rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
         
+        trip_summary_table <- reactive({
+          # browser()
+          rval$trip_record %>%
+            select(hhid,pernum,person_id,tripnum,recid) %>%
+            left_join(
+              get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
+                select(recid, error_flag),
+              by = "recid")
+        })
+        
         output$trip_summary <- DT::renderDT(
           
           rval$trip_record %>%
