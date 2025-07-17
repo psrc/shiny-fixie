@@ -27,9 +27,15 @@ sproc_dismiss_flag <- function(recid, person_id){
 sproc_update_data <- function(recid, edit_list){
   
   # build update query
-  # TODO: specify data type for each variable
-  all_variable_edits <- paste(names(edit_list), edit_list, sep = " = ", collapse = ", ")
-
+  all_variable_edits <- paste(
+    # variable names and value pairs
+    paste0(names(edit_list), " = '", edit_list, "'"),
+    # concat pairs with comma
+    collapse = ", "
+  )
+  # browser()
+  # TODO: some kind of data validation step before execute update query (e.g., arrival time later than departure time, value greater than 0)
+  
   # execute_query(glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};"))
   
   showModal( modal_confirm_action("Successfully updated trip") )
