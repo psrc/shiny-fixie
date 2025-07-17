@@ -10,7 +10,7 @@ sproc_remove_trip <- function(recid){
   
   # execute_query(glue("EXECUTE HHSurvey.remove_trip @target_recid = {recid};"))
   
-  showModal( modal_confirm_action("Successfully deleted trip") )
+  notification_confirm_action("Successfully deleted trip")
   
 }
 
@@ -19,7 +19,7 @@ sproc_dismiss_flag <- function(recid, person_id){
   
   execute_query(glue("EXECUTE HHSurvey.dismiss_flag @target_recid = {recid}, @target_person_id = {person_id};"))
   
-  showModal( modal_confirm_action("Successfully dismissed error flag") )
+  notification_confirm_action("Successfully dismissed error flag")
   
 }
 
@@ -33,11 +33,9 @@ sproc_update_data <- function(recid, edit_list){
     # concat pairs with comma
     collapse = ", "
   )
-  # browser()
-  # TODO: some kind of data validation step before execute update query (e.g., arrival time later than departure time, value greater than 0)
   
   # execute_query(glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};"))
   
-  showModal( modal_confirm_action("Successfully updated trip") )
+  notification_confirm_action("Successfully updated trip")
   
 }

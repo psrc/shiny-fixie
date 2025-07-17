@@ -6,15 +6,9 @@ modal_warning_select_row <- modalDialog(
   )
 
 # ---- Successful action ----
-modal_confirm_action <- function(title){
+notification_confirm_action <- function(title){
   
-  # modalDialog(title = title,
-  #             footer = div(
-  #               style = "display: flex; justify-content: space-between;",
-  #               modalButton('Ok')
-  #             ),
-  #             easyClose = TRUE,
-  #             size = "l")
+  removeModal()
   
   # switch to notification
   showNotification(
