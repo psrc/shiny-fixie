@@ -1,7 +1,7 @@
 shinyUI(
 
   fluidPage(
-    
+    useShinyjs(),
     tags$style(HTML("
     .tabbable > .nav > li > a {background-color: #005753;  color:white}
     .tabbable > .nav > li.active > a {background-color: #91268F; color:white}
