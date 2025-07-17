@@ -19,7 +19,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
     # data validation: Create an InputValidator object
     iv <- InputValidator$new()
 
-
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
       # browser()    
@@ -61,6 +60,16 @@ modal_edit_trip_server <- function(id, selected_recid) {
         rval$recid <- selected_recid()
         rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
         
+        trip_summary_table <- reactive({
+          # browser()
+          rval$trip_record %>%
+            select(hhid,pernum,person_id,tripnum,recid) %>%
+            left_join(
+              get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
+                select(recid, error_flag),
+              by = "recid")
+        })
+        
         output$trip_summary <- DT::renderDT(
           
           rval$trip_record %>%
@@ -84,7 +93,11 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                   lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
         modal_copy_latlong_server("button-copy_dest",
                                   lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
-
+        
+        observe({
+          toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table()$error_flag))
+        })
+        
         showModal(
           modalDialog(title = "Trip Record Editor",
 
