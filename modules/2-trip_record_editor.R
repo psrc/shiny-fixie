@@ -15,28 +15,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                            trip_record = NULL, 
                            compare_table = NULL,
                            updated_trip = NULL)
-    observe({
-      rval$recid <- selected_recid()
-      rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
-    })
-    
-    output$trip_summary <- DT::renderDT(
 
-      rval$trip_record %>%
-        select(hhid,pernum,person_id,tripnum,recid) %>%
-        left_join(
-          get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
-            select(recid, error_flag),
-          by = "recid"
-          ),
-
-      rownames = FALSE,
-      options =list(ordering = F,
-                    dom = 't',
-                    selection = 'single',
-                    pageLength =-1)
-
-      )
 
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
@@ -44,6 +23,27 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
+        
+        rval$recid <- selected_recid()
+        rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
+        
+        output$trip_summary <- DT::renderDT(
+          
+          rval$trip_record %>%
+            select(hhid,pernum,person_id,tripnum,recid) %>%
+            left_join(
+              get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
+                select(recid, error_flag),
+              by = "recid"
+            ),
+          
+          rownames = FALSE,
+          options =list(ordering = F,
+                        dom = 't',
+                        selection = 'single',
+                        pageLength =-1)
+          
+        )
 
         # featured buttons
         modal_copy_latlong_server("button-copy_origin",
@@ -376,7 +376,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     ## ---- Confirm Dismiss Flag ----
     observeEvent(input$clickdissmissflag_action, {
-
+      
+      # update person list in person dropdown
+      
+      
       # executes dismiss flag and show success message
       sproc_dismiss_flag(rval$recid, rval$trip_record[["person_id"]])
       
