@@ -4,12 +4,6 @@
 # https://github.com/psrc/travel-survey-QC-Clean/blob/main/survey_data_cleaning/fixie_sprocs.sql
 # https://github.com/psrc/travel-survey-QC-Clean/blob/main/survey_data_cleaning/rulesy_recalculate_after_edit.sql
 
-# ---- Recalculation of derived fields ----
-sproc_recalculate_after_edit <- function(person_id){
-  
-  execute_query(glue("EXECUTE HHSurvey.recalculate_after_edit @target_person_id = {person_id};"))
-  
-}
 
 # ---- Trip deletion ----
 sproc_remove_trip <- function(recid){
