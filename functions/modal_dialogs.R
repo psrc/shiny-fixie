@@ -5,15 +5,20 @@ modal_warning_select_row <- modalDialog(
   "Please select a record from the table below to continue."
   )
 
-# ---- Confirm action ----
+# ---- Successful action ----
 modal_confirm_action <- function(title){
   
-  modalDialog(title = title,
-              footer = div(
-                style = "display: flex; justify-content: space-between;",
-                modalButton('Ok')
-              ),
-              easyClose = TRUE,
-              size = "l")
+  # modalDialog(title = title,
+  #             footer = div(
+  #               style = "display: flex; justify-content: space-between;",
+  #               modalButton('Ok')
+  #             ),
+  #             easyClose = TRUE,
+  #             size = "l")
+  
+  # switch to notification
+  showNotification(
+    title,
+    type = "message")
   
 }

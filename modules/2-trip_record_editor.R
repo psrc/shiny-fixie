@@ -16,7 +16,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                            compare_table = NULL,
                            updated_trip = NULL)
 
-    # data validation
+    # data validation: Create an InputValidator object
     iv <- InputValidator$new()
 
 
@@ -24,7 +24,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickedit, {
       # browser()    
       
-      # data validation rules
+      # data validation: Add validation rules
       # origin
       iv$add_rule("data_edit-origin_lat", sv_lte(90))
       iv$add_rule("data_edit-origin_lat", sv_gte(-90))
@@ -52,6 +52,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
         }
       })
       
+      # data validation: Start displaying errors in the UI
       iv$enable()
 
       # if a row is selected in table: show Trip Record Editor
@@ -244,131 +245,137 @@ modal_edit_trip_server <- function(id, selected_recid) {
     # ---- Show Preview Pane & Apply Changes ----
     observeEvent(input$clickupdate, {
       
-      # Don't proceed if any input is invalid
-      req(iv$is_valid())
-      
-      # get all editable variables
-      input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
-      
-      ## ---- create compare table ----
-      compare_table <- NULL
-      for(i in 1:length(tripeditor.cols)){
-        # variable name
-        var_name <- tripeditor.cols[i]
-        var_input_name <- input_tripeditor.cols[i]
+      # data validation: Don't proceed if any input is invalid
+      if(!iv$is_valid()) {
+        showNotification(
+          "Please fix the errors in the form before continuing",
+          type = "warning"
+        )
+      }
+      else{
+        # get all editable variables
+        input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
         
-        # updated value
-        if(input[[var_input_name]] == ""){
-          # if text inputs like dest_purpose_other, psrc_comment are kept empty, the output would be ""
-          # change to NA to match DB value
-          updated_value <- NA
+        ## ---- create compare table ----
+        compare_table <- NULL
+        for(i in 1:length(tripeditor.cols)){
+          # variable name
+          var_name <- tripeditor.cols[i]
+          var_input_name <- input_tripeditor.cols[i]
+          
+          # updated value
+          if(input[[var_input_name]] == ""){
+            # if text inputs like dest_purpose_other, psrc_comment are kept empty, the output would be ""
+            # change to NA to match DB value
+            updated_value <- NA
+          }
+          else{
+            updated_value <- input[[var_input_name]]
+          }
+          
+          compare_var <- as.data.frame(
+            cbind(Variable = var_name,
+                  # original value
+                  `Original Value` = rval$trip_record[[var_name]],
+                  # updated value
+                  `Updated Value` = updated_value
+            )
+          )
+          
+          # create df with original and updated values
+          compare_table <- rbind(compare_table,
+                                 compare_var)
         }
-        else{
-          updated_value <- input[[var_input_name]]
-        }
+        ## ---- process datetime ----
+        
+        # updated timestamps
+        depart_datetime <- paste(input[["data_edit-depart_time_timestamp_date"]],
+                                 strftime(input[["data_edit-depart_time_timestamp_time"]], format="%H:%M:%S"))
+        arrival_datetime <- paste(input[["data_edit-arrival_time_timestamp_date"]],
+                                  strftime(input[["data_edit-arrival_time_timestamp_time"]], format="%H:%M:%S"))
         
         compare_var <- as.data.frame(
-          cbind(Variable = var_name,
+          cbind(Variable = c("depart_time_timestamp", "arrival_time_timestamp"),
                 # original value
-                `Original Value` = rval$trip_record[[var_name]],
+                `Original Value` = c(as.character(format(rval$trip_record[["depart_time_timestamp"]], "%Y-%m-%d %H:%M:%S")),
+                                     as.character(format(rval$trip_record[["arrival_time_timestamp"]], "%Y-%m-%d %H:%M:%S"))),
                 # updated value
-                `Updated Value` = updated_value
+                `Updated Value` = c(depart_datetime, arrival_datetime)
           )
         )
         
-        # create df with original and updated values
-        compare_table <- rbind(compare_table,
-                               compare_var)
-      }
-      ## ---- process datetime ----
-      
-      # updated timestamps
-      depart_datetime <- paste(input[["data_edit-depart_time_timestamp_date"]],
-                               strftime(input[["data_edit-depart_time_timestamp_time"]], format="%H:%M:%S"))
-      arrival_datetime <- paste(input[["data_edit-arrival_time_timestamp_date"]],
-                                strftime(input[["data_edit-arrival_time_timestamp_time"]], format="%H:%M:%S"))
-      
-      compare_var <- as.data.frame(
-        cbind(Variable = c("depart_time_timestamp", "arrival_time_timestamp"),
-              # original value
-              `Original Value` = c(as.character(format(rval$trip_record[["depart_time_timestamp"]], "%Y-%m-%d %H:%M:%S")),
-                                   as.character(format(rval$trip_record[["arrival_time_timestamp"]], "%Y-%m-%d %H:%M:%S"))),
-              # updated value
-              `Updated Value` = c(depart_datetime, arrival_datetime)
-              )
-        )
-      
-      compare_table <- rbind(compare_var, compare_table)
-      
-      # detect if values are modified
-      rval$compare_table <- compare_table %>%
-        mutate(mod=case_when(`Original Value`==`Updated Value`~0,
-                             is.na(`Original Value`) & is.na(`Updated Value`)~0, # for empty text inputs
-                             TRUE~1))
-      
-      ## ---- generate updated trip record ----
-      trip <- NULL
-      for(var_name in names(rval$trip_record)){
-        if(var_name %in% tripeditor.cols){
-          row <- as.data.frame(input[[paste0("data_edit-",var_name)]])
-        } else{
-          row <- as.data.frame(rval$trip_record[[var_name]])
-        }
+        compare_table <- rbind(compare_var, compare_table)
         
-        if(is.null(trip)){
-          trip <- row
-        }
-        else{
-          trip <- cbind(trip, row)
-        }
+        # detect if values are modified
+        rval$compare_table <- compare_table %>%
+          mutate(mod=case_when(`Original Value`==`Updated Value`~0,
+                               is.na(`Original Value`) & is.na(`Updated Value`)~0, # for empty text inputs
+                               TRUE~1))
         
-      }
-      names(trip) <- names(rval$trip_record)
-      rval$updated_trip <- trip
-      
-      
-      ## ---- print all comparison table ----
-      output$print_cols <- renderDT({
+        ## ---- generate updated trip record ----
+        trip <- NULL
+        for(var_name in names(rval$trip_record)){
+          if(var_name %in% tripeditor.cols){
+            row <- as.data.frame(input[[paste0("data_edit-",var_name)]])
+          } else{
+            row <- as.data.frame(rval$trip_record[[var_name]])
+          }
+          
+          if(is.null(trip)){
+            trip <- row
+          }
+          else{
+            trip <- cbind(trip, row)
+          }
+          
+        }
+        names(trip) <- names(rval$trip_record)
+        rval$updated_trip <- trip
         
-        datatable(rval$compare_table,
-                  options =list(ordering = F,
-                                dom = 't',
-                                pageLength = -1,
-                                # hide mod column
-                                columnDefs = list(list(targets = 4,visible = FALSE)))
-        ) %>%
-          formatStyle(
-            'mod',
-            target = 'row',
-            backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
+        
+        ## ---- print all comparison table ----
+        output$print_cols <- renderDT({
+          
+          datatable(rval$compare_table,
+                    options =list(ordering = F,
+                                  dom = 't',
+                                  pageLength = -1,
+                                  # hide mod column
+                                  columnDefs = list(list(targets = 4,visible = FALSE)))
+          ) %>%
+            formatStyle(
+              'mod',
+              target = 'row',
+              backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
+            )
+          
+        })
+        
+        ## ---- modal dialog: show update preview pane ----
+        showModal(
+          modalDialog(title = "Update Trip Record Preview",
+                      
+                      # show trip table
+                      div(
+                        class = "bottom-spacing",
+                        DT::DTOutput(ns("trip_summary"))
+                      ),
+                      #TODO: add trip summary
+                      div(
+                        DTOutput(ns('print_cols'))
+                      ),
+                      
+                      footer = div(
+                        style = "display: flex; justify-content: space-between;",
+                        # push changes to database
+                        actionButton(ns("clickpush"), label = "Apply Changes"),
+                        modalButton('Close')
+                      ),
+                      easyClose = TRUE,
+                      size = "l"
           )
-        
-      })
-      
-      ## ---- modal dialog: show update preview pane ----
-      showModal(
-        modalDialog(title = "Update Trip Record Preview",
-                    
-                    # show trip table
-                    div(
-                      class = "bottom-spacing",
-                      DT::DTOutput(ns("trip_summary"))
-                    ),
-                    #TODO: add trip summary
-                    div(
-                      DTOutput(ns('print_cols'))
-                    ),
-                    
-                    footer = div(
-                      style = "display: flex; justify-content: space-between;",
-                      # push changes to database
-                      actionButton(ns("clickpush"), label = "Apply Changes"),
-                      modalButton('Close')
-                    ),
-                    easyClose = TRUE,
-                    size = "l"
         )
-      )
+      }
       
     })
     
@@ -411,9 +418,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     ## ---- Confirm Dismiss Flag ----
     observeEvent(input$clickdissmissflag_action, {
-      
-      # update person list in person dropdown
-      
       
       # executes dismiss flag and show success message
       sproc_dismiss_flag(rval$recid, rval$trip_record[["person_id"]])
