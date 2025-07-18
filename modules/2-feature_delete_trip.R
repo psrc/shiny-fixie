@@ -10,7 +10,8 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
     ns <- session$ns
     
     rval <- reactiveValues(recid = NULL, 
-                           trip_record = NULL)
+                           trip_record = NULL, 
+                           trip_summary_table = NULL)
     
     
     # data cleaning tools ----
@@ -18,41 +19,53 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
       
       rval$recid <- selected_recid()
       rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
+
       
-      output$trip_summary <- DT::renderDT(
+      if(!identical(rval$recid,integer(0))){
         
-        rval$trip_record %>%
+        
+        rval$trip_summary_table <- rval$trip_record %>%
           select(hhid,pernum,person_id,tripnum,recid) %>%
           left_join(
             get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
               select(recid, error_flag),
-            by = "recid"
-          ),
+            by = "recid")
         
-        rownames = FALSE,
-        options =list(ordering = F,
-                      dom = 't',
-                      selection = 'single',
-                      pageLength =-1)
+        output$trip_summary <- DT::renderDT(
+          
+          rval$trip_summary_table,
+          
+          rownames = FALSE,
+          options =list(ordering = F,
+                        dom = 't',
+                        selection = 'single',
+                        pageLength =-1)
+          
+        )
         
-      )
+        showModal(
+          modalDialog(title = "Delete Trip",
+                      
+                      "Are you sure you want to delete this trip?",
+                      # show trip table
+                      div(
+                        class = "bottom-spacing",
+                        DT::DTOutput(ns("trip_summary"))
+                      ),
+                      
+                      footer = column(actionButton(ns("clickdelete"), label = 'Yes'), 
+                                      modalButton('No'),
+                                      width=12),
+                      easyClose = TRUE)) 
+        
+      }
+      else{
+        showNotification(
+          "Please select a record from the table below to continue",
+          type = "warning")
+      }
       
       
-      showModal(
-        modalDialog(title = "Delete Trip",
-                    
-                    "Are you sure you want to delete this trip?",
-                    # show trip table
-                    div(
-                      class = "bottom-spacing",
-                      DT::DTOutput(ns("trip_summary"))
-                    ),
-                    
-                    footer = column(actionButton(ns("clickdelete"), label = 'Yes'), 
-                                    modalButton('No'),
-                                    width=12),
-                    easyClose = TRUE)
-        ) 
       })
     
     observeEvent(input$clickdelete, { 

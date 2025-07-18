@@ -1,3 +1,5 @@
+# NOTES: if no trip selected, insert new trip at very beginning of trip list
+
 modal_new_trip_ui <- function(id) {
   ns <- NS(id)
   
