@@ -31,7 +31,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
         
-        browser()
+        # browser()
         
         # data validation: Add validation rules
         # origin
@@ -56,8 +56,11 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                                  strftime(input[["data_edit-arrival_time_timestamp_time"]], format="%H:%M:%S"))
           )
           
-          if (depart_datetime_r >= arrival_datetime_r) {
-            "Arrival time must be later than departure time"
+          # if there are values in depart_datetime_r and arrival_datetime_r
+          if (!identical(depart_datetime_r, as.POSIXct(numeric(0))) & !identical(arrival_datetime_r, as.POSIXct(numeric(0)))) {
+            if(depart_datetime_r >= arrival_datetime_r){
+              "Arrival time must be later than departure time"
+            }
           }
         })
         
