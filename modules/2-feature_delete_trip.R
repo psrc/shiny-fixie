@@ -60,9 +60,7 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
         
       }
       else{
-        showNotification(
-          "Please select a record from the table below to continue",
-          type = "warning")
+        notification_warning_select_row()
       }
       
       

@@ -1,9 +1,12 @@
 # ---- Warning: select trip ----
-modal_warning_select_row <- modalDialog(
-  title = "0 records have been selected",
-  easy_close = TRUE,
-  "Please select a record from the table below to continue."
-  )
+notification_warning_select_row <- function(){
+  
+  # switch to notification
+  showNotification(
+    "Please select a record from the table below to continue",
+    type = "warning")
+  
+}
 
 # ---- Successful action ----
 notification_confirm_action <- function(title){

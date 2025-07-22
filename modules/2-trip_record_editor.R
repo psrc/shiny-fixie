@@ -249,10 +249,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
           ))}
       # if no row is selected
         else{
-          # showModal( modal_warning_select_row )
-          showNotification(
-            "Please select a record from the table below to continue",
-            type = "warning")
+          notification_warning_select_row()
         }
       })
     
