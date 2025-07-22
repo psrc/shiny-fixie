@@ -31,7 +31,7 @@ codebook <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/old_
                               sheet = 'value_labels_2023')
 
 # database name
-cleaning_database <- "hhts_cleaning_temporal"
+cleaning_database <- "hhts_cleaning"
 
 # names of views for edits 
 edit_persons_view_name <- list("All Persons" = "person_all_test",
