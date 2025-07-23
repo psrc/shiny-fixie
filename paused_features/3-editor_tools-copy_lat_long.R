@@ -11,13 +11,23 @@ modal_copy_latlong_server <- function(id, lat_input, long_input) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    latlong <- reactive({ paste0(lat_input, ", ", long_input) })
+    rval <- reactiveValues(latlng = NULL,
+                           lat = NULL,
+                           lng = NULL)
+    
+    observeEvent(input$clickcopy,{
+      rval$lat <- lat_input
+      rval$lng <- long_input
+      browser()
+      rval$latlng <- paste0(rval$lat, ", ", rval$lng)
+      print(rval$latlng)
+    })
     
     output$copybutton <- renderUI({
       rclipboard::rclipButton(
         inputId = ns("clickcopy"),
-        label = "Copy to clipboard",
-        clipText = latlong()
+        label = icon("clipboard"),
+        clipText = rval$latlng
       )
     })
     

@@ -83,13 +83,13 @@ dateTimeInput <- function(inputId, df, label_name = NULL){
     tags$label(class = "control-label", label_name),
     br(),
     fluidRow(
-      column(4,
+      column(5,
              dateInput(inputId = paste0(inputId, "_date"),
                        label = "Date",
                        value = date_part,
                        format = "yyyy-mm-dd")
       ),
-      column(8,
+      column(7,
              timeInput(paste0(inputId, "_time"), "Time", value = hms::as_hms(time_part))
       )
     )

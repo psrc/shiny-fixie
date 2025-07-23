@@ -89,9 +89,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
         # featured buttons
         modal_copy_latlong_server("button-copy_origin",
-                                  lat_input=input$`data_edit-origin_lat`, long_input=input$`data_edit-origin_lng`)
+                                  lat_input=input[['data_edit-origin_lat']], long_input=input[['data_edit-origin_lng']])
         modal_copy_latlong_server("button-copy_dest",
-                                  lat_input=input$`data_edit-dest_lat`, long_input=input$`data_edit-dest_lng`)
+                                  lat_input=input[['data_edit-dest_lat']], long_input=input[['data_edit-dest_lng']])
         
         observe({
           toggleState(id = "clickdissmissflag", condition = !is.na(rval$trip_summary_table[['error_flag']]))
@@ -107,92 +107,64 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           class = "bottom-spacing",
                           DT::DTOutput(ns("trip_summary"))
                         ),
-
-                        ## time and distance ----
-
-                        div(class = "modal-header",
-                            "time and distance"),
-
-                        fluidRow(
-                          class = "bottom-spacing",
-                          # timestamps
-                          # TODO: find better way to select date and time
-                          column(7, 
-                                 dateTimeInput(ns("data_edit-depart_time_timestamp"), df = rval$trip_record),
-                                 dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$trip_record)),
-                          # trip distance
-                          column(5, numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0))),
-
-
-                        ## trip origin and destination ----
-
-                        div(class = "modal-header",
-                            "trip origin and destination"),
                         
-                        # buttons for mapping in google maps
+                        fluidRow(
+                          column(6,
+                                 div(class = "modal-header", "Trip Origin"),
+                                 dateTimeInput(ns("data_edit-depart_time_timestamp"), df = rval$trip_record)
+                          ), # end column
+                          column(6,
+                                 div(class = "modal-header", "Trip Destination"),
+                                 dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$trip_record)
+                                 
+                          ) # end column
+                        ), # fluidRow
+                        
                         fluidRow(class = "bottom-spacing",
-                          column(12,
-                                 actionButton_google_direction("get_directions", df = rval$trip_record)
-                                 )),
-                        
-                        fluidRow(
-                          column(12,
-                                 actionButton_google_place("open_origin",
-                                                           label = "Open origin location in Google Maps",
-                                                           df = rval$trip_record,
-                                                           lat_var_name = "origin_lat",
-                                                           long_var_name = "origin_lng")
-                                 )),
-                        
-                        fluidRow(class = "section-padding",
-                                 # origin purpose
-                                 column(5, selectInputSingle(ns("data_edit-origin_purpose"), df = rval$trip_record)),
-                                 # leave space
-                                 column(3, ),
-                                 # origin lat/long
-                                 column(4,
-                                        fluidRow(
-                                          column(6, numericInputSimple(ns("data_edit-origin_lat"), df = rval$trip_record)),
-                                          column(6, numericInputSimple(ns("data_edit-origin_lng"), df = rval$trip_record))
-                                        ),
-                                        # button for copying origin lat/long to clipboard
-                                        fluidRow( column(12,modal_copy_latlong_ui(ns('button-copy_origin'))) )
-                                        ) # end column
-                                 ),
-
-                        fluidRow(
-                          # button for mapping destination
-                          column(12,
-                                 actionButton_google_place("open_dest",
-                                                           label = "Open destination location in Google Maps",
-                                                           df = rval$trip_record,
-                                                           lat_var_name = "dest_lat",
-                                                           long_var_name = "dest_lng")
-                                 )
-                          ),
-                        fluidRow(class = "section-padding",
-                          # destination purpose
-                          column(5, selectInputSingle(ns("data_edit-dest_purpose"), df = rval$trip_record)),
-                          # destination label
-                          column(3, textInputSimple(ns("data_edit-dest_purpose_other"), df = rval$trip_record)),
-                          # destination lat/long
-                          column(4,
-                                 fluidRow(column(6, numericInputSimple(ns("data_edit-dest_lat"), df = rval$trip_record)),
-                                          column(6, numericInputSimple(ns("data_edit-dest_lng"), df = rval$trip_record))),
-                                 # button for copying destination lat/long to clipboard
-                                 fluidRow(
-                                   column(12,
-                                          modal_copy_latlong_ui(ns('button-copy_dest'))
-                                          )
-                                   )
+                                 column(6, selectInputSingle(ns("data_edit-origin_purpose"), df = rval$trip_record) ),
+                                 column(6,
+                                        selectInputSingle(ns("data_edit-dest_purpose"), df = rval$trip_record),
+                                        textInputSimple(ns("data_edit-dest_purpose_other"), df = rval$trip_record)
                                  ) # end column
-                        ),
+                        ), # fluidRow
+                        
+                        fluidRow(class = "bottom-spacing",
+                          column(6,
+                                 fluidRow(
+                                   column(4, numericInputSimple(ns("data_edit-origin_lat"), df = rval$trip_record)),
+                                   column(4, numericInputSimple(ns("data_edit-origin_lng"), df = rval$trip_record)),
+                                   column(4, 
+                                          actionButton_google_place("open_origin",
+                                                                    df = rval$trip_record,
+                                                                    lat_var_name = "origin_lat",
+                                                                    long_var_name = "origin_lng"))
+                                 )
+                          ), # end column
+                          column(6,
+                                 fluidRow(column(4, numericInputSimple(ns("data_edit-dest_lat"), df = rval$trip_record)),
+                                          column(4, numericInputSimple(ns("data_edit-dest_lng"), df = rval$trip_record)),
+                                          column(4, 
+                                                 actionButton_google_place("open_dest",
+                                                                           df = rval$trip_record,
+                                                                           lat_var_name = "dest_lat",
+                                                                           long_var_name = "dest_lng"))
+                                          ),     
+                          ) # end column
+                        ), # fluidRow
+                        
+                        fluidRow(class = "bottom-spacing",
+                                 column(12, 
+                                        div(numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0)),
+                                        div(actionButton_google_direction("get_directions", df = rval$trip_record))
+                                        )
+                                 ), # fluidRow
+                        
 
                         ## mode type ----
 
                         fluidRow(
                           column(9,
-                                 div(class = "modal-header", "mode type"),
+                                 div(class = "modal-header", "Travel Modes"),
                                  column(7,
                                         selectInputSingle(ns("data_edit-mode_1"), df = rval$trip_record),
                                         selectInputSingle(ns("data_edit-mode_2"), df = rval$trip_record),
@@ -204,7 +176,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                         selectInputSingle(ns("data_edit-mode_egr"), df = rval$trip_record))
                           ), # end column
                           column(3,
-                                 div(class = "modal-header", "travelers"),
+                                 div(class = "modal-header", "Travelers"),
                                  selectInputSingle(ns("data_edit-driver"), df = rval$trip_record),
                                  selectInputSingle(ns("data_edit-travelers_hh"), df = rval$trip_record),
                                  selectInputSingle(ns("data_edit-travelers_nonhh"), df = rval$trip_record)

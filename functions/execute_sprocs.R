@@ -25,7 +25,7 @@ sproc_dismiss_flag <- function(recid, person_id){
 
 # ---- Update data to database ----
 sproc_update_data <- function(recid, edit_list){
-  
+
   # build update query
   all_variable_edits <- paste(
     # variable names and value pairs
@@ -33,7 +33,7 @@ sproc_update_data <- function(recid, edit_list){
     # concat pairs with comma
     collapse = ", "
   )
-  
+  browser()  
   # execute_query(glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};"))
   
   notification_confirm_action("Successfully updated trip")
