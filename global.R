@@ -46,10 +46,11 @@ view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles"
 
 # list of variables being edited in trip record editor (that would be shown in update preview comparison table)
 tripeditor.cols <- c(#"depart_time_timestamp","arrival_time_timestamp", # commented out because they need additional processing
-                     "mode_1","mode_2","mode_3","mode_4","mode_other_specify","mode_acc","mode_egr",
-                     "origin_purpose","dest_purpose","dest_purpose_other",
+                     "mode_1","mode_2","mode_3","mode_4","mode_acc","mode_egr",
+                     "origin_purpose","dest_purpose",
                      "distance_miles","origin_lat","origin_lng","dest_lat","dest_lng",
                      "driver","travelers_hh","travelers_nonhh",
+                     # "dest_purpose_other","mode_other_specify",
                      # "hhmember1","hhmember2","hhmember3","hhmember4","hhmember5","hhmember6","hhmember7","hhmember8",
                      "psrc_comment"
                      )
