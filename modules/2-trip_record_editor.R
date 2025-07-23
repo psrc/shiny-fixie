@@ -190,34 +190,26 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
                         ## mode type ----
 
-                        fluidRow(column(4,
-                                        div(class = "modal-header", "mode type"),
-                                           selectInputSingle(ns("data_edit-mode_1"), df = rval$trip_record),
-                                           selectInputSingle(ns("data_edit-mode_2"), df = rval$trip_record),
-                                           selectInputSingle(ns("data_edit-mode_3"), df = rval$trip_record),
-                                           selectInputSingle(ns("data_edit-mode_4"), df = rval$trip_record),
-                                           textInputSimple(ns("data_edit-mode_other_specify"), df = rval$trip_record),
-                                           selectInputSingle(ns("data_edit-mode_acc"), df = rval$trip_record),
-                                           selectInputSingle(ns("data_edit-mode_egr"), df = rval$trip_record)
-                                        ), # end column
-                                 column(8,
-                                        div(class = "modal-header", "travelers"),
-                                        column(6,
-                                               selectInputSingle(ns("data_edit-driver"), df = rval$trip_record),
-                                               selectInputSingle(ns("data_edit-travelers_hh"), df = rval$trip_record),
-                                               selectInputSingle(ns("data_edit-travelers_nonhh"), df = rval$trip_record)),
-                                        column(6,
-                                           div("hhmembers"),
-                                           selectInputSingle(ns("data_edit-hhmember1"), df = rval$trip_record, label_name = "1"),
-                                           selectInputSingle(ns("data_edit-hhmember2"), df = rval$trip_record, label_name = "2"),
-                                           selectInputSingle(ns("data_edit-hhmember3"), df = rval$trip_record, label_name = "3"),
-                                           selectInputSingle(ns("data_edit-hhmember4"), df = rval$trip_record, label_name = "4"),
-                                           selectInputSingle(ns("data_edit-hhmember5"), df = rval$trip_record, label_name = "5"),
-                                           selectInputSingle(ns("data_edit-hhmember6"), df = rval$trip_record, label_name = "6"),
-                                           selectInputSingle(ns("data_edit-hhmember7"), df = rval$trip_record, label_name = "7"),
-                                           selectInputSingle(ns("data_edit-hhmember8"), df = rval$trip_record, label_name = "8"))
-                                        ) # end column
-                                 ), # fluidRow
+                        fluidRow(
+                          column(9,
+                                 div(class = "modal-header", "mode type"),
+                                 column(7,
+                                        selectInputSingle(ns("data_edit-mode_1"), df = rval$trip_record),
+                                        selectInputSingle(ns("data_edit-mode_2"), df = rval$trip_record),
+                                        selectInputSingle(ns("data_edit-mode_3"), df = rval$trip_record),
+                                        selectInputSingle(ns("data_edit-mode_4"), df = rval$trip_record)),
+                                 column(5,
+                                        textInputSimple(ns("data_edit-mode_other_specify"), df = rval$trip_record),
+                                        selectInputSingle(ns("data_edit-mode_acc"), df = rval$trip_record),
+                                        selectInputSingle(ns("data_edit-mode_egr"), df = rval$trip_record))
+                          ), # end column
+                          column(3,
+                                 div(class = "modal-header", "travelers"),
+                                 selectInputSingle(ns("data_edit-driver"), df = rval$trip_record),
+                                 selectInputSingle(ns("data_edit-travelers_hh"), df = rval$trip_record),
+                                 selectInputSingle(ns("data_edit-travelers_nonhh"), df = rval$trip_record)
+                                 ) # end column
+                          ), # fluidRow
 
                         ## elevate comment ----
 
