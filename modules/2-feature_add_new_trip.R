@@ -13,14 +13,17 @@ modal_new_trip_server <- function(id, selected_recid) {
     
     rval <- reactiveValues(recid = NULL, 
                            trip_record = NULL, 
-                           trip_summary_table = NULL)
+                           trip_summary_table = NULL,
+                           updated_trip = NULL)
     
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
       
       rval$recid <- selected_recid()
       rval$trip_record <- get_data(view_name="Trip", recid=rval$recid) 
-      
+      rval$updated_trip <- rval$trip_record %>%
+        filter(row_number() != 1)
+      # browser()
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
@@ -44,11 +47,6 @@ modal_new_trip_server <- function(id, selected_recid) {
           
         )
         
-        output$print_row <- renderPrint({
-          cat('These rows were selected:\n\n')
-          cat(rval$recid)
-        })
-        
         showModal(
           modalDialog(title = "Trip Record Generator",
                       
@@ -59,9 +57,10 @@ modal_new_trip_server <- function(id, selected_recid) {
                       ),
                       footer = column(12,
                                       class = "trip-buttons-panel",
-                                      modalButton('Add blank trip'),
-                                      modalButton('Add reverse trip'),
-                                      modalButton('Add return home trip'),
+                                      modalButton('Insert trip before selected trip'),
+                                      modalButton('Insert trip after selected trip'),
+                                      actionButton(ns("clickreversetrip"), "Add reverse trip"),
+                                      actionButton(ns("clickreturnhome"), "Add return home trip"),
                                       modalButton('Cancel')
                       ),
                       size = "l"
@@ -74,6 +73,69 @@ modal_new_trip_server <- function(id, selected_recid) {
       }
       
       }) # end observeEvent
+    
+    
+    # return home ----
+    
+    observeEvent(input$clickreturnhome, { 
+      
+      showModal(
+        modalDialog(title = "Trip Record Generator: Add Return Trip",
+                    
+                    div("Adding return home trip after this selected trip:"),
+                    
+                    # show trip table
+                    div(
+                      class = "bottom-spacing",
+                      DT::DTOutput(ns("trip_summary"))
+                    ),
+                    
+                    fluidRow(
+                      column(12,
+                             dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$updated_trip)
+                             
+                      ) # end column
+                    ),
+                    
+                    
+                    footer = column(12,
+                                    class = "trip-buttons-panel",
+                                    modalButton('Preview new trip'),
+                                    modalButton('Cancel')
+                    ),
+                    size = "l"))
+      })
+    
+    
+    # reverse trip ----
+    
+    observeEvent(input$clickreversetrip, { 
+      
+      showModal(
+        modalDialog(title = "Trip Record Generator: Add Reverse Trip",
+                    
+                    div("Adding reverse trip after this selected trip:"),
+                    
+                    # show trip table
+                    div(
+                      class = "bottom-spacing",
+                      DT::DTOutput(ns("trip_summary"))
+                    ),
+                    
+                    fluidRow(
+                      column(12,
+                             dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$updated_trip)
+                             
+                      ) # end column
+                    ),
+                    
+                    footer = column(12,
+                                    class = "trip-buttons-panel",
+                                    modalButton('Preview new trip'),
+                                    modalButton('Cancel')
+                    ),
+                    size = "l"))
+    })
 
     output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Add new trip") })
     
