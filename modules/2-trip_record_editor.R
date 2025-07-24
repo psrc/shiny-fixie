@@ -86,23 +86,46 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         pageLength =-1)
           
         )
+        
+        # get point of interest locations
+        
+        home_geog <- get_poi_geog("home_geog", hhid = rval$trip_record['hhid'])
+        work_geog <- get_poi_geog("work_geog", person_id = rval$trip_record['person_id'])
+        school_geog <- get_poi_geog("school_geog", person_id = rval$trip_record['person_id'])
+        # browser()
 
         # grey out dismiss flag button if this trip has no error flag
         observe({
           toggleState(id = "clickdissmissflag", condition = !is.na(rval$trip_summary_table[['error_flag']]))
+          toggleState(id = "open_home_geog", condition = home_geog!="NA, NA")
+          toggleState(id = "open_work_geog", condition = work_geog!="NA, NA")
+          toggleState(id = "open_school_geog", condition = school_geog!="NA, NA")
         })
         
         showModal(
           modalDialog(title = "Trip Record Editor",
 
                       tagList(
-
-                        # show trip table
-                        div(
-                          class = "bottom-spacing",
-                          DT::DTOutput(ns("trip_summary"))
-                        ),
                         
+                        fluidRow(
+                          column(10,
+                                 ## show trip table ----
+                                 div(
+                                   class = "bottom-spacing",
+                                   DT::DTOutput(ns("trip_summary"))
+                                 ),
+                          ), # end column
+                          column(2,
+                                 ## show home, work and school location ----
+                                 actionButton_google_poi(ns("open_home_geog"), latlong = home_geog, icon = "house"),
+                                 actionButton_google_poi(ns("open_work_geog"), latlong = work_geog, icon = "briefcase"),
+                                 actionButton_google_poi(ns("open_school_geog"), latlong = school_geog, icon = "school-flag")
+                                 
+                          ) # end column
+                        ), # fluidRow
+                        
+                        
+                        ## timestamps ----
                         fluidRow(
                           column(6,
                                  div(class = "modal-header", "Trip Origin"),
@@ -115,6 +138,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           ) # end column
                         ), # fluidRow
                         
+                        ## purposes ----
                         fluidRow(class = "bottom-spacing",
                                  column(6, selectInputSingle(ns("data_edit-origin_purpose"), df = rval$trip_record) ),
                                  column(6,
@@ -123,6 +147,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                  ) # end column
                         ), # fluidRow
                         
+                        ## locations ----
                         fluidRow(class = "bottom-spacing",
                           column(6,
                                  fluidRow(
@@ -147,6 +172,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           ) # end column
                         ), # fluidRow
                         
+                        ## distance ----
                         fluidRow(class = "bottom-spacing",
                                  column(12, 
                                         div(numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0)),

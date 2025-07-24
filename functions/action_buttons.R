@@ -24,3 +24,14 @@ actionButton_google_place <- function(inputId, df, lat_var_name, long_var_name){
                value = "Open popup",
                onclick =paste0("window.open('",url,"','_blank')"))
 }
+
+# link to google maps showing point of interest locations
+actionButton_google_poi <- function(inputId, latlong, icon){
+  
+  url <- paste0("https://www.google.com/maps/place/", latlong)
+  
+  actionButton(inputId=inputId, 
+               label = icon(icon),
+               value = "Open popup",
+               onclick =paste0("window.open('",url,"','_blank')"))
+}
