@@ -200,7 +200,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                       class = "trip-buttons-panel",
                                       actionButton(ns("clickdissmissflag"), label = "Dismiss Flag"),
                                       modalButton('(Delete trip)'),
-                                      modalButton('(Split from traces)'),
+                                      modalButton('(Unlink trip)'),
                                       modalButton('Cancel')
                                       ),
                       # easyClose = TRUE,
