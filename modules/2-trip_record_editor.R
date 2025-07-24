@@ -12,8 +12,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
     ns <- session$ns
 
     rval <- reactiveValues(recid = NULL, 
-                           trip_record = NULL, 
-                           trip_summary_table = NULL,
                            compare_table = NULL,
                            updated_trip = NULL)
 
@@ -25,8 +23,29 @@ modal_edit_trip_server <- function(id, selected_recid) {
       # browser()   
       
       rval$recid <- selected_recid()
-      rval$trip_record <- get_data(view_name="Trip", recid=rval$recid) 
       
+      # get trip data from database
+      trip_record <- get_data(view_name="Trip", recid=rval$recid)
+      # trip summary
+      trip_summary_table <- trip_record %>%
+        select(hhid,pernum,person_id,tripnum,recid) %>%
+        left_join(
+          get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
+            select(recid, error_flag),
+          by = "recid")
+      
+      
+      output$trip_summary <- DT::renderDT(
+        
+        trip_summary_table,
+        
+        rownames = FALSE,
+        options =list(ordering = F,
+                      dom = 't',
+                      selection = 'single',
+                      pageLength =-1)
+        
+      )
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
@@ -67,36 +86,15 @@ modal_edit_trip_server <- function(id, selected_recid) {
         # data validation: Start displaying errors in the UI
         iv$enable()
         
-        rval$trip_summary_table <- rval$trip_record %>%
-          select(hhid,pernum,person_id,tripnum,recid) %>%
-          left_join(
-            get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
-              select(recid, error_flag),
-            by = "recid")
-            
-        
-        output$trip_summary <- DT::renderDT(
-          
-          rval$trip_summary_table,
-          
-          rownames = FALSE,
-          options =list(ordering = F,
-                        dom = 't',
-                        selection = 'single',
-                        pageLength =-1)
-          
-        )
-        
         # get point of interest locations
         
-        home_geog <- get_poi_geog("home_geog", hhid = rval$trip_record['hhid'])
-        work_geog <- get_poi_geog("work_geog", person_id = rval$trip_record['person_id'])
-        school_geog <- get_poi_geog("school_geog", person_id = rval$trip_record['person_id'])
-        # browser()
+        home_geog <- get_poi_geog("home_geog", hhid = trip_record['hhid'])
+        work_geog <- get_poi_geog("work_geog", person_id = trip_record['person_id'])
+        school_geog <- get_poi_geog("school_geog", person_id = trip_record['person_id'])
 
         observe({
           # grey out dismiss flag button if this trip has no error flag
-          toggleState(id = "clickdissmissflag", condition = !is.na(rval$trip_summary_table[['error_flag']]))
+          toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table[['error_flag']]))
           # grey out poi location buttons if this no valid location
           toggleState(id = "open_home_geog", condition = home_geog!="NA, NA")
           toggleState(id = "open_work_geog", condition = work_geog!="NA, NA")
@@ -135,21 +133,21 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         fluidRow(
                           column(6,
                                  div(class = "modal-header", "Trip Origin"),
-                                 dateTimeInput(ns("data_edit-depart_time_timestamp"), df = rval$trip_record)
+                                 dateTimeInput(ns("data_edit-depart_time_timestamp"), df = trip_record)
                           ), # end column
                           column(6,
                                  div(class = "modal-header", "Trip Destination"),
-                                 dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$trip_record)
+                                 dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = trip_record)
                                  
                           ) # end column
                         ), # fluidRow
                         
                         ## purposes ----
                         fluidRow(class = "bottom-spacing",
-                                 column(6, selectInputSingle(ns("data_edit-origin_purpose"), df = rval$trip_record) ),
+                                 column(6, selectInputSingle(ns("data_edit-origin_purpose"), df = trip_record) ),
                                  column(6,
-                                        selectInputSingle(ns("data_edit-dest_purpose"), df = rval$trip_record),
-                                        textInputSimple(ns("data_edit-dest_purpose_other"), df = rval$trip_record)
+                                        selectInputSingle(ns("data_edit-dest_purpose"), df = trip_record),
+                                        textInputSimple(ns("data_edit-dest_purpose_other"), df = trip_record)
                                  ) # end column
                         ), # fluidRow
                         
@@ -157,21 +155,21 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         fluidRow(class = "bottom-spacing",
                           column(6,
                                  fluidRow(
-                                   column(4, numericInputSimple(ns("data_edit-origin_lat"), df = rval$trip_record)),
-                                   column(4, numericInputSimple(ns("data_edit-origin_lng"), df = rval$trip_record)),
+                                   column(4, numericInputSimple(ns("data_edit-origin_lat"), df = trip_record)),
+                                   column(4, numericInputSimple(ns("data_edit-origin_lng"), df = trip_record)),
                                    column(4, 
                                           actionButton_google_place("open_origin",
-                                                                    df = rval$trip_record,
+                                                                    df = trip_record,
                                                                     lat_var_name = "origin_lat",
                                                                     long_var_name = "origin_lng"))
                                  )
                           ), # end column
                           column(6,
-                                 fluidRow(column(4, numericInputSimple(ns("data_edit-dest_lat"), df = rval$trip_record)),
-                                          column(4, numericInputSimple(ns("data_edit-dest_lng"), df = rval$trip_record)),
+                                 fluidRow(column(4, numericInputSimple(ns("data_edit-dest_lat"), df = trip_record)),
+                                          column(4, numericInputSimple(ns("data_edit-dest_lng"), df = trip_record)),
                                           column(4, 
                                                  actionButton_google_place("open_dest",
-                                                                           df = rval$trip_record,
+                                                                           df = trip_record,
                                                                            lat_var_name = "dest_lat",
                                                                            long_var_name = "dest_lng"))
                                           ),     
@@ -181,8 +179,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         ## distance ----
                         fluidRow(class = "bottom-spacing",
                                  column(12, 
-                                        div(numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0)),
-                                        div(actionButton_google_direction("get_directions", df = rval$trip_record))
+                                        div(numericInputSimple(ns("data_edit-distance_miles"), df = trip_record, min = 0)),
+                                        div(actionButton_google_direction("get_directions", df = trip_record))
                                         )
                                  ), # fluidRow
                         
@@ -193,20 +191,20 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           column(9,
                                  div(class = "modal-header", "Travel Modes"),
                                  column(7,
-                                        selectInputSingle(ns("data_edit-mode_1"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_2"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_3"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_4"), df = rval$trip_record)),
+                                        selectInputSingle(ns("data_edit-mode_1"), df = trip_record),
+                                        selectInputSingle(ns("data_edit-mode_2"), df = trip_record),
+                                        selectInputSingle(ns("data_edit-mode_3"), df = trip_record),
+                                        selectInputSingle(ns("data_edit-mode_4"), df = trip_record)),
                                  column(5,
-                                        textInputSimple(ns("data_edit-mode_other_specify"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_acc"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_egr"), df = rval$trip_record))
+                                        textInputSimple(ns("data_edit-mode_other_specify"), df = trip_record),
+                                        selectInputSingle(ns("data_edit-mode_acc"), df = trip_record),
+                                        selectInputSingle(ns("data_edit-mode_egr"), df = trip_record))
                           ), # end column
                           column(3,
                                  div(class = "modal-header", "Travelers"),
-                                 selectInputSingle(ns("data_edit-driver"), df = rval$trip_record),
-                                 selectInputSingle(ns("data_edit-travelers_hh"), df = rval$trip_record),
-                                 selectInputSingle(ns("data_edit-travelers_nonhh"), df = rval$trip_record)
+                                 selectInputSingle(ns("data_edit-driver"), df = trip_record),
+                                 selectInputSingle(ns("data_edit-travelers_hh"), df = trip_record),
+                                 selectInputSingle(ns("data_edit-travelers_nonhh"), df = trip_record)
                                  ) # end column
                           ), # fluidRow
 
@@ -215,7 +213,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         fluidRow(
                           column(5,
                                  textInputSimple(ns("data_edit-psrc_comment"),
-                                                 df = rval$trip_record,
+                                                 df = trip_record,
                                                  label_name = "Add comment:")
                                  )
                         )
@@ -279,7 +277,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
           compare_var <- as.data.frame(
             cbind(Variable = var_name,
                   # original value
-                  `Original Value` = rval$trip_record[[var_name]],
+                  `Original Value` = trip_record[[var_name]],
                   # updated value
                   `Updated Value` = updated_value
             )
@@ -300,8 +298,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
         compare_var <- as.data.frame(
           cbind(Variable = c("depart_time_timestamp", "arrival_time_timestamp"),
                 # original value
-                `Original Value` = c(as.character(format(rval$trip_record[["depart_time_timestamp"]], "%Y-%m-%d %H:%M:%S")),
-                                     as.character(format(rval$trip_record[["arrival_time_timestamp"]], "%Y-%m-%d %H:%M:%S"))),
+                `Original Value` = c(as.character(format(trip_record[["depart_time_timestamp"]], "%Y-%m-%d %H:%M:%S")),
+                                     as.character(format(trip_record[["arrival_time_timestamp"]], "%Y-%m-%d %H:%M:%S"))),
                 # updated value
                 `Updated Value` = c(depart_datetime, arrival_datetime)
           )
@@ -317,11 +315,11 @@ modal_edit_trip_server <- function(id, selected_recid) {
         
         ## ---- generate updated trip record ----
         trip <- NULL
-        for(var_name in names(rval$trip_record)){
+        for(var_name in names(trip_record)){
           if(var_name %in% tripeditor.cols){
             row <- as.data.frame(input[[paste0("data_edit-",var_name)]])
           } else{
-            row <- as.data.frame(rval$trip_record[[var_name]])
+            row <- as.data.frame(trip_record[[var_name]])
           }
           
           if(is.null(trip)){
@@ -332,7 +330,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
           }
           
         }
-        names(trip) <- names(rval$trip_record)
+        names(trip) <- names(trip_record)
         rval$updated_trip <- trip
         
         
@@ -423,7 +421,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickdissmissflag_action, {
       
       # executes dismiss flag and show success message
-      sproc_dismiss_flag(rval$recid, rval$trip_record[["person_id"]])
+      sproc_dismiss_flag(rval$recid, trip_record[["person_id"]])
       
     })
     
