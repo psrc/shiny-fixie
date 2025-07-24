@@ -87,12 +87,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
           
         )
 
-        # featured buttons
-        modal_copy_latlong_server("button-copy_origin",
-                                  lat_input=input[['data_edit-origin_lat']], long_input=input[['data_edit-origin_lng']])
-        modal_copy_latlong_server("button-copy_dest",
-                                  lat_input=input[['data_edit-dest_lat']], long_input=input[['data_edit-dest_lng']])
-        
+        # grey out dismiss flag button if this trip has no error flag
         observe({
           toggleState(id = "clickdissmissflag", condition = !is.na(rval$trip_summary_table[['error_flag']]))
         })
