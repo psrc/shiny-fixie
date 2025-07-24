@@ -5,7 +5,7 @@ modal_delete_trip_ui <- function(id) {
   
 }
 
-modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
+modal_delete_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
@@ -17,46 +17,28 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
       
+      # assign rval ----
       rval$recid <- selected_recid()
-      rval$trip_record <- get_data(view_name="Trip", recid=rval$recid)
+      # trip data, trip summary and datatable widget
+      rval$trip_record <- get_trip_record(rval$recid)
+      rval$trip_summary_table <- get_trip_summary(rval$trip_record)
+      output$trip_summary <- render_trip_summary(rval$trip_summary_table)
 
       
       if(!identical(rval$recid,integer(0))){
-        
-        
-        rval$trip_summary_table <- rval$trip_record %>%
-          select(hhid,pernum,person_id,tripnum,recid) %>%
-          left_join(
-            get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
-              select(recid, error_flag),
-            by = "recid")
-        
-        output$trip_summary <- DT::renderDT(
-          
-          rval$trip_summary_table,
-          
-          rownames = FALSE,
-          options =list(ordering = F,
-                        dom = 't',
-                        selection = 'single',
-                        pageLength =-1)
-          
-        )
         
         showModal(
           modalDialog(title = "Delete Trip",
                       
                       "Are you sure you want to delete this trip?",
+                      
                       # show trip table
-                      div(
-                        class = "bottom-spacing",
-                        DT::DTOutput(ns("trip_summary"))
-                      ),
+                      tripeditor_top_panel(ns("trip_summary")),
                       
                       footer = column(actionButton(ns("clickdelete"), label = 'Yes'), 
                                       modalButton('No'),
-                                      width=12),
-                      easyClose = TRUE)) 
+                                      width=12)
+                      )) 
         
       }
       else{
@@ -67,7 +49,7 @@ modal_delete_trip_server <- function(id, label_name, thedata, selected_recid) {
       })
     
     observeEvent(input$clickdelete, { 
-      sproc_remove_trip(selected_recid())
+      sproc_remove_trip(rval$recid)
       })
 
     output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Delete trip") }) 

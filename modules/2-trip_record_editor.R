@@ -36,7 +36,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
       if(!identical(rval$recid,integer(0))){
         
         # prep point of interest buttons
-        poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
         poi_latlong <- prep_poi_buttons(poi_ids, rval$trip_record)
         poi_config <- tibble(inputId = ns(poi_ids), # config for actionButton_google_poi
                              latlong = poi_latlong, 
@@ -321,11 +320,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
       showModal(
         modalDialog(title = "Are you sure you want to dismiss this error flag?",
                     
+                    
                     # show trip table
-                    div(
-                      class = "bottom-spacing",
-                      DT::DTOutput(ns("trip_summary"))
-                    ),
+                    tripeditor_top_panel(ns("trip_summary")),
+                    
                     footer = div(
                       style = "display: flex; justify-content: space-between;",
                       # push changes to database

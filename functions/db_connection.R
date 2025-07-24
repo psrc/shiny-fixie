@@ -18,8 +18,7 @@ get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
   return(get_query(sql = query, db_name = cleaning_database))
 }
 
-# --- get point of interest coordinates from person and houeshold data tables----
-
+# --- get point of interest coordinates from person and household data tables----
 get_poi_geog <- function(poi_geog, person_id=NULL, hhid=NULL){
   # get person-level data from database for edit platform
   

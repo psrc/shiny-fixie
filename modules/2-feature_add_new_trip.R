@@ -11,50 +11,46 @@ modal_new_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
+    # create objects ----
+    # values that share across multiple observeEvents
     rval <- reactiveValues(recid = NULL, 
                            trip_record = NULL, 
                            trip_summary_table = NULL,
+                           poi_latlong = NULL,
+                           poi_config = NULL,
                            updated_trip = NULL)
+    
+    # rval$updated_trip <- rval$trip_record %>%
+    #   filter(row_number() != 1)
+    
     
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
       
+      # assign rval ----
       rval$recid <- selected_recid()
-      rval$trip_record <- get_data(view_name="Trip", recid=rval$recid) 
-      rval$updated_trip <- rval$trip_record %>%
-        filter(row_number() != 1)
+      
+      # trip data, trip summary and datatable widget
+      rval$trip_record <- get_trip_record(rval$recid)
+      rval$trip_summary_table <- get_trip_summary(rval$trip_record)
+      output$trip_summary <- render_trip_summary(rval$trip_summary_table)
+      
+      # prep point of interest buttons
+      rval$poi_latlong <- prep_poi_buttons(poi_ids, rval$trip_record)
+      rval$poi_config <- tibble(inputId = ns(poi_ids), # config for actionButton_google_poi
+                                latlong = rval$poi_latlong, 
+                                icon = poi_icons)
       # browser()
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
         
-        rval$trip_summary_table <- rval$trip_record %>%
-          select(hhid,pernum,person_id,tripnum,recid) %>%
-          left_join(
-            get_data(view_name = "trip_error_flags", recid = rval$recid) %>%
-              select(recid, error_flag),
-            by = "recid")
-        
-        output$trip_summary <- DT::renderDT(
-          
-          rval$trip_summary_table,
-          
-          rownames = FALSE,
-          options =list(ordering = F,
-                        dom = 't',
-                        selection = 'single',
-                        pageLength =-1)
-          
-        )
-        
         showModal(
           modalDialog(title = "Trip Record Generator",
                       
-                      # show trip table
-                      div(
-                        class = "bottom-spacing",
-                        DT::DTOutput(ns("trip_summary"))
-                      ),
+                      # editor top panel: trip summary table and point of interest buttons ----
+                      tripeditor_top_panel(ns("trip_summary"), rval$poi_config),
+                      
                       footer = column(12,
                                       class = "trip-buttons-panel",
                                       modalButton('Insert trip before selected trip'),
@@ -84,11 +80,8 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     div("Adding return home trip after this selected trip:"),
                     
-                    # show trip table
-                    div(
-                      class = "bottom-spacing",
-                      DT::DTOutput(ns("trip_summary"))
-                    ),
+                    # editor top panel: trip summary table and point of interest buttons ----
+                    tripeditor_top_panel(ns("trip_summary"), rval$poi_config),
                     
                     fluidRow(
                       column(12,
@@ -116,11 +109,8 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     div("Adding reverse trip after this selected trip:"),
                     
-                    # show trip table
-                    div(
-                      class = "bottom-spacing",
-                      DT::DTOutput(ns("trip_summary"))
-                    ),
+                    # editor top panel: trip summary table and point of interest buttons ----
+                    tripeditor_top_panel(ns("trip_summary"), rval$poi_config),
                     
                     fluidRow(
                       column(12,
