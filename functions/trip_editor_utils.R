@@ -1,19 +1,16 @@
 
-# get trip record and trip summary table from recid ----
-
+# get trip record ----
 get_trip_record <- function(recid){
-  print("inside function:")
-  print(recid)
-  # get trip data from database
+  
   trip_record <- get_data(view_name="Trip", recid=recid)
   
   return(trip_record)
   
 }
 
+# get trip summary table ----
 get_trip_summary <- function(trip_record){
   
-  # get trip data from database
   trip_summary_table <- trip_record %>%
     select(hhid,pernum,person_id,tripnum,recid) %>%
     left_join(
@@ -25,6 +22,7 @@ get_trip_summary <- function(trip_record){
   
 }
 
+# datatable for trip summary ----
 render_trip_summary <- function(trip_summary_table){
   
   DT::renderDT(
@@ -41,6 +39,7 @@ render_trip_summary <- function(trip_summary_table){
   
 }
 
+# data validation object for trip editor ----
 add_datavalidation <- function(input){
   
   rval <- reactiveValues(depart_time_timestamp_date = NULL,
@@ -92,4 +91,22 @@ add_datavalidation <- function(input){
   iv$enable()
   
   return(iv)
+}
+
+prep_poi_buttons <- function(poi_ids, trip_record){
+  
+  # get point of interest locations
+  # poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
+  poi_latlong <-c(get_poi_geog("home_geog", hhid = trip_record['hhid']), 
+                  get_poi_geog("work_geog", person_id = trip_record['person_id']), 
+                  get_poi_geog("school_geog", person_id = trip_record['person_id']))
+  
+  observe({
+    # grey out poi location buttons if this no valid location
+    toggleState(id = "open_home_geog", condition = poi_latlong[1]!="NA, NA")
+    toggleState(id = "open_work_geog", condition = poi_latlong[2]!="NA, NA")
+    toggleState(id = "open_school_geog", condition = poi_latlong[3]!="NA, NA")
+  })
+  
+  return(poi_latlong)
 }

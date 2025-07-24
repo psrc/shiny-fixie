@@ -11,9 +11,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
-    rval <- reactiveValues(compare_table = NULL,
-                           updated_trip = NULL)
-
 
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
@@ -21,40 +18,35 @@ modal_edit_trip_server <- function(id, selected_recid) {
       
       recid <- selected_recid()
       
-      # get trip data from database
-      trip_record <- get_trip_record(recid)
-      # trip summary
-      trip_summary_table <- get_trip_summary(trip_record)
-      output$trip_summary <- render_trip_summary(trip_summary_table)
-      
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(recid,integer(0))){
         
-        # enable data validation
+        # create objects ----
+        rval <- reactiveValues(compare_table = NULL,
+                               updated_trip = NULL)
+        
+        # trip data, trip summary and datatable widget
+        trip_record <- get_trip_record(recid)
+        trip_summary_table <- get_trip_summary(trip_record)
+        output$trip_summary <- render_trip_summary(trip_summary_table)
+        
+        # prep point of interest buttons
+        poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
+        poi_latlong <- prep_poi_buttons(poi_ids, trip_record)
+        poi_config <- tibble(inputId = ns(poi_ids), # config for actionButton_google_poi
+                             latlong = poi_latlong, 
+                             icon = poi_icons)
+        
+        # enable data validation ----
         iv <- add_datavalidation(input)
         
-        # get point of interest locations
-        
-        home_geog <- get_poi_geog("home_geog", hhid = trip_record['hhid'])
-        work_geog <- get_poi_geog("work_geog", person_id = trip_record['person_id'])
-        school_geog <- get_poi_geog("school_geog", person_id = trip_record['person_id'])
 
         observe({
           # grey out dismiss flag button if this trip has no error flag
           toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table[['error_flag']]))
-          # grey out poi location buttons if this no valid location
-          toggleState(id = "open_home_geog", condition = home_geog!="NA, NA")
-          toggleState(id = "open_work_geog", condition = work_geog!="NA, NA")
-          toggleState(id = "open_school_geog", condition = school_geog!="NA, NA")
         })
         
-        poi_config <- tribble(
-          ~ inputId,               ~ latlong,   ~ icon,
-          ns("open_home_geog"),    home_geog,   "house",
-          ns("open_work_geog"),    work_geog,   "briefcase",
-          ns("open_school_geog"),  school_geog, "school-flag",
-        )
         
         showModal(
           modalDialog(title = "Trip Record Editor",
@@ -70,7 +62,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                  ),
                           ), # end column
                           column(2,
-                                 ## show home, work and school location ----
+                                 ## show point of interests: home, work and school locations ----
                                  pmap(poi_config, actionButton_google_poi)
                                  
                           ) # end column
@@ -113,14 +105,15 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                  )
                           ), # end column
                           column(6,
-                                 fluidRow(column(4, numericInputSimple(ns("data_edit-dest_lat"), df = trip_record)),
-                                          column(4, numericInputSimple(ns("data_edit-dest_lng"), df = trip_record)),
-                                          column(4, 
-                                                 actionButton_google_place("open_dest",
-                                                                           df = trip_record,
-                                                                           lat_var_name = "dest_lat",
-                                                                           long_var_name = "dest_lng"))
-                                          ),     
+                                 fluidRow(
+                                   column(4, numericInputSimple(ns("data_edit-dest_lat"), df = trip_record)),
+                                   column(4, numericInputSimple(ns("data_edit-dest_lng"), df = trip_record)),
+                                   column(4, 
+                                          actionButton_google_place("open_dest",
+                                                                    df = trip_record,
+                                                                    lat_var_name = "dest_lat",
+                                                                    long_var_name = "dest_lng"))
+                                   ),     
                           ) # end column
                         ), # fluidRow
                         
