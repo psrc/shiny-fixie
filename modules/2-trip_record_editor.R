@@ -207,7 +207,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       size = "l"
           ))}
       # if no row is selected
-        else{
+      else{
           notification_warning_select_row()
         }
       })
