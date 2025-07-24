@@ -103,6 +103,13 @@ modal_edit_trip_server <- function(id, selected_recid) {
           toggleState(id = "open_school_geog", condition = school_geog!="NA, NA")
         })
         
+        poi_config <- tribble(
+          ~ inputId,               ~ latlong,   ~ icon,
+          ns("open_home_geog"),    home_geog,   "house",
+          ns("open_work_geog"),    work_geog,   "briefcase",
+          ns("open_school_geog"),  school_geog, "school-flag",
+        )
+        
         showModal(
           modalDialog(title = "Trip Record Editor",
 
@@ -118,9 +125,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           ), # end column
                           column(2,
                                  ## show home, work and school location ----
-                                 actionButton_google_poi(ns("open_home_geog"), latlong = home_geog, icon = "house"),
-                                 actionButton_google_poi(ns("open_work_geog"), latlong = work_geog, icon = "briefcase"),
-                                 actionButton_google_poi(ns("open_school_geog"), latlong = school_geog, icon = "school-flag")
+                                 pmap(poi_config, actionButton_google_poi)
                                  
                           ) # end column
                         ), # fluidRow
