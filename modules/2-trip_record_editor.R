@@ -94,9 +94,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
         school_geog <- get_poi_geog("school_geog", person_id = rval$trip_record['person_id'])
         # browser()
 
-        # grey out dismiss flag button if this trip has no error flag
         observe({
+          # grey out dismiss flag button if this trip has no error flag
           toggleState(id = "clickdissmissflag", condition = !is.na(rval$trip_summary_table[['error_flag']]))
+          # grey out poi location buttons if this no valid location
           toggleState(id = "open_home_geog", condition = home_geog!="NA, NA")
           toggleState(id = "open_work_geog", condition = work_geog!="NA, NA")
           toggleState(id = "open_school_geog", condition = school_geog!="NA, NA")
