@@ -35,12 +35,8 @@ modal_new_trip_server <- function(id, selected_recid) {
       rval$trip_summary_table <- get_trip_summary(rval$trip_record)
       output$trip_summary <- render_trip_summary(rval$trip_summary_table)
       
-      # prep point of interest buttons
-      rval$poi_latlong <- prep_poi_buttons(poi_ids, rval$trip_record)
-      rval$poi_config <- tibble(inputId = ns(poi_ids), # config for actionButton_google_poi
-                                latlong = rval$poi_latlong, 
-                                icon = poi_icons)
-      # browser()
+      # create trip summary panel ----
+      trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
@@ -49,7 +45,7 @@ modal_new_trip_server <- function(id, selected_recid) {
           modalDialog(title = "Trip Record Generator",
                       
                       # editor top panel: trip summary table and point of interest buttons ----
-                      tripeditor_top_panel(ns("trip_summary"), rval$poi_config),
+                      trip_summary_panel_ui(ns("trip_summary_panel")),
                       
                       footer = column(12,
                                       class = "trip-buttons-panel",
@@ -75,13 +71,16 @@ modal_new_trip_server <- function(id, selected_recid) {
     
     observeEvent(input$clickreturnhome, { 
       
+      # create trip summary panel ----
+      trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
+      
       showModal(
         modalDialog(title = "Trip Record Generator: Add Return Trip",
                     
                     div("Adding return home trip after this selected trip:"),
                     
                     # editor top panel: trip summary table and point of interest buttons ----
-                    tripeditor_top_panel(ns("trip_summary"), rval$poi_config),
+                    trip_summary_panel_ui(ns("trip_summary_panel")),
                     
                     fluidRow(
                       column(12,
@@ -104,13 +103,16 @@ modal_new_trip_server <- function(id, selected_recid) {
     
     observeEvent(input$clickreversetrip, { 
       
+      # create trip summary panel ----
+      trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
+      
       showModal(
         modalDialog(title = "Trip Record Generator: Add Reverse Trip",
                     
                     div("Adding reverse trip after this selected trip:"),
                     
                     # editor top panel: trip summary table and point of interest buttons ----
-                    tripeditor_top_panel(ns("trip_summary"), rval$poi_config),
+                    trip_summary_panel_ui(ns("trip_summary_panel")),
                     
                     fluidRow(
                       column(12,

@@ -98,21 +98,3 @@ add_datavalidation <- function(input){
   
   return(iv)
 }
-
-prep_poi_buttons <- function(poi_ids, trip_record){
-  
-  # get point of interest locations
-  # poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
-  poi_latlong <-c(get_poi_geog("home_geog", hhid = trip_record['hhid']), 
-                  get_poi_geog("work_geog", person_id = trip_record['person_id']), 
-                  get_poi_geog("school_geog", person_id = trip_record['person_id']))
-  
-  observe({
-    # grey out poi location buttons if this no valid location
-    toggleState(id = "open_home_geog", condition = poi_latlong[1]!="NA, NA")
-    toggleState(id = "open_work_geog", condition = poi_latlong[2]!="NA, NA")
-    toggleState(id = "open_school_geog", condition = poi_latlong[3]!="NA, NA")
-  })
-  
-  return(poi_latlong)
-}

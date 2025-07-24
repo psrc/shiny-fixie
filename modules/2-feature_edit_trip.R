@@ -25,21 +25,17 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickedit, {
       
       rval$recid <- selected_recid()
-
-      # trip data, trip summary and datatable widget
-      rval$trip_record <- get_trip_record(rval$recid)
-      rval$trip_summary_table <- get_trip_summary(rval$trip_record)
-      output$trip_summary <- render_trip_summary(rval$trip_summary_table)
       
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
+
+        # trip data, trip summary and datatable widget
+        rval$trip_record <- get_trip_record(rval$recid)
+        rval$trip_summary_table <- get_trip_summary(rval$trip_record)
         
-        # prep point of interest buttons
-        poi_latlong <- prep_poi_buttons(poi_ids, rval$trip_record)
-        poi_config <- tibble(inputId = ns(poi_ids), # config for actionButton_google_poi
-                             latlong = poi_latlong, 
-                             icon = poi_icons)
+        # create trip summary panel ----
+        trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
         
         # enable data validation ----
         iv <- add_datavalidation(input)
@@ -57,7 +53,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       tagList(
                         
                         # editor top panel: trip summary table and point of interest buttons ----
-                        tripeditor_top_panel(ns("trip_summary"), poi_config),
+                        trip_summary_panel_ui(ns("trip_summary_panel")),
                         
                         
                         ## timestamps ----
@@ -178,6 +174,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
     # ---- Show Preview Pane & Apply Changes ----
     observeEvent(input$clickupdate, {
       
+      # create trip summary panel ----
+      trip_summary_panel_server("trip_summary_panel", rval$trip_record)
+      
       # get all editable variables
       input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
       
@@ -280,8 +279,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
       showModal(
         modalDialog(title = "Update Trip Record Preview",
                     
-                    # show trip table
-                    tripeditor_top_panel(ns("trip_summary")),
+                    # editor top panel: trip summary table and point of interest buttons ----
+                    trip_summary_panel_ui(ns("trip_summary_panel")),
                     
                     div(
                       DTOutput(ns('print_cols'))
@@ -317,12 +316,14 @@ modal_edit_trip_server <- function(id, selected_recid) {
     # ---- Dismiss Flag ----
     observeEvent(input$clickdissmissflag, {
       
+      # create trip summary panel ----
+      trip_summary_panel_server("trip_summary_panel", rval$trip_record)
+      
       showModal(
         modalDialog(title = "Are you sure you want to dismiss this error flag?",
                     
-                    
-                    # show trip table
-                    tripeditor_top_panel(ns("trip_summary")),
+                    # editor top panel: trip summary table and point of interest buttons ----
+                    trip_summary_panel_ui(ns("trip_summary_panel")),
                     
                     footer = div(
                       style = "display: flex; justify-content: space-between;",
