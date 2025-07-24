@@ -90,6 +90,12 @@ add_datavalidation <- function(input){
   # data validation: Start displaying errors in the UI
   iv$enable()
   
+  # data validation: Don't proceed if any input is invalid
+  observe({
+    # grey out Preview Edits button if validation rules are not violated
+    toggleState(id = "clickupdate", condition = iv$is_valid())
+  })
+  
   return(iv)
 }
 
