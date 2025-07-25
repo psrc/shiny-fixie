@@ -43,6 +43,8 @@ i {
   border-bottom: 1px solid #000000;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
+  background-color: white;
+  z-index: 1000;
 }
 
 .mainpage_title {
