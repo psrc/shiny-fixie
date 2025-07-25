@@ -15,31 +15,23 @@ modal_new_trip_server <- function(id, selected_recid) {
     # values that share across multiple observeEvents
     rval <- reactiveValues(recid = NULL, 
                            trip_record = NULL, 
-                           trip_summary_table = NULL,
-                           poi_latlong = NULL,
-                           poi_config = NULL,
                            updated_trip = NULL)
-    
-    # rval$updated_trip <- rval$trip_record %>%
-    #   filter(row_number() != 1)
     
     
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
       
-      # assign rval ----
       rval$recid <- selected_recid()
-      
-      # trip data, trip summary and datatable widget
-      rval$trip_record <- get_trip_record(rval$recid)
-      rval$trip_summary_table <- get_trip_summary(rval$trip_record)
-      output$trip_summary <- render_trip_summary(rval$trip_summary_table)
-      
-      # create trip summary panel ----
-      trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(rval$recid,integer(0))){
+        
+        rval$trip_record <- get_trip_record(rval$recid)
+        # rval$updated_trip <- rval$trip_record %>%
+        #   filter(row_number() != 1)
+        
+        # create trip summary panel ----
+        trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
         
         showModal(
           modalDialog(title = "Trip Record Generator",
