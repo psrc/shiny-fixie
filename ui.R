@@ -14,7 +14,8 @@ shinyUI(
     theme = "styles.css", # Loads in the custom CSS
     
     # This section adds the PSRC logo on the top left of the page and the Page Title
-    fluidRow(class = "title-logo-section",
+    absolutePanel(top = 0, left = 0, right = 0, fixed = TRUE,
+      class = "title-logo-section",
       column(12,
              div(
                div(class = "psrc-logo",
@@ -48,8 +49,8 @@ shinyUI(
              ) # end div
       ) # end column
     ),
+      fluidRow(column(12, edit_interface_ui('main_page')), style = "padding-top: 1rem;") #
     
-    fluidRow(column(12, edit_interface_ui('main_page') ))
     
     # tags$footer(footer_ui('psrcfooter'))
   

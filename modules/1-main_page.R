@@ -28,13 +28,12 @@ edit_interface_server <- function(id, selected_error_type) {
     output$thetable <- DT::renderDataTable(
       
       edit_dt()[,view.cols],
-      
-      options =list(ordering = F, dom = 't'), 
+
+      options =list(ordering = F, dom = 't'),
       selection = 'single',
-      rownames = FALSE, 
+      rownames = FALSE,
       server=TRUE
-      
-      )
+    )
     
     
     # data cleaning tools ----
@@ -44,7 +43,7 @@ edit_interface_server <- function(id, selected_error_type) {
     ## button to add new trip
     modal_new_trip_server("button_new",       
                           selected_recid = reactive(selected_row_recid()))
-
+    
     ## activate Edit Trip modal
     modal_edit_trip_server("button_edit",     
                            selected_recid = reactive(selected_row_recid()))
@@ -60,40 +59,44 @@ edit_interface_server <- function(id, selected_error_type) {
     
     output$editplatform <- renderUI({
       tagList(
-        fluidRow(class = "page-format",
-          
-          # person panel
-          column(8, person_panel_ui(ns("panel-person"))),
-          
-          # trip editing panel
-          column(4,
-                 fluidRow(
-                   wellPanel(
-                     
-                     p("Select one trip in trip table below to edit"),
-                     
-                     div(class = "trip-buttons-panel",
-                         modal_new_trip_ui(ns('button_new')),
-                         modal_edit_trip_ui(ns('button_edit')),
-                         modal_delete_trip_ui(ns('button_delete'))
-                         ) # end div
-                     
-                     ), # end wellpanel
-                   
-                   wellPanel(
-                     
-                     p("Select multiple consecutive trips in trip table below to link"),
-                     modal_trip_linking_ui(ns('button_link'))
-                     
-                     ) # end wellpanel
-                 )
-          ), # end column
-          
-        ), # end fluidrow
+        absolutePanel(top = "90px", left = 0, right = 0, fixed = TRUE,
+                      style = "background-color: white; z-index: 500;",
+                      fluidRow(class = "page-format",
+                               
+                               # person panel
+                               column(8, person_panel_ui(ns("panel-person"))),
+                               
+                               # trip editing panel
+                               column(4,
+                                      fluidRow(
+                                        wellPanel(
+                                          
+                                          p("Select one trip in trip table below to edit"),
+                                          
+                                          div(class = "trip-buttons-panel",
+                                              modal_new_trip_ui(ns('button_new')),
+                                              modal_edit_trip_ui(ns('button_edit')),
+                                              modal_delete_trip_ui(ns('button_delete'))
+                                          ) # end div
+                                          
+                                        ), # end wellpanel
+                                        
+                                        wellPanel(
+                                          
+                                          p("Select multiple consecutive trips in trip table below to link"),
+                                          modal_trip_linking_ui(ns('button_link'))
+                                          
+                                        ) # end wellpanel
+                                      )
+                               ), # end column
+                      )# end fluidrow
+        ), 
         
-        fluidRow(column(12, DT::dataTableOutput(ns("thetable"))))
-      
+        fluidRow(column(12, DT::dataTableOutput(ns("thetable"))), 
+                 style = "padding-top: 25%;")
+        
       ) # end taglist
+      
     }) 
     
   }) 
