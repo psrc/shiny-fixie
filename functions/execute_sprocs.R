@@ -33,7 +33,7 @@ sproc_update_data <- function(recid, edit_list){
     # concat pairs with comma
     collapse = ", "
   )
-  # browser()  
+  browser()
   # execute_query(glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};"))
   
   notification_confirm_action("Successfully updated trip")

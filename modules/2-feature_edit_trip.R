@@ -16,8 +16,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     rval <- reactiveValues(recid = NULL,
                            compare_table = NULL,
                            updated_trip = NULL,
-                           trip_record = NULL,
-                           trip_summary_table = NULL)
+                           trip_record = NULL)
 
 
 
@@ -32,7 +31,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
         # trip data, trip summary and datatable widget
         rval$trip_record <- get_trip_record(rval$recid)
-        rval$trip_summary_table <- get_trip_summary(rval$trip_record)
+        trip_summary_table <- get_trip_summary(rval$trip_record)
         
         # create trip summary panel ----
         trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
@@ -43,7 +42,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
         observe({
           # grey out dismiss flag button if this trip has no error flag
-          toggleState(id = "clickdissmissflag", condition = !is.na(rval$trip_summary_table[['error_flag']]))
+          toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table[['error_flag']]))
         })
         
         
@@ -177,84 +176,9 @@ modal_edit_trip_server <- function(id, selected_recid) {
       # create trip summary panel ----
       trip_summary_panel_server("trip_summary_panel", rval$trip_record)
       
-      # get all editable variables
-      input_tripeditor.cols <- paste0("data_edit-", tripeditor.cols)
-      
-      ## ---- create compare table ----
-      compare_table <- NULL
-      for(i in 1:length(tripeditor.cols)){
-        # variable name
-        var_name <- tripeditor.cols[i]
-        var_input_name <- input_tripeditor.cols[i]
-        
-        # updated value
-        if(input[[var_input_name]] == ""){
-          # if text inputs like dest_purpose_other, psrc_comment are kept empty, the output would be ""
-          # change to NA to match DB value
-          updated_value <- NA
-        }
-        else{
-          updated_value <- input[[var_input_name]]
-        }
-        
-        compare_var <- as.data.frame(
-          cbind(Variable = var_name,
-                # original value
-                `Original Value` = rval$trip_record[[var_name]],
-                # updated value
-                `Updated Value` = updated_value
-          )
-        )
-        
-        # create df with original and updated values
-        compare_table <- rbind(compare_table,
-                               compare_var)
-      }
-      ## ---- process datetime ----
-      
-      # updated timestamps
-      depart_datetime <- paste(input[["data_edit-depart_time_timestamp_date"]],
-                               strftime(input[["data_edit-depart_time_timestamp_time"]], format="%H:%M:%S"))
-      arrival_datetime <- paste(input[["data_edit-arrival_time_timestamp_date"]],
-                                strftime(input[["data_edit-arrival_time_timestamp_time"]], format="%H:%M:%S"))
-      
-      compare_var <- as.data.frame(
-        cbind(Variable = c("depart_time_timestamp", "arrival_time_timestamp"),
-              # original value
-              `Original Value` = c(as.character(format(rval$trip_record[["depart_time_timestamp"]], "%Y-%m-%d %H:%M:%S")),
-                                   as.character(format(rval$trip_record[["arrival_time_timestamp"]], "%Y-%m-%d %H:%M:%S"))),
-              # updated value
-              `Updated Value` = c(depart_datetime, arrival_datetime)
-        )
-      )
-      
-      compare_table <- rbind(compare_var, compare_table)
-      
-      # detect if values are modified
-      rval$compare_table <- compare_table %>%
-        mutate(mod=case_when(`Original Value`==`Updated Value`~0,
-                             is.na(`Original Value`) & is.na(`Updated Value`)~0, # for empty text inputs
-                             TRUE~1))
-      
-      ## ---- generate updated trip record ----
-      trip <- NULL
-      for(var_name in names(rval$trip_record)){
-        if(var_name %in% tripeditor.cols){
-          row <- as.data.frame(input[[paste0("data_edit-",var_name)]])
-        } else{
-          row <- as.data.frame(rval$trip_record[[var_name]])
-        }
-        
-        if(is.null(trip)){
-          trip <- row
-        }
-        else{
-          trip <- cbind(trip, row)
-        }
-        
-      }
-      names(trip) <- names(rval$trip_record)
-      rval$updated_trip <- trip
+      # generate compare table and updated trip record ----
+      rval$compare_table <- generate_compare_table(input, rval$trip_record)
+      rval$updated_trip <- generate_updated_trip(input, rval$trip_record)
       
       
       ## ---- print all comparison table ----
