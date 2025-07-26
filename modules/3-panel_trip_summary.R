@@ -12,7 +12,17 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
     ns <- session$ns
     
     trip_summary_table <- get_trip_summary(trip_record)
-    output$trip_summary <- render_trip_summary(trip_summary_table)
+    output$trip_summary <-  DT::renderDT(
+      
+      trip_summary_table,
+      
+      rownames = FALSE,
+      options =list(ordering = F,
+                    dom = 't',
+                    selection = 'single',
+                    pageLength =-1)
+      
+    )
     
     # prep point of interest buttons ----
     poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
@@ -72,10 +82,8 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
                  pmap(poi_config, actionButton_google_poi)
           )
         ) # fluidRow
-        
-      }
-      
-    }) 
-    return(reactive({input$personID}))
+        }
+      }) 
+    
   })  # end moduleServer
 }

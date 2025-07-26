@@ -135,28 +135,18 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                  ) # end column
                           ), # fluidRow
 
-                        ## elevate comment ----
-
-                        fluidRow(
-                          column(5,
-                                 textInputSimple(ns("data_edit-psrc_comment"),
-                                                 df = rval$trip_record,
-                                                 label_name = "Add comment:")
-                                 )
-                        )
-
                       ), # end tagList
                       br(),
-                      fluidRow(column(12,
-                                      div(
-                                        class = "trip-buttons-panel",
-                                        actionButton(ns("clickupdate"), label = "Preview Edits")
-                                          )
-                                      )),
                       footer = column(12,
                                       class = "trip-buttons-panel",
+                                      
+                                      # elevate comment
+                                      textInputSimple(ns("data_edit-psrc_comment"),
+                                                      df = rval$trip_record,
+                                                      label_name = "Add comment:"),
+                                      
+                                      actionButton(ns("clickupdate"), label = "Preview Edits"),
                                       actionButton(ns("clickdissmissflag"), label = "Dismiss Flag"),
-                                      modalButton('(Delete trip)'),
                                       modalButton('(Unlink trip)'),
                                       modalButton('Cancel')
                                       ),
@@ -255,7 +245,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       actionButton(ns("clickdissmissflag_action"), label = 'Yes'),
                       modalButton('No')
                     ),
-                    easyClose = TRUE,
                     size = "l") 
         )
       

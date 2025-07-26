@@ -9,9 +9,7 @@ modal_delete_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    rval <- reactiveValues(recid = NULL, 
-                           trip_record = NULL, 
-                           trip_summary_table = NULL)
+    rval <- reactiveValues(recid = NULL)
     
     
     # data cleaning tools ----
@@ -19,26 +17,34 @@ modal_delete_trip_server <- function(id, selected_recid) {
       
       # assign rval ----
       rval$recid <- selected_recid()
-      # trip data, trip summary and datatable widget
-      rval$trip_record <- get_trip_record(rval$recid)
-      rval$trip_summary_table <- get_trip_summary(rval$trip_record)
-      output$trip_summary <- render_trip_summary(rval$trip_summary_table)
 
       
       if(!identical(rval$recid,integer(0))){
         
+        # trip data, trip summary and datatable widget
+        trip_record <- get_trip_record(rval$recid)
+        
+        # create trip summary panel ----
+        trip_summary_panel_server("trip_summary_panel", trip_record)
+        
         showModal(
-          modalDialog(title = "Delete Trip",
+          modalDialog(
+            title = "Delete Trip",
+            
+            "Are you sure you want to delete this trip?",
                       
-                      "Are you sure you want to delete this trip?",
-                      
-                      # show trip table
-                      tripeditor_top_panel(ns("trip_summary")),
-                      
-                      footer = column(actionButton(ns("clickdelete"), label = 'Yes'), 
-                                      modalButton('No'),
-                                      width=12)
-                      )) 
+            # editor top panel: trip summary table and point of interest buttons ----
+            trip_summary_panel_ui(ns("trip_summary_panel")),
+            
+            footer = div(
+              style = "display: flex; justify-content: space-between;",
+              # push changes to database
+              actionButton(ns("clickdelete"), label = 'Yes'),
+              modalButton('No'),
+              width=12
+            ),
+            size = "l")
+          ) 
         
       }
       else{

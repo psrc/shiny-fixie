@@ -22,22 +22,6 @@ get_trip_summary <- function(trip_record){
   
 }
 
-# datatable for trip summary ----
-render_trip_summary <- function(trip_summary_table){
-  
-  DT::renderDT(
-    
-    trip_summary_table,
-    
-    rownames = FALSE,
-    options =list(ordering = F,
-                  dom = 't',
-                  selection = 'single',
-                  pageLength =-1)
-    
-  )
-  
-}
 
 # data validation object for trip editor ----
 add_datavalidation <- function(input){
