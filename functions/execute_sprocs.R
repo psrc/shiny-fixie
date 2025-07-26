@@ -23,18 +23,52 @@ sproc_dismiss_flag <- function(recid, person_id){
   
 }
 
+# Helper function to evaluate whether a string can be evaluated as a number 
+is_numeric_string <- function(x) {
+  !is.na(suppressWarnings(as.numeric(x)))
+}
+
+# Helper function to format SQL values based on data type
+format_sql_value <- function(value) {
+  if (is.null(value) || is.na(value)) {
+    return("NULL")
+  } else if (is_numeric_string(value)) {
+    # For numeric values (including integers and doubles), don't use quotes
+    return(as.character(value))
+  } else if (is.logical(value)) {
+    # For logical values, convert to 1/0 without quotes
+    return(ifelse(value, "1", "0"))
+  } else if (inherits(value, "Date")) {
+    # For dates, use quotes and proper format
+    return(paste0("'", format(value, "%Y-%m-%d"), "'"))
+  } else if (inherits(value, "POSIXt")) {
+    # For datetime, use quotes and proper format
+    return(paste0("'", format(value, "%Y-%m-%d %H:%M:%S"), "'"))
+  } else {
+    # For character/text values, use quotes and escape single quotes
+    escaped_value <- gsub("'", "''", as.character(value))
+    return(paste0("'", escaped_value, "'"))
+  }
+}
+
+# Function to build SET clause for UPDATE statements with proper data type handling
+build_set_clause <- function(column_names, values) {
+  # Format each value according to its data type
+  formatted_values <- sapply(values, format_sql_value, USE.NAMES = FALSE)
+  set_pairs <- paste0(column_names, " = ", formatted_values)
+  return(paste(set_pairs, collapse = ", "))
+}
+
 # ---- Update data to database ----
 sproc_update_data <- function(recid, edit_list){
 
-  # build update query
-  all_variable_edits <- paste(
-    # variable names and value pairs
-    paste0(names(edit_list), " = '", edit_list, "'"),
-    # concat pairs with comma
-    collapse = ", "
-  )
-  browser()
-  # execute_query(glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};"))
+  # build update query using proper data type formatting
+  all_variable_edits <- build_set_clause(names(edit_list), edit_list)
+  
+  #browser()
+  sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
+  execute_query(sql_query)
+  
   
   notification_confirm_action("Successfully updated trip")
   
