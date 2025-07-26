@@ -223,7 +223,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
       names(edit_list) <- df[df$mod == 1, "Variable"]
       
       # write update query
-      sproc_update_data(rval$recid, edit_list)
+      sproc_update_data(rval$recid, rval$trip_record[["person_id"]], edit_list)
       
     })
     

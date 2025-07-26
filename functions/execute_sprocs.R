@@ -60,14 +60,17 @@ build_set_clause <- function(column_names, values) {
 }
 
 # ---- Update data to database ----
-sproc_update_data <- function(recid, edit_list){
+sproc_update_data <- function(recid, person_id, edit_list){
 
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
-  
-  #browser()
   sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
+  
+  # execute update query
   execute_query(sql_query)
+  
+  # execute follow up procedures
+  execute_query(glue("EXECUTE HHSurvey.after_edits @target_person_id = {person_id};"))
   
   
   notification_confirm_action("Successfully updated trip")
