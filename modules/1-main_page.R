@@ -14,6 +14,7 @@ edit_interface_server <- function(id, selected_error_type) {
     rval <- reactiveValues(error_type = NULL)
     observe({
       rval$error_type <- selected_error_type()
+      browser()
     })
     
     # person control panel ----
