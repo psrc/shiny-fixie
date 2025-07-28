@@ -18,7 +18,7 @@ edit_interface_server <- function(id, selected_error_type) {
     
     # person control panel ----
     
-    personID <- person_panel_server("panel-person", view_name=reactive(rval$error_type))
+    personID <- person_panel_server("panel-person", selected_error_type=reactive(rval$error_type))
     
     # the trip table ----
     

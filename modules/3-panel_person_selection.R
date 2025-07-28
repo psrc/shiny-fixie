@@ -7,7 +7,7 @@ person_panel_ui <- function(id) {
 }
 
 # person control panel
-person_panel_server <- function(id, view_name) {
+person_panel_server <- function(id, selected_error_type) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
@@ -15,7 +15,7 @@ person_panel_server <- function(id, view_name) {
                            all_person_data = NULL, 
                            person_list = NULL)
     observe({
-      rval$error_type <- view_name()
+      rval$error_type <- selected_error_type()
       rval$person_list <- get_error_flag_person_list(rval$error_type)
       rval$all_person_data <- get_data(view_name = "person_all_test", person_id = rval$person_list)
     })
