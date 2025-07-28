@@ -42,32 +42,37 @@ get_all_error_flags <- function(){
   error_names <- unique(df[["error_flag"]])
   error_list <- paste0("'",error_names,"'")
   
-  # create named vector for dropdown selection that includes "all error flags" option
+  # create named vector for dropdown selection that includes 
+  # "all error flags" and "all persons"options
   all_errors <- paste(error_list, collapse = ", ")
-  full_list <- append(c(all_errors, 'all_person_placeholder'), error_list)
+  full_list <- append(c('all_error_placeholder', 'all_person_placeholder'), error_list)
   names(full_list) <- append(c("all error flags", "all persons"), error_names)
   
   return(full_list)
 }
 
-# ---- get person list for error flag ----
+# ---- get person list for person section panel ----
 get_error_flag_person_list <- function(error_type){
   
-  if(error_type!='all_person_placeholder'){
-    query <- glue("select person_id, error_flag from HHSurvey.trip_error_flags
-                 where error_flag in ({error_type});")
+  if(error_type == 'all_error_placeholder'){
+    # show all persons with error flag
+    query <- glue("select person_id from HHSurvey.trip_error_flags;")
     df <- get_query(sql = query, db_name = cleaning_database)
-    
-    person_list <- unique(df[["person_id"]])
   }
-  # show all person IDs
-  else{
+  else if(error_type == 'all_person_placeholder'){
+    # show all persons in trip table
     query <- glue("select person_id from HHSurvey.Trip;")
     df <- get_query(sql = query, db_name = cleaning_database)
     
-    person_list <- unique(df[["person_id"]])
+  }
+  else{
+    # show persons by individual error
+    query <- glue("select person_id, error_flag from HHSurvey.trip_error_flags
+                 where error_flag in ({error_type});")
+    df <- get_query(sql = query, db_name = cleaning_database)
   }
   
+  person_list <- unique(df[["person_id"]])
   
   return(person_list)
 }
