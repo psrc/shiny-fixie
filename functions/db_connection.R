@@ -8,8 +8,18 @@ get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
   # get person-level data from database for edit platform
   
   if(!is.null(person_id)){
-    # to get data for a person_id
-    query <- glue("select * from HHSurvey.{view_name} where personid={person_id};")
+    
+    if(length(person_id)==1){
+      # to get data for a person_id
+      query <- glue("select * from HHSurvey.{view_name} where personid={person_id};")
+    }
+    # when getting a list of person IDs
+    else{
+      all_persons <- paste(person_id, collapse = ", ")
+      query <- glue("select * from HHSurvey.{view_name} where personid in ({all_persons});")
+      # browser()
+    }
+    
   }
   else if(!is.null(recid)){
     # to get data for a trip
@@ -21,6 +31,35 @@ get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
   }
   
   return(get_query(sql = query, db_name = cleaning_database))
+}
+
+# --- get list of all error flags for dropdown selection ----
+get_all_error_flags <- function(){
+  
+  # get all error flags
+  query <- glue("select error_flag from HHSurvey.trip_error_flags;")
+  df <- get_query(sql = query, db_name = cleaning_database)
+  error_names <- unique(df[["error_flag"]])
+  error_list <- paste0("'",error_names,"'")
+  
+  # create named vector for dropdown selection that includes "all error flags" option
+  all_errors <- paste(error_list, collapse = ", ")
+  full_list <- append(all_errors, error_list)
+  names(full_list) <- append("all error flags", error_names)
+  
+  return(full_list)
+}
+
+# ---- get person list for error flag ----
+get_error_flag_person_list <- function(error_type){
+  
+  query <- glue("select person_id, error_flag from HHSurvey.trip_error_flags
+                 where error_flag in ({error_type});")
+  df <- get_query(sql = query, db_name = cleaning_database)
+  
+  person_list <- unique(df[["person_id"]])
+  
+  return(person_list)
 }
 
 # --- get point of interest coordinates from person and household data tables----

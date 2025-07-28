@@ -40,8 +40,7 @@ shinyUI(
                div(
                  selectInput("error_type",
                              label = "Select Error Type:", 
-                             choices = edit_persons_view_name, 
-                             selected = "person_all_test")
+                             choices = all_error_types)
                ),
                
                style = "display: flex;"

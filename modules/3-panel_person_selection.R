@@ -16,8 +16,8 @@ person_panel_server <- function(id, view_name) {
                            person_list = NULL)
     observe({
       rval$error_type <- view_name()
-      rval$all_person_data <- get_data(view_name = rval$error_type)
-      rval$person_list <- unique(rval$all_person_data[["personid"]])
+      rval$person_list <- get_error_flag_person_list(rval$error_type)
+      rval$all_person_data <- get_data(view_name = "person_all_test", person_id = rval$person_list)
     })
     
     
