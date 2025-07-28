@@ -33,6 +33,10 @@ codebook <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/old_
 # database name
 cleaning_database <- "hhts_cleaning"
 
+# point of interest icons
+poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
+poi_icons <- c("house", "briefcase", "school-flag")
+
 # names of views for edits 
 edit_persons_view_name <- list("All Persons" = "person_all_test",
                                "All Errors" = "person_all_error",
