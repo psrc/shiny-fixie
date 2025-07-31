@@ -25,17 +25,6 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
     )
     
     # prep point of interest buttons ----
-    poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
-    
-    # get poi locations
-    poi_latlong <-c(get_poi_geog("home_geog", hhid = trip_record['hhid']), 
-                    get_poi_geog("work_geog", person_id = trip_record['person_id']), 
-                    get_poi_geog("school_geog", person_id = trip_record['person_id']))
-    names(poi_latlong) <- poi_ids
-    
-    # poi button icons
-    poi_icons <- c("house", "briefcase", "school-flag")
-    names(poi_icons) <- poi_ids
     
     # generate poi button configuration
     poi_config <- tibble(
@@ -44,14 +33,29 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
       icon = character()
     )
     
-    for (x in names(poi_latlong)) {
+    if(incl_poi){
       
-      # add poi button if valid location exists
-      if(poi_latlong[[x]] != "NA, NA"){
+      poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
+      
+      # get poi locations
+      poi_latlong <-c(get_poi_geog("home_geog", hhid = trip_record['hhid']), 
+                      get_poi_geog("work_geog", person_id = trip_record['person_id']), 
+                      get_poi_geog("school_geog", person_id = trip_record['person_id']))
+      names(poi_latlong) <- poi_ids
+      
+      # poi button icons
+      poi_icons <- c("house", "briefcase", "school-flag")
+      names(poi_icons) <- poi_ids
+      
+      for (x in names(poi_latlong)) {
         
-        poi_config <- poi_config %>% add_row(inputId = ns(x), 
-                                             latlong = poi_latlong[[x]], 
-                                             icon = poi_icons[[x]])
+        # add poi button if valid location exists
+        if(poi_latlong[[x]] != "NA, NA"){
+          
+          poi_config <- poi_config %>% add_row(inputId = ns(x), 
+                                               latlong = poi_latlong[[x]], 
+                                               icon = poi_icons[[x]])
+        }
       }
       
     }
@@ -60,7 +64,7 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
     output$tripsummarypanel <- renderUI({
       
       # only show trip summary ----
-      if(!incl_poi | nrow(poi_config)==0){
+      if(nrow(poi_config)==0){
         
         div(
           class = "bottom-spacing",

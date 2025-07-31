@@ -4,19 +4,19 @@ execute_query <- function(query){
 }
 
 # --- get data from database ----
-get_data <- function(view_name="data2fixie_test", person_id=NULL, recid=NULL){
+get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL){
   # get person-level data from database for edit platform
   
   if(!is.null(person_id)){
     
     if(length(person_id)==1){
       # to get data for a person_id
-      query <- glue("select * from HHSurvey.{view_name} where personid={person_id};")
+      query <- glue("select * from HHSurvey.{view_name} where person_id={person_id};")
     }
     # when getting a list of person IDs
     else{
       all_persons <- paste(person_id, collapse = ", ")
-      query <- glue("select * from HHSurvey.{view_name} where personid in ({all_persons});")
+      query <- glue("select * from HHSurvey.{view_name} where person_id in ({all_persons});")
       # browser()
     }
     

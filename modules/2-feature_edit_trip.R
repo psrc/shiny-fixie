@@ -164,7 +164,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickupdate, {
       
       # create trip summary panel ----
-      trip_summary_panel_server("trip_summary_panel", rval$trip_record)
+      trip_summary_panel_server("trip_summary_panel_update", rval$trip_record)
       
       # generate compare table and updated trip record ----
       rval$compare_table <- generate_compare_table(input, rval$trip_record)
@@ -194,7 +194,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
         modalDialog(title = "Update Trip Record Preview",
                     
                     # editor top panel: trip summary table and point of interest buttons ----
-                    trip_summary_panel_ui(ns("trip_summary_panel")),
+                    trip_summary_panel_ui(ns("trip_summary_panel_update")),
                     
                     div(
                       DTOutput(ns('print_cols'))
