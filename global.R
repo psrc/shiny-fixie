@@ -33,17 +33,7 @@ codebook <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/old_
 # database name
 cleaning_database <- "hhts_cleaning"
 
-# names of views for edits 
-# edit_persons_view_name <- list("All Persons" = "person_all_test",
-#                                "All Errors" = "person_all_error",
-#                                "Too Long at Dest." = "person_too_long_at_dest",
-#                                "Missing mode_1" = "person_mode_1_missing")
 all_error_types <- get_all_error_flags()
-
-# columns showing in trip table
-view.cols <- c("tripnum","modes_desc","daynum","depart_dhm","arrive_dhm","miles","mph","Error",
-               "cotravelers","origin_purpose","dest_purpose","dest_name","duration_at_dest",
-               "recid","rc","elevate_issue")
 
 # list of variables being edited in trip record editor (that would be shown in update preview comparison table)
 tripeditor.cols <- c(#"depart_time_timestamp","arrival_time_timestamp", # commented out because they need additional processing

@@ -27,7 +27,8 @@ edit_interface_server <- function(id, selected_error_type) {
     
     output$thetable <- DT::renderDataTable(
       
-      edit_dt()[,view.cols],
+      # edit_dt()[,view.cols],
+      edit_dt() %>% select(-c("person_id")),
       
       options =list(ordering = F, dom = 't'), 
       selection = 'single',
