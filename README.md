@@ -4,4 +4,4 @@ Shiny App for PSRC household travel survey manual data cleaning
 
 - requirements to run app: 
   - connected to PSRC VPN 
-  - have access to hhts_cleaning_temporal database
+  - have access to hhts_cleaning database
