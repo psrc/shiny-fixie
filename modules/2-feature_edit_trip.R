@@ -105,8 +105,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         
                         ## distance ----
                         fluidRow(class = "bottom-spacing",
-                                 column(12, 
-                                        div(numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0)),
+                                 column(6,
+                                        style = "display: flex;", 
+                                        div(numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0), 
+                                            style = "padding-right: 2rem;"),
                                         div(actionButton_google_direction("get_directions", df = rval$trip_record))
                                         )
                                  ), # fluidRow
@@ -137,19 +139,24 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
                       ), # end tagList
                       br(),
-                      footer = column(12,
-                                      class = "trip-buttons-panel",
-                                      
-                                      # elevate comment
-                                      textInputSimple(ns("data_edit-psrc_comment"),
-                                                      df = rval$trip_record,
-                                                      label_name = "Add comment:"),
-                                      
-                                      actionButton(ns("clickupdate"), label = "Preview Edits"),
-                                      actionButton(ns("clickdissmissflag"), label = "Dismiss Flag"),
-                                      modalButton('(Unlink trip)'),
-                                      modalButton('Cancel')
-                                      ),
+                      footer = div(
+                        # column(12,
+                        style = "display: flex; justify-content: space-between;",
+                        # class = "trip-buttons-panel",
+                        # elevate comment
+                        div(
+                          textInputSimple(ns("data_edit-psrc_comment"),
+                                          df = rval$trip_record,
+                                          label_name = "Add comment",
+                          ) # end div
+                        ),
+                        div(style = "margin-top: 30px;",
+                          actionButton(ns("clickupdate"), label = "Preview Edits"),
+                          actionButton(ns("clickdissmissflag"), label = "Dismiss Flag"),
+                          modalButton('(Unlink trip)'),
+                          modalButton('Cancel')
+                        ) # end div
+                      ),
                       # easyClose = TRUE,
                       size = "l"
           ))}

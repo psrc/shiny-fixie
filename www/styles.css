@@ -1,5 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&display=swap');
 
+.selectize-input, 
+.selectize-dropdown,
+.form-control,
+.selectize-input.items.full.has-options.has-items {
+  /* for text in selectInputs boxes */
+  font-size: 14px;
+}
+
+.selectize-input, .selectize-dropdown {
+  font-size: 14px;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   font-size: 12pt;
