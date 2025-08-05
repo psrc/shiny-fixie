@@ -84,6 +84,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                    column(4, numericInputSimple(ns("data_edit-origin_lat"), df = rval$trip_record)),
                                    column(4, numericInputSimple(ns("data_edit-origin_lng"), df = rval$trip_record)),
                                    column(4, 
+                                          class = "google-buttons",
                                           actionButton_google_place("open_origin",
                                                                     df = rval$trip_record,
                                                                     lat_var_name = "origin_lat",
@@ -95,6 +96,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                    column(4, numericInputSimple(ns("data_edit-dest_lat"), df = rval$trip_record)),
                                    column(4, numericInputSimple(ns("data_edit-dest_lng"), df = rval$trip_record)),
                                    column(4, 
+                                          class = "google-buttons",
                                           actionButton_google_place("open_dest",
                                                                     df = rval$trip_record,
                                                                     lat_var_name = "dest_lat",
@@ -109,7 +111,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
                                         style = "display: flex;", 
                                         div(numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0), 
                                             style = "padding-right: 2rem;"),
-                                        div(actionButton_google_direction("get_directions", df = rval$trip_record))
+                                        div(class = "google-buttons",
+                                            actionButton_google_direction("get_directions", df = rval$trip_record))
                                         )
                                  ), # fluidRow
                         

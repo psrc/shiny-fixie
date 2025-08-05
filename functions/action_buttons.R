@@ -35,5 +35,6 @@ actionButton_google_poi <- function(inputId, latlong, icon){
   actionButton(inputId=inputId, 
                label = icon(icon),
                value = "Open popup",
-               onclick =paste0("window.open('",url,"','_blank')"))
+               onclick =paste0("window.open('",url,"','_blank')"),
+               style = "margin-bottom: .75rem;")
 }

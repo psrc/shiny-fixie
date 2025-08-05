@@ -82,6 +82,7 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
                      DT::DTOutput(ns("trip_summary")))
           ),
           column(2,
+                 class = "google-buttons",
                  # show point of interests: home, work and school locations
                  pmap(poi_config, actionButton_google_poi)
           )
