@@ -27,8 +27,7 @@ sapply(module_files, source)
 sapply(function_files, source)
 
 # codebook: get variable values
-codebook <- readxl::read_xlsx("J:/Projects/Surveys/HHTravel/Survey2023/Data/old_stuff/data_deliverable_81823/codebook_guide/PSRC_Combined_Codebook_2023_08162023.xlsx", 
-                              sheet = 'value_labels_2023')
+codebook <- read_csv("data/value_labels_2023.csv")
 
 # database name
 cleaning_database <- "hhts_cleaning"
