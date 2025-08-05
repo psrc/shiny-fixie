@@ -1,5 +1,32 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&display=swap');
 
+.selectize-input, 
+.selectize-dropdown,
+.form-control,
+.selectize-input.items.full.has-options.has-items {
+  /* for text in selectInputs boxes */
+  font-size: 14px;
+}
+
+.selectize-input, .selectize-dropdown {
+  font-size: 14px;
+}
+
+.modal-footer div button{
+  background-color: #E3C9E3;
+  border-color: #E3C9E3;
+  color: #4a0048;
+  font-weight: 600;
+}
+
+.modal-footer div button:hover {
+  background-color: #91268F;
+  border-color: #91268F;
+  color: white;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   font-size: 12pt;
@@ -33,10 +60,24 @@ h4 {
 }
 
 i {
-  color: #EC9B21;
-  font-size: 20pt;
+  color:  #005753;
+  /*color: #F05A28;*/
+  font-size: 18pt;
   padding-left: 25px;
   padding-right: 25px;
+}
+
+.google-buttons button {
+  border-color: #BFE9E7;
+  background-color:  #BFE9E7;
+}
+
+.google-buttons button:hover {
+  background-color: #00716c;
+}
+
+i:hover {
+  color:  white;
 }
 
 .title-logo-section {
