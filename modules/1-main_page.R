@@ -11,14 +11,9 @@ edit_interface_server <- function(id, selected_error_type) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    rval <- reactiveValues(error_type = NULL)
-    observe({
-      rval$error_type <- selected_error_type()
-    })
-    
     # person control panel ----
     
-    personID <- person_panel_server("panel-person", selected_error_type=reactive(rval$error_type))
+    personID <- person_panel_server("panel-person", selected_error_type=reactive(selected_error_type()))
     
     # the trip table ----
     
