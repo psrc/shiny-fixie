@@ -1,9 +1,9 @@
 # Procedures triggered or executed via pass-through queries in Shiny-Fixie
 
 # ---- Trip deletion ----
-sproc_remove_trip <- function(recid){
+sproc_delete_trip <- function(recid){
   
-  # execute_query(glue("EXECUTE HHSurvey.remove_trip @target_recid = {recid};"))
+  execute_query(glue("EXECUTE HHSurvey.shifixy_delete_trip @target_recid = {recid};"))
   
   notification_confirm_action("Successfully deleted trip")
   
@@ -21,7 +21,7 @@ sproc_dismiss_flag <- function(recid, person_id){
 # ---- Add reverse trip ----
 sproc_insert_reverse_trip <- function(recid, reverse_startdatetime){
   
-  execute_query(glue("EXECUTE HHSurvey.insert_reverse_trip2 @target_recid = {recid}, @startdatetime = '{reverse_startdatetime}';"))
+  execute_query(glue("EXECUTE HHSurvey.shifixy_insert_reverse_trip @target_recid = {recid}, @startdatetime = '{reverse_startdatetime}';"))
   
   notification_confirm_action("Successfully inserted reverse trip")
   

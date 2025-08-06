@@ -9,20 +9,16 @@ modal_delete_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    rval <- reactiveValues(recid = NULL)
     
     
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
-      
-      # assign rval ----
-      rval$recid <- selected_recid()
 
       
-      if(!identical(rval$recid,integer(0))){
+      if(!identical(selected_recid(),integer(0))){
         
         # trip data, trip summary and datatable widget
-        trip_record <- get_trip_record(rval$recid)
+        trip_record <- get_trip_record(selected_recid())
         
         # create trip summary panel ----
         trip_summary_panel_server("trip_summary_panel", trip_record)
@@ -55,7 +51,7 @@ modal_delete_trip_server <- function(id, selected_recid) {
       })
     
     observeEvent(input$clickdelete, { 
-      sproc_remove_trip(rval$recid)
+      sproc_delete_trip(selected_recid())
       })
 
     output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Delete trip") }) 

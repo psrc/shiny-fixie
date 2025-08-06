@@ -31,10 +31,10 @@ modal_new_trip_server <- function(id, selected_recid) {
                       
                       footer = column(12,
                                       class = "trip-buttons-panel",
-                                      modalButton('Insert trip before selected trip'),
-                                      modalButton('Insert trip after selected trip'),
+                                      modalButton('(Insert trip before selected trip)'),
+                                      modalButton('(Insert trip after selected trip)'),
                                       actionButton(ns("clickreversetrip"), "Add reverse trip"),
-                                      actionButton(ns("clickreturnhome"), "Add return home trip"),
+                                      actionButton(ns("clickreturnhome"), "(Add return home trip)"),
                                       modalButton('Cancel')
                       ),
                       size = "l"
