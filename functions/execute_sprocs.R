@@ -1,9 +1,4 @@
-# Procedures triggered or executed via pass-through queries in FixieUI
-
-# Stored procedures maintained here:
-# https://github.com/psrc/travel-survey-QC-Clean/blob/main/survey_data_cleaning/fixie_sprocs.sql
-# https://github.com/psrc/travel-survey-QC-Clean/blob/main/survey_data_cleaning/rulesy_recalculate_after_edit.sql
-
+# Procedures triggered or executed via pass-through queries in Shiny-Fixie
 
 # ---- Trip deletion ----
 sproc_remove_trip <- function(recid){
@@ -22,6 +17,17 @@ sproc_dismiss_flag <- function(recid, person_id){
   notification_confirm_action("Successfully dismissed error flag")
   
 }
+
+# ---- Add reverse trip ----
+sproc_insert_reverse_trip <- function(recid, reverse_startdatetime){
+  
+  execute_query(glue("EXECUTE HHSurvey.insert_reverse_trip2 @target_recid = {recid}, @startdatetime = '{reverse_startdatetime}';"))
+  
+  notification_confirm_action("Successfully inserted reverse trip")
+  
+}
+
+# ---- Update data to database ----
 
 # Helper function to evaluate whether a string can be evaluated as a number 
 is_numeric_string <- function(x) {
@@ -59,13 +65,12 @@ build_set_clause <- function(column_names, values) {
   return(paste(set_pairs, collapse = ", "))
 }
 
-# ---- Update data to database ----
 sproc_update_data <- function(recid, person_id, edit_list){
 
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
   sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
-  
+  # browser()
   # execute update query
   execute_query(sql_query)
   

@@ -83,6 +83,13 @@ add_datavalidation <- function(input){
   return(iv)
 }
 
+combine_datetime <- function(date, time){
+  
+  datetime <- paste(date, strftime(time, format="%H:%M:%S"))
+  
+  return(datetime)
+}
+
 # generate compare table: detect if values are modified ----
 generate_compare_table <- function(input, trip_record){
   
@@ -122,10 +129,8 @@ generate_compare_table <- function(input, trip_record){
   ## ---- process datetime ----
   
   # updated timestamps
-  depart_datetime <- paste(input[["data_edit-depart_time_timestamp_date"]],
-                           strftime(input[["data_edit-depart_time_timestamp_time"]], format="%H:%M:%S"))
-  arrival_datetime <- paste(input[["data_edit-arrival_time_timestamp_date"]],
-                            strftime(input[["data_edit-arrival_time_timestamp_time"]], format="%H:%M:%S"))
+  depart_datetime <- combine_datetime(input[["data_edit-depart_time_timestamp_date"]],input[["data_edit-depart_time_timestamp_time"]])
+  arrival_datetime <- combine_datetime(input[["data_edit-arrival_time_timestamp_date"]],input[["data_edit-arrival_time_timestamp_time"]])
   
   compare_var <- as.data.frame(
     cbind(Variable = c("depart_time_timestamp", "arrival_time_timestamp"),

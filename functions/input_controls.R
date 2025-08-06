@@ -85,8 +85,10 @@ dateTimeInput <- function(inputId, df = NULL, label_name = NULL, datetime_val = 
   } 
   # if no value is provided, show empty input box
   else{
+    
     date_value <- ""
     time_value <- ""
+    
   }
   
     

@@ -12,8 +12,6 @@ modal_new_trip_server <- function(id, selected_recid) {
     ns <- session$ns
     
     # create objects ----
-    # values that share across multiple observeEvents
-    rval <- reactiveValues(updated_trip = NULL)
     trip_record <- reactive(get_trip_record(selected_recid()))
     
     # data cleaning tools ----
@@ -21,9 +19,6 @@ modal_new_trip_server <- function(id, selected_recid) {
       
       # if a row is selected in table: show Trip Record Editor
       if(!identical(selected_recid(),integer(0))){
-        
-        rval$updated_trip <- trip_record() %>%
-          filter(row_number() != 1)
         
         # create trip summary panel ----
         trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
@@ -116,11 +111,20 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     footer = column(12,
                                     class = "trip-buttons-panel",
-                                    modalButton('Preview new trip'),
+                                    actionButton(ns("pushaddreverse"), 'Add reverse trip'),
                                     modalButton('Cancel')
                     ),
                     size = "l"))
     })
+    
+    observeEvent(input$pushaddreverse, {
+      
+      reverse_datetime <- combine_datetime(input[["reverse_trip-depart_timestamp_date"]],input[["reverse_trip-depart_timestamp_time"]])
+      
+      # executes dismiss flag and show success message
+      sproc_insert_reverse_trip(selected_recid(), reverse_datetime)
+      
+      })
 
     output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Add new trip") })
     

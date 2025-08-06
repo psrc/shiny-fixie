@@ -213,7 +213,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                     footer = div(
                       style = "display: flex; justify-content: space-between;",
                       # push changes to database
-                      actionButton(ns("clickpush"), label = "Apply Changes"),
+                      actionButton(ns("pushedit"), label = "Apply Changes"),
                       modalButton('Close')
                     ),
                     easyClose = TRUE,
@@ -224,7 +224,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     })
     
     # ---- Update Data in Database ----
-    observeEvent(input$clickpush, {
+    observeEvent(input$pushedit, {
       
       # create a named list of all edits
       df <- rval$compare_table
@@ -252,7 +252,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                     footer = div(
                       style = "display: flex; justify-content: space-between;",
                       # push changes to database
-                      actionButton(ns("clickdissmissflag_action"), label = 'Yes'),
+                      actionButton(ns("pushdismissflag"), label = 'Yes'),
                       modalButton('No')
                     ),
                     size = "l") 
@@ -261,7 +261,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     })
     
     ## ---- Confirm Dismiss Flag ----
-    observeEvent(input$clickdissmissflag_action, {
+    observeEvent(input$pushdismissflag, {
       
       # executes dismiss flag and show success message
       sproc_dismiss_flag(rval$recid, rval$trip_record[["person_id"]])
