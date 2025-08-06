@@ -57,26 +57,39 @@ numericInputSimple <- function(inputId, df, label_name = NULL, min = NA, max = N
 }
 
 # datetime input - specialized for timestamp columns with proper date/time controls
-dateTimeInput <- function(inputId, df, label_name = NULL){
+dateTimeInput <- function(inputId, df = NULL, label_name = NULL, datetime_val = NULL){
   
-  rval <- reactiveValues(datetime_string = NULL)
-  
-  var_str <- gsub("^.*-", "", inputId)
-  if(is.null(label_name)){
-    label_name = var_str
+  # for trip editor when trip_record is provided
+  if(!is.null(df)){
+    
+    var_str <- gsub("^.*-", "", inputId)
+    if(is.null(label_name)){
+      label_name = var_str
+    }
+    
+    # Get the datetime value
+    datetime_val <- df[1, c(var_str)]
+    
   }
   
-  # Get the datetime value and parse it properly
-  datetime_val <- df[1, c(var_str)]
+  # for trip editor and return home trip when datetime_val is provided
+  if(!is.null(datetime_val)){
+    
+    # Truncate to seconds to match database precision
+    parsed_datetime <- as.POSIXct(format(datetime_val, "%Y-%m-%d %H:%M:%S"))
+    
+    # Extract date and time components
+    date_value <- strftime(parsed_datetime, format="%Y-%m-%d")
+    time_value <- hms::as_hms(strftime(parsed_datetime, format="%H:%M:%S"))
+    
+  } 
+  # if no value is provided, show empty input box
+  else{
+    date_value <- ""
+    time_value <- ""
+  }
   
-  parsed_datetime <- as.POSIXct(datetime_val)
-  # Truncate to seconds to match database precision
-  parsed_datetime <- as.POSIXct(format(parsed_datetime, "%Y-%m-%d %H:%M:%S"))
-  
-  # Extract date and time components
-  date_part <- strftime(parsed_datetime, format="%Y-%m-%d")
-  time_part <- strftime(parsed_datetime, format="%H:%M:%S")
-  
+    
   # Create a container with both date and time inputs
   div(
     style = "margin-bottom: 15px;",
@@ -86,12 +99,15 @@ dateTimeInput <- function(inputId, df, label_name = NULL){
       column(5,
              dateInput(inputId = paste0(inputId, "_date"),
                        label = "Date",
-                       value = date_part,
+                       value = date_value,
                        format = "yyyy-mm-dd")
       ),
       column(7,
-             timeInput(paste0(inputId, "_time"), "Time", value = hms::as_hms(time_part))
+             timeInput(paste0(inputId, "_time"), "Time", value = time_value)
       )
     )
   )
+    
+  
+  
 }

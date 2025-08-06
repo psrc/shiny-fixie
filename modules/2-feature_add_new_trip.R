@@ -13,25 +13,20 @@ modal_new_trip_server <- function(id, selected_recid) {
     
     # create objects ----
     # values that share across multiple observeEvents
-    rval <- reactiveValues(recid = NULL, 
-                           trip_record = NULL, 
-                           updated_trip = NULL)
-    
+    rval <- reactiveValues(updated_trip = NULL)
+    trip_record <- reactive(get_trip_record(selected_recid()))
     
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
       
-      rval$recid <- selected_recid()
-      
       # if a row is selected in table: show Trip Record Editor
-      if(!identical(rval$recid,integer(0))){
+      if(!identical(selected_recid(),integer(0))){
         
-        rval$trip_record <- get_trip_record(rval$recid)
-        # rval$updated_trip <- rval$trip_record %>%
-        #   filter(row_number() != 1)
+        rval$updated_trip <- trip_record() %>%
+          filter(row_number() != 1)
         
         # create trip summary panel ----
-        trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
+        trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
         
         showModal(
           modalDialog(title = "Trip Record Generator",
@@ -64,7 +59,7 @@ modal_new_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickreturnhome, { 
       
       # create trip summary panel ----
-      trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
+      trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
       
       showModal(
         modalDialog(title = "Trip Record Generator: Add Return Trip",
@@ -76,7 +71,10 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     fluidRow(
                       column(12,
-                             dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$updated_trip)
+                             dateTimeInput(ns("return_home-depart_timestamp"), 
+                                           label_name = "Enter the departure date and time for return home trip:",
+                                           # show arrival time of previous trip as placeholder
+                                           datetime_val = trip_record()[1,'arrival_time_timestamp'])
                              
                       ) # end column
                     ),
@@ -96,7 +94,7 @@ modal_new_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickreversetrip, { 
       
       # create trip summary panel ----
-      trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
+      trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
       
       showModal(
         modalDialog(title = "Trip Record Generator: Add Reverse Trip",
@@ -108,7 +106,10 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     fluidRow(
                       column(12,
-                             dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$updated_trip)
+                             dateTimeInput(ns("reverse_trip-depart_timestamp"), 
+                                           label_name = "Enter the departure date and time for reverse trip:",
+                                           # show arrival time of previous trip as placeholder
+                                           datetime_val = trip_record()[1,'arrival_time_timestamp'])
                              
                       ) # end column
                     ),
