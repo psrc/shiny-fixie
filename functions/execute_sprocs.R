@@ -67,24 +67,12 @@ build_set_clause <- function(column_names, values) {
 
 sproc_update_data <- function(recid, person_id, edit_list){
   
-  message("start")
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
   sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
-  # browser()
-  # execute update query
-  message("1 execute update query:")
-  message(paste("all_variable_edits:", all_variable_edits))
-  message(paste("sql_query:", sql_query))
-  
   execute_query(sql_query)
   
-  message("2 execute HHSurvey.shifixy_after_edits2")
-  browser()
-  # execute follow up procedures
-  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits2 @target_person_id = {person_id};"))
-  
-  message("3 finish")
+  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
   
   notification_confirm_action("Successfully updated trip")
   

@@ -1,6 +1,5 @@
 # ---- execute SQL query ----
 execute_query <- function(query){
-  message(paste("db_name in sql_execute():", cleaning_database))
   
   sql_execute(query, db_name=cleaning_database)
 }
