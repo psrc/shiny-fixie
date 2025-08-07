@@ -12,7 +12,7 @@ sproc_delete_trip <- function(recid){
 # ---- Dismiss error flag ----
 sproc_dismiss_flag <- function(recid, person_id){
   
-  execute_query(glue("EXECUTE HHSurvey.dismiss_flag @target_recid = {recid}, @target_person_id = {person_id};"))
+  execute_query(glue("EXECUTE HHSurvey.shifixy_dismiss_flag @target_recid = {recid};"))
   
   notification_confirm_action("Successfully dismissed error flag")
   
@@ -75,7 +75,7 @@ sproc_update_data <- function(recid, person_id, edit_list){
   execute_query(sql_query)
   
   # execute follow up procedures
-  execute_query(glue("EXECUTE HHSurvey.after_edits @target_person_id = {person_id};"))
+  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
   
   
   notification_confirm_action("Successfully updated trip")
