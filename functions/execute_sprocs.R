@@ -66,7 +66,8 @@ build_set_clause <- function(column_names, values) {
 }
 
 sproc_update_data <- function(recid, person_id, edit_list){
-
+  
+  message("start")
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
   sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
