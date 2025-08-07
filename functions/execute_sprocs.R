@@ -79,10 +79,10 @@ sproc_update_data <- function(recid, person_id, edit_list){
   
   execute_query(sql_query)
   
-  message("2 execute HHSurvey.shifixy_after_edits")
+  message("2 execute HHSurvey.shifixy_after_edits2")
   browser()
   # execute follow up procedures
-  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
+  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits2 @target_person_id = {person_id};"))
   
   message("3 finish")
   
