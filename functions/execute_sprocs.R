@@ -73,14 +73,18 @@ sproc_update_data <- function(recid, person_id, edit_list){
   sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
   # browser()
   # execute update query
-  message("1")
+  message("1 execute update query:")
+  message(paste("all_variable_edits:", all_variable_edits))
+  message(paste("sql_query:", sql_query))
+  
   execute_query(sql_query)
   
-  message("2")
+  message("2 execute HHSurvey.shifixy_after_edits")
+  browser()
   # execute follow up procedures
   execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
   
-  message("3")
+  message("3 finish")
   
   notification_confirm_action("Successfully updated trip")
   
