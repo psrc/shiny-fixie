@@ -37,11 +37,7 @@ shinyUI(
                #                 )),
                
                # select error type
-               div(
-                 selectInput("error_type",
-                             label = "Select Error Type:", 
-                             choices = all_error_types)
-               ),
+               div(error_dropdown_ui('dropdown_errortype')),
                
                style = "display: flex;"
              ) # end div

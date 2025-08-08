@@ -62,7 +62,9 @@ edit_interface_server <- function(id, selected_error_type) {
         fluidRow(class = "page-format",
           
           # person panel
-          column(8, person_panel_ui(ns("panel-person"))),
+          column(8, 
+                 person_panel_ui(ns("panel-person"))
+                 ),
           
           # trip editing panel
           column(4,

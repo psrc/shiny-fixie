@@ -41,7 +41,7 @@ person_panel_server <- function(id, selected_error_type) {
             ), # end fluidRow
           
           fluidRow(
-            column(12, DT::DTOutput(ns("persontable")) ) 
+            column(12, DT::DTOutput(ns("persontable")) )
             ) # end fluidRow
           
           ) # end wellPanel
