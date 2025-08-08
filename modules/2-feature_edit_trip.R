@@ -13,24 +13,20 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     # create objects ----
     # values that share across multiple observeEvents
-    rval <- reactiveValues(recid = NULL,
-                           compare_table = NULL,
-                           updated_trip = NULL,
-                           trip_record = NULL)
+    rval <- reactiveValues(trip_record = NULL,
+                           edit_list = NULL)
 
 
 
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
       
-      rval$recid <- selected_recid()
-      
       
       # if a row is selected in table: show Trip Record Editor
-      if(!identical(rval$recid,integer(0))){
+      if(!identical(selected_recid(),integer(0))){
 
         # trip data, trip summary and datatable widget
-        rval$trip_record <- get_trip_record(rval$recid)
+        rval$trip_record <- get_trip_record(selected_recid())
         trip_summary_table <- get_trip_summary(rval$trip_record)
         
         # create trip summary panel ----
@@ -43,6 +39,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
         observe({
           # grey out dismiss flag button if this trip has no error flag
           toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table[['error_flag']]))
+          # grey out apply changes button if no edits were made
+          toggleState(id = "pushedit", condition = length(rval$edit_list) !=0 & !is.null(rval$edit_list))
         })
         
         
@@ -177,14 +175,17 @@ modal_edit_trip_server <- function(id, selected_recid) {
       trip_summary_panel_server("trip_summary_panel_update", rval$trip_record)
       
       # generate compare table and updated trip record ----
-      rval$compare_table <- generate_compare_table(input, rval$trip_record)
-      rval$updated_trip <- generate_updated_trip(input, rval$trip_record)
+      compare_table <- generate_compare_table(input, rval$trip_record)
+      
+      # create a named list of all edits
+      rval$edit_list <- compare_table[compare_table$mod == 1, "Updated Value"]
+      names(rval$edit_list) <- compare_table[compare_table$mod == 1, "Variable"]
       
       
       ## ---- print all comparison table ----
       output$print_cols <- renderDT({
         
-        datatable(rval$compare_table,
+        datatable(compare_table,
                   options =list(ordering = F,
                                 dom = 't',
                                 pageLength = -1,
@@ -225,15 +226,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     # ---- Update Data in Database ----
     observeEvent(input$pushedit, {
-      
-      # create a named list of all edits
-      df <- rval$compare_table
-      
-      edit_list <- df[df$mod == 1, "Updated Value"]
-      names(edit_list) <- df[df$mod == 1, "Variable"]
-      
       # write update query
-      sproc_update_data(rval$recid, rval$trip_record[["person_id"]], edit_list)
+      sproc_update_data(selected_recid(), rval$trip_record[["person_id"]], rval$edit_list)
       
     })
     
@@ -264,7 +258,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$pushdismissflag, {
       
       # executes dismiss flag and show success message
-      sproc_dismiss_flag(rval$recid, rval$trip_record[["person_id"]])
+      sproc_dismiss_flag(selected_recid(), rval$trip_record[["person_id"]])
       
     })
     
