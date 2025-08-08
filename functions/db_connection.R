@@ -34,6 +34,15 @@ get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL){
   return(get_query(sql = query, db_name = cleaning_database))
 }
 
+# ---- get trip record ----
+get_trip_record <- function(recid){
+  
+  trip_record <- get_data(view_name="Trip", recid=recid)
+  
+  return(trip_record)
+  
+}
+
 # --- get list of all error flags for dropdown selection ----
 get_all_error_flags <- function(){
   

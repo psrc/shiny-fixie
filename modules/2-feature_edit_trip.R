@@ -11,12 +11,17 @@ modal_edit_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    # create objects ----
-    # values that share across multiple observeEvents
     rval <- reactiveValues(trip_record = NULL,
-                           edit_list = NULL)
+                           edit_list = NULL,
+                           test_dissmissflag = NULL)
 
-
+    # grey out invalid buttons ----
+    observe({
+      # grey out dismiss flag button if this trip has no error flag
+      toggleState(id = "clickdissmissflag", condition = nrow(rval$test_dissmissflag)>0)
+      # grey out apply changes button if no edits were made
+      toggleState(id = "pushedit", condition = length(rval$edit_list)>0 & !is.null(rval$edit_list))
+    })
 
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
@@ -25,25 +30,16 @@ modal_edit_trip_server <- function(id, selected_recid) {
       # if a row is selected in table: show Trip Record Editor
       if(!identical(selected_recid(),integer(0))){
 
-        # trip data, trip summary and datatable widget
         rval$trip_record <- get_trip_record(selected_recid())
-        trip_summary_table <- get_trip_summary(rval$trip_record)
+        rval$test_dissmissflag <- get_data(view_name = "trip_error_flags", recid = selected_recid())
         
-        # create trip summary panel ----
+        # trip summary panel
         trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
         
         # enable data validation ----
         iv <- add_datavalidation(input)
         
-
-        observe({
-          # grey out dismiss flag button if this trip has no error flag
-          toggleState(id = "clickdissmissflag", condition = !is.na(trip_summary_table[['error_flag']]))
-          # grey out apply changes button if no edits were made
-          toggleState(id = "pushedit", condition = length(rval$edit_list) !=0 & !is.null(rval$edit_list))
-        })
-        
-        
+        # Trip Record Editor ---
         showModal(
           modalDialog(title = "Trip Record Editor",
 
@@ -171,18 +167,16 @@ modal_edit_trip_server <- function(id, selected_recid) {
     # ---- Show Preview Pane & Apply Changes ----
     observeEvent(input$clickupdate, {
       
-      # create trip summary panel ----
+      # trip summary panel
       trip_summary_panel_server("trip_summary_panel_update", rval$trip_record)
       
-      # generate compare table and updated trip record ----
-      compare_table <- generate_compare_table(input, rval$trip_record)
+      ## ---- print all comparison table ----
       
-      # create a named list of all edits
+      # generate compare table and named list of all edits
+      compare_table <- generate_compare_table(input, rval$trip_record)
       rval$edit_list <- compare_table[compare_table$mod == 1, "Updated Value"]
       names(rval$edit_list) <- compare_table[compare_table$mod == 1, "Variable"]
       
-      
-      ## ---- print all comparison table ----
       output$print_cols <- renderDT({
         
         datatable(compare_table,
@@ -200,11 +194,11 @@ modal_edit_trip_server <- function(id, selected_recid) {
         
       })
       
-      ## ---- modal dialog: show update preview pane ----
+      ## Update Trip Record Preview ----
       showModal(
         modalDialog(title = "Update Trip Record Preview",
                     
-                    # editor top panel: trip summary table and point of interest buttons ----
+                    # editor top panel: trip summary table ----
                     trip_summary_panel_ui(ns("trip_summary_panel_update")),
                     
                     div(
@@ -226,6 +220,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     # ---- Update Data in Database ----
     observeEvent(input$pushedit, {
+
       # write update query
       sproc_update_data(selected_recid(), rval$trip_record[["person_id"]], rval$edit_list)
       
@@ -234,13 +229,13 @@ modal_edit_trip_server <- function(id, selected_recid) {
     # ---- Dismiss Flag ----
     observeEvent(input$clickdissmissflag, {
       
-      # create trip summary panel ----
+      # trip summary panel
       trip_summary_panel_server("trip_summary_panel", rval$trip_record)
       
       showModal(
         modalDialog(title = "Are you sure you want to dismiss this error flag?",
                     
-                    # editor top panel: trip summary table and point of interest buttons ----
+                    ## editor top panel: trip summary table ----
                     trip_summary_panel_ui(ns("trip_summary_panel")),
                     
                     footer = div(

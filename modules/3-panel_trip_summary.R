@@ -11,10 +11,16 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    trip_summary_table <- get_trip_summary(trip_record)
+    # trip_summary_table <- get_trip_summary(trip_record)
     output$trip_summary <-  DT::renderDT(
       
-      trip_summary_table,
+      # get trip summary table
+      trip_record %>%
+        select(hhid,pernum,person_id,tripnum,recid) %>%
+        left_join(
+          get_data(view_name = "trip_error_flags", recid = .[['recid']]) %>%
+            select(recid, error_flag),
+          by = "recid"),
       
       rownames = FALSE,
       options =list(ordering = F,
