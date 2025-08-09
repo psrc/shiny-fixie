@@ -25,10 +25,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
 
     # Trip Record Editor ----
     observeEvent(input$clickedit, {
+      # browser()
       
-      
-      # if a row is selected in table: show Trip Record Editor
-      if(!identical(selected_recid(),integer(0))){
+      # if a single row is selected in table: show Trip Record Editor
+      if(length(selected_recid())==1){
 
         rval$trip_record <- get_trip_record(selected_recid())
         rval$test_dissmissflag <- get_data(view_name = "trip_error_flags", recid = selected_recid())
@@ -157,7 +157,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       # easyClose = TRUE,
                       size = "l"
           ))}
-      # if no row is selected
+      # if no row or multiple rows are selected
       else{
           notification_warning_select_row()
         }

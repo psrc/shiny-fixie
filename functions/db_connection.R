@@ -10,21 +10,18 @@ get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL){
   
   if(!is.null(person_id)){
     
-    if(length(person_id)==1){
-      # to get data for a person_id
-      query <- glue("select * from HHSurvey.{view_name} where person_id={person_id};")
-    }
     # when getting a list of person IDs
-    else{
-      all_persons <- paste(person_id, collapse = ", ")
-      query <- glue("select * from HHSurvey.{view_name} where person_id in ({all_persons});")
-      # browser()
-    }
+    all_persons <- paste(person_id, collapse = ", ")
+    query <- glue("select * from HHSurvey.{view_name} where person_id in ({all_persons});")
     
   }
   else if(!is.null(recid)){
+    
+    # when getting a list of record IDs
+    all_recids <- paste(recid, collapse = ",")
     # to get data for a trip
-    query <- glue("select * from HHSurvey.{view_name} where recid={recid};")
+    query <- glue("select * from HHSurvey.{view_name} where recid in ({all_recids});")
+    
   }
   else {
     # to get data for all persons

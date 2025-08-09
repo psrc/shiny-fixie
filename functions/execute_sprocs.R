@@ -27,6 +27,15 @@ sproc_insert_reverse_trip <- function(recid, reverse_startdatetime){
   
 }
 
+# ---- Link trips ----
+sproc_link_trips <- function(recid){
+  
+  # execute_query(glue("EXECUTE HHSurvey.shifixy_insert_reverse_trip @target_recid = {recid}, @startdatetime = '{reverse_startdatetime}';"))
+  
+  notification_confirm_action("(Link trips function not completed) Successfully linked trips")
+  
+}
+
 # ---- Update data to database ----
 
 # Helper function to evaluate whether a string can be evaluated as a number 

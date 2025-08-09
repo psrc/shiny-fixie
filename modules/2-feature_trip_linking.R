@@ -8,26 +8,48 @@ modal_trip_linking_ui <- function(id) {
 modal_trip_linking_server <- function(id, thedata, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
-    
-    output$print_row <- renderPrint({
-      cat('These rows were selected:\n\n')
-      cat(selected_recid())
-    })
+        
+    # create objects ----
+    trip_record <- reactive(get_trip_record(selected_recid()))
     
     # data cleaning tools ----
-    observeEvent(input$clicklink, { showModal(
-      modalDialog(title = "Trip Linking Editor",
-                  
-                  "Placeholder for trip linking!",
-                  div(verbatimTextOutput(ns('print_row'))),
-                  
-                  footer = column(modalButton('Cancel'),
-                                  width=12),
-                  easyClose = TRUE
-      )
-    ) })
+    observeEvent(input$clicklink, { 
+      
+      # test if selected recids are two or more consecutive records
+      if(length(selected_recid())>=2 & all(diff(selected_recid()) == 1)){
+        
+        # trip summary panel
+        trip_summary_panel_server("trip_summary_panel", trip_record())
+        
+        showModal(
+          modalDialog(
+            title = "Trip Linking Editor",
+            
+            "Are you sure you want to link these trips?",
+            
+            # editor top panel: trip summary table and point of interest buttons ----
+            trip_summary_panel_ui(ns("trip_summary_panel")),
+            
+            
+            footer = div(
+              style = "display: flex; justify-content: space-between;",
+              # push changes to database
+              actionButton(ns("pushlink"), label = 'Yes'),
+              modalButton('No'),
+              width=12
+            )
+          )) 
+      }
+      else{
+        notification_warning_select_linking()
+      }
+    })
+    
+    observeEvent(input$pushlink, { 
+      sproc_link_trips(selected_recid())
+    })
 
-    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "(Link selected trips)") })
+    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "Link selected trips") })
     
   })  # end moduleServer
 }

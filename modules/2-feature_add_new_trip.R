@@ -18,9 +18,9 @@ modal_new_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickedit, { 
       
       # if a row is selected in table: show Trip Record Editor
-      if(!identical(selected_recid(),integer(0))){
+      if(length(selected_recid())==1){
         
-        # create trip summary panel ----
+        # trip summary panel
         trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
         
         showModal(

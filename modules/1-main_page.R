@@ -29,7 +29,7 @@ edit_interface_server <- function(id, selected_error_type) {
         arrange(tripnum),
       
       options =list(ordering = F, dom = 't'), 
-      selection = 'single',
+      # selection = 'single',
       rownames = FALSE, 
       server=TRUE
       
@@ -71,7 +71,7 @@ edit_interface_server <- function(id, selected_error_type) {
                  fluidRow(
                    wellPanel(
                      
-                     p("Select one trip in trip table below to edit"),
+                     p("Select one trip to edit"),
                      
                      div(class = "trip-buttons-panel",
                          modal_new_trip_ui(ns('button_new')),
@@ -83,7 +83,7 @@ edit_interface_server <- function(id, selected_error_type) {
                    
                    wellPanel(
                      
-                     p("Select multiple consecutive trips in trip table below to link"),
+                     p("Select multiple consecutive trips to link trip"),
                      modal_trip_linking_ui(ns('button_link'))
                      
                      ) # end wellpanel

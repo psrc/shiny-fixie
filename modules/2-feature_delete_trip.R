@@ -15,12 +15,12 @@ modal_delete_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickedit, { 
 
       
-      if(!identical(selected_recid(),integer(0))){
+      if(length(selected_recid())==1){
         
         # trip data, trip summary and datatable widget
         trip_record <- get_trip_record(selected_recid())
         
-        # create trip summary panel ----
+        # trip summary panel
         trip_summary_panel_server("trip_summary_panel", trip_record)
         
         showModal(
@@ -35,7 +35,7 @@ modal_delete_trip_server <- function(id, selected_recid) {
             footer = div(
               style = "display: flex; justify-content: space-between;",
               # push changes to database
-              actionButton(ns("clickdelete"), label = 'Yes'),
+              actionButton(ns("pushdelete"), label = 'Yes'),
               modalButton('No'),
               width=12
             ),
@@ -50,7 +50,7 @@ modal_delete_trip_server <- function(id, selected_recid) {
       
       })
     
-    observeEvent(input$clickdelete, { 
+    observeEvent(input$pushdelete, { 
       sproc_delete_trip(selected_recid())
       })
 

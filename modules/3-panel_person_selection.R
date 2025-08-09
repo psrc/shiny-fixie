@@ -21,9 +21,9 @@ person_panel_server <- function(id, selected_error_type) {
         filter(person_id == input$personID), 
       
       rownames = FALSE,
+      selection = 'none',
       options = list(ordering = F, 
-                     dom = 't',  
-                     selection = 'single')
+                     dom = 't')
       )
     
     output$personpanel <- renderUI({

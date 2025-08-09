@@ -23,9 +23,9 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
           by = "recid"),
       
       rownames = FALSE,
+      selection = 'none',
       options =list(ordering = F,
                     dom = 't',
-                    selection = 'single',
                     pageLength =-1)
       
     )

@@ -1,9 +1,19 @@
-# ---- Warning: select trip ----
+# ---- Warning: select single trip ----
 notification_warning_select_row <- function(){
   
   # switch to notification
   showNotification(
-    "Please select a record from the table below to continue",
+    "Please select a single record from the table to continue",
+    type = "warning")
+  
+}
+
+# ---- Warning: select linking trip ----
+notification_warning_select_linking <- function(){
+  
+  # switch to notification
+  showNotification(
+    "Please select two or more consecutive records from the table to continue",
     type = "warning")
   
 }
