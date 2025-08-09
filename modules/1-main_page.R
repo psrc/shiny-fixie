@@ -83,7 +83,7 @@ edit_interface_server <- function(id, selected_error_type) {
                    
                    wellPanel(
                      
-                     p("Select multiple consecutive trips to link trip"),
+                     p("Select multiple consecutive trips to link"),
                      modal_trip_linking_ui(ns('button_link'))
                      
                      ) # end wellpanel

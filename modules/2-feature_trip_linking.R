@@ -16,7 +16,7 @@ modal_trip_linking_server <- function(id, thedata, selected_recid) {
     observeEvent(input$clicklink, { 
       
       # test if selected recids are two or more consecutive records
-      if(length(selected_recid())>=2 & all(diff(selected_recid()) == 1)){
+      if(length(selected_recid())>=2 & all(diff(sort(selected_recid())) == 1)){
         
         # trip summary panel
         trip_summary_panel_server("trip_summary_panel", trip_record())
