@@ -18,15 +18,14 @@ edit_interface_server <- function(id, selected_error_type) {
     # the trip table ----
     
     # person data from database
-    edit_dt <- reactive({ get_data(person_id = personID()) })
+    edit_dt <- reactive({ get_data(person_id = personID(), order_by=c("person_id", "tripnum")) })
     
     output$thetable <- DT::renderDataTable(
       
       edit_dt() %>% 
         # remove missing response pattern
         mutate(Modes = str_replace(Modes, ",?Missing Response,?", "")) %>%
-        select(-c("person_id")) %>%
-        arrange(tripnum),
+        select(-c("person_id")),
       
       options =list(ordering = F, dom = 't'), 
       # selection = 'single',

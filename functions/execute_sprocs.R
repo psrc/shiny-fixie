@@ -29,8 +29,9 @@ sproc_insert_reverse_trip <- function(recid, reverse_startdatetime){
 
 # ---- Link trips ----
 sproc_link_trips <- function(recid){
-  
-  # execute_query(glue("EXECUTE HHSurvey.shifixy_insert_reverse_trip @target_recid = {recid}, @startdatetime = '{reverse_startdatetime}';"))
+  all_recids <- paste(recid, collapse = ",")
+  # browser()
+  execute_query(glue("EXECUTE HHSurvey.link_trip_via_id @recid_list = '{all_recids}';"))
   
   notification_confirm_action("(Link trips function not completed) Successfully linked trips")
   

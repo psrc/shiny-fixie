@@ -10,20 +10,20 @@ modal_trip_linking_server <- function(id, thedata, selected_recid) {
     ns <- session$ns
         
     # create objects ----
-    trip_record <- reactive(get_trip_record(selected_recid()))
+    trip_record <- reactive(get_trip_record(selected_recid(), order_by=c("tripnum")))
     
     # data cleaning tools ----
     observeEvent(input$clicklink, { 
-      
-      # test if selected recids are two or more consecutive records
-      if(length(selected_recid())>=2 & all(diff(sort(selected_recid())) == 1)){
+      # browser()
+      # test if selected recids are two or more consecutive records [all(diff(sort(selected_recid())) == 1)]
+      if(length(selected_recid())>=2){
         
         # trip summary panel
         trip_summary_panel_server("trip_summary_panel", trip_record())
         
         showModal(
           modalDialog(
-            title = "Trip Linking Editor",
+            title = "Trip Linking Editor (still in testing)",
             
             "Are you sure you want to link these trips?",
             
@@ -46,10 +46,10 @@ modal_trip_linking_server <- function(id, thedata, selected_recid) {
     })
     
     observeEvent(input$pushlink, { 
-      sproc_link_trips(selected_recid())
+      sproc_link_trips(sort(selected_recid()))
     })
 
-    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "Link selected trips") })
+    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "(Link selected trips)") })
     
   })  # end moduleServer
 }

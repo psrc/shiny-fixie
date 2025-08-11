@@ -5,26 +5,40 @@ execute_query <- function(query){
 }
 
 # --- get data from database ----
-get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL){
-  # get person-level data from database for edit platform
-  
+get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL, order_by=NULL){
+  # browser()
+  # person ID
   if(!is.null(person_id)){
     
-    # when getting a list of person IDs
     all_persons <- paste(person_id, collapse = ", ")
-    query <- glue("select * from HHSurvey.{view_name} where person_id in ({all_persons});")
+    
+    if(is.null(order_by)){
+      query <- glue("select * from HHSurvey.{view_name} where person_id in ({all_persons});")
+    }
+    else{
+      # order table by columns
+      order_by_list <- paste(order_by, collapse = ", ")
+      query <- glue("select * from HHSurvey.{view_name} where person_id in ({all_persons}) order by {order_by_list};")
+    }
     
   }
+  # record ID
   else if(!is.null(recid)){
     
-    # when getting a list of record IDs
     all_recids <- paste(recid, collapse = ",")
-    # to get data for a trip
-    query <- glue("select * from HHSurvey.{view_name} where recid in ({all_recids});")
+    
+    if(is.null(order_by)){
+      query <- glue("select * from HHSurvey.{view_name} where recid in ({all_recids});")
+    }
+    else{
+      # order table by columns
+      order_by_list <- paste(order_by, collapse = ", ")
+      query <- glue("select * from HHSurvey.{view_name} where recid in ({all_recids}) order by {order_by_list};")
+    }
     
   }
+  # return entire table
   else {
-    # to get data for all persons
     query <- glue("select * from HHSurvey.{view_name};")
   }
   
@@ -32,9 +46,9 @@ get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL){
 }
 
 # ---- get trip record ----
-get_trip_record <- function(recid){
-  
-  trip_record <- get_data(view_name="Trip", recid=recid)
+get_trip_record <- function(recid, order_by = NULL){
+  # browser()
+  trip_record <- get_data(view_name="Trip", recid=recid, order_by = order_by)
   
   return(trip_record)
   
