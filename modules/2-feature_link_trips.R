@@ -1,11 +1,11 @@
-modal_trip_linking_ui <- function(id) {
+modal_link_trips_ui <- function(id) {
   ns <- NS(id)
   
   uiOutput(ns("linkbutton"))
   
 }
 
-modal_trip_linking_server <- function(id, thedata, selected_recid) {
+modal_link_trips_server <- function(id, thedata, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
         

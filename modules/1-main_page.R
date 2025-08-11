@@ -40,19 +40,15 @@ edit_interface_server <- function(id, selected_error_type) {
     selected_row_recid <- reactive({ edit_dt()[input$thetable_rows_selected, "recid"] })
     
     ## button to add new trip
-    modal_new_trip_server("button_new",       
-                          selected_recid = reactive(selected_row_recid()))
-
+    modal_new_trip_server("button_new", selected_recid = reactive(selected_row_recid()))
     ## activate Edit Trip modal
-    modal_edit_trip_server("button_edit",     
-                           selected_recid = reactive(selected_row_recid()))
-    
+    modal_edit_trip_server("button_edit", selected_recid = reactive(selected_row_recid()))
     ## button to delete trip
-    modal_delete_trip_server("button_delete", 
-                             selected_recid = reactive(selected_row_recid()))
-    ## trip linking interface
-    modal_trip_linking_server("button_link",  
-                              selected_recid = reactive(selected_row_recid()))
+    modal_delete_trip_server("button_delete", selected_recid = reactive(selected_row_recid()))
+    ## link trips interface
+    modal_link_trips_server("button_link", selected_recid = reactive(selected_row_recid()))
+    ## unlink trip interface
+    modal_unlink_trip_server("button_unlink", selected_recid = reactive(selected_row_recid()))
     
     # platform layout ----
     
@@ -75,7 +71,8 @@ edit_interface_server <- function(id, selected_error_type) {
                      div(class = "trip-buttons-panel",
                          modal_new_trip_ui(ns('button_new')),
                          modal_edit_trip_ui(ns('button_edit')),
-                         modal_delete_trip_ui(ns('button_delete'))
+                         modal_delete_trip_ui(ns('button_delete')),
+                         modal_unlink_trip_ui(ns('button_unlink'))
                          ) # end div
                      
                      ), # end wellpanel
@@ -83,7 +80,7 @@ edit_interface_server <- function(id, selected_error_type) {
                    wellPanel(
                      
                      p("Select multiple consecutive trips to link"),
-                     modal_trip_linking_ui(ns('button_link'))
+                     modal_link_trips_ui(ns('button_link'))
                      
                      ) # end wellpanel
                  )

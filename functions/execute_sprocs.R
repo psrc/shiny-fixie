@@ -37,6 +37,15 @@ sproc_link_trips <- function(recid){
   
 }
 
+# ---- Unlink trip ----
+sproc_unlink_trip <- function(recid){
+  # browser()
+  # execute_query(glue("EXECUTE HHSurvey.unlink_via_id @ref_recid = '{recid}';"))
+  
+  notification_confirm_action("(Link trips function not completed) Successfully unlinked trip")
+  
+}
+
 # ---- Update data to database ----
 
 # Helper function to evaluate whether a string can be evaluated as a number 
