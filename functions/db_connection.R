@@ -69,8 +69,8 @@ get_all_error_flags <- function(){
   # create named vector for dropdown selection that includes 
   # "all error flags" and "all persons"options
   all_errors <- paste(error_list, collapse = ", ")
-  full_list <- append(c('all_person_placeholder', 'all_error_placeholder'), error_list)
-  names(full_list) <- append(c('all persons', 'all error flags'), error_names)
+  full_list <- append(c('all_person_placeholder', 'all_error_placeholder', 'all_elevated_placeholder'), error_list)
+  names(full_list) <- append(c('all persons', 'all error flags', 'all elevated trips'), error_names)
   
   return(full_list)
 }
@@ -86,6 +86,12 @@ get_error_flag_person_list <- function(error_type){
   else if(error_type == 'all_person_placeholder'){
     # show all persons in trip table
     query <- glue("select person_id from HHSurvey.Trip;")
+    df <- get_query(sql = query, db_name = cleaning_database)
+    
+  }
+  else if(error_type == 'all_elevated_placeholder'){
+    # show all persons with elevated comments
+    query <- glue("SELECT DISTINCT person_id FROM HHSurvey.Trip WHERE psrc_comment IS NOT NULL AND psrc_comment<>'' ;")
     df <- get_query(sql = query, db_name = cleaning_database)
     
   }

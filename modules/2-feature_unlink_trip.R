@@ -9,34 +9,27 @@ modal_unlink_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    
-    
     # data cleaning tools ----
     observeEvent(input$clickedit, { 
       
+      # get trip ingredients
+      trip_link_ids <- paste(
+        get_data(custom_query = glue("SELECT trip_link FROM HHSurvey.trip_ingredients_done WHERE recid = {selected_recid()}"))[['trip_link']], 
+        collapse = ",")
       
-      if(length(selected_recid())==1){
+      if(length(selected_recid())==1 & trip_link_ids!=""){
         
-        # trip data, trip summary and datatable widget
         trip_record <- get_trip_record(selected_recid())
+        
         # browser()
         output$ingedients_table <-  DT::renderDT(
           
           # get trip ingredients table
           get_data(
-            custom_query = glue("SELECT recid,
-                                        DepartTime,
-                                        ArriveTime,
-                                        OriginPurpose,
-                                        DestPurpose,
-                                        mode_1 
+            custom_query = glue("SELECT recid, DepartTime, ArriveTime, OriginPurpose, DestPurpose, mode_1 
                                  FROM HHSurvey.ingredient2fixie
-                                 WHERE person_id IN ({trip_record['person_id']}) and 
-                                       trip_link IN (SELECT trip_link 
-                                                     FROM HHSurvey.trip_ingredients_done 
-                                                     WHERE recid = {selected_recid()})
-                                 ORDER BY person_id,daynum,DepartTime,ArriveTime"
-                                )
+                                 WHERE person_id = {trip_record['person_id']} and trip_link IN ({trip_link_ids})
+                                 ORDER BY person_id,daynum,DepartTime,ArriveTime")
             ) %>%
             group_by(recid) %>%
             filter(ArriveTime == min(ArriveTime)),
@@ -80,6 +73,11 @@ modal_unlink_trip_server <- function(id, selected_recid) {
             size = "l")
         ) 
         
+      }
+      else if(trip_link_ids==""){
+        showNotification(
+          "Cannot unlink trip. This trip hasn't been linked yet",
+          type = "warning")
       }
       else{
         notification_warning_select_row()

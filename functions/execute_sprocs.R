@@ -31,18 +31,18 @@ sproc_insert_reverse_trip <- function(recid, reverse_startdatetime){
 sproc_link_trips <- function(recid){
   all_recids <- paste(recid, collapse = ",")
   # browser()
-  execute_query(glue("EXECUTE HHSurvey.link_trip_via_id @recid_list = '{all_recids}';"))
+  # execute_query(glue("EXECUTE HHSurvey.link_trip_via_id @recid_list = '{all_recids}';"))
   
-  notification_confirm_action("(Link trips function not completed) Successfully linked trips")
+  notification_confirm_action("(Not completed) Successfully linked trips")
   
 }
 
 # ---- Unlink trip ----
 sproc_unlink_trip <- function(recid){
   # browser()
-  # execute_query(glue("EXECUTE HHSurvey.unlink_via_id @ref_recid = '{recid}';"))
+  # execute_query(glue("EXECUTE HHSurvey.unlink_via_id @ref_recid = {recid};"))
   
-  notification_confirm_action("(Link trips function not completed) Successfully unlinked trip")
+  notification_confirm_action("(Not completed) Successfully unlinked trip")
   
 }
 
