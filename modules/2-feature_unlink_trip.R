@@ -22,11 +22,22 @@ modal_unlink_trip_server <- function(id, selected_recid) {
         # browser()
         output$ingedients_table <-  DT::renderDT(
           
-          # get trip summary table
+          # get trip ingredients table
           get_data(
-            custom_query = glue("SELECT recid,DepartTime,ArriveTime,OriginPurpose,DestPurpose,mode_1 FROM HHSurvey.ingredient2fixie
-                               WHERE person_id IN ({trip_record['person_id']}) and trip_link IN (SELECT trip_link FROM HHSurvey.trip_ingredients_done WHERE recid = {selected_recid()})
-                               ORDER BY person_id,daynum,DepartTime,ArriveTime")) %>%
+            custom_query = glue("SELECT recid,
+                                        DepartTime,
+                                        ArriveTime,
+                                        OriginPurpose,
+                                        DestPurpose,
+                                        mode_1 
+                                 FROM HHSurvey.ingredient2fixie
+                                 WHERE person_id IN ({trip_record['person_id']}) and 
+                                       trip_link IN (SELECT trip_link 
+                                                     FROM HHSurvey.trip_ingredients_done 
+                                                     WHERE recid = {selected_recid()})
+                                 ORDER BY person_id,daynum,DepartTime,ArriveTime"
+                                )
+            ) %>%
             group_by(recid) %>%
             filter(ArriveTime == min(ArriveTime)),
           
