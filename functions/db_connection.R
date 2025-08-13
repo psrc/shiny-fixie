@@ -5,7 +5,7 @@ execute_query <- function(query){
 }
 
 # --- get data from database ----
-get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL, order_by=NULL){
+get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL, order_by=NULL, custom_query = NULL){
   # browser()
   # person ID
   if(!is.null(person_id)){
@@ -36,6 +36,9 @@ get_data <- function(view_name="data2fixie", person_id=NULL, recid=NULL, order_b
       query <- glue("select * from HHSurvey.{view_name} where recid in ({all_recids}) order by {order_by_list};")
     }
     
+  }
+  else if(!is.null(custom_query)){
+    query <- glue(custom_query)
   }
   # return entire table
   else {
