@@ -42,7 +42,7 @@ sproc_link_trips <- function(recid){
     showNotification(
       "Trip linking failed. All linked trips were filtered out because they would 
       return to the same location, result in a looped purpose, or speed suggests a stop.",
-      
+      duration = 7, 
       type = "error")
   })
   

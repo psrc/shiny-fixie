@@ -21,7 +21,7 @@ modal_new_trip_server <- function(id, selected_recid) {
       if(length(selected_recid())==1){
         
         # trip summary panel
-        trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
+        trip_summary_panel_server("trip_summary_panel", selected_recid(), incl_poi = TRUE)
         
         showModal(
           modalDialog(title = "Trip Record Generator",
@@ -56,7 +56,7 @@ modal_new_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickreturnhome, { 
       
       # create trip summary panel ----
-      trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
+      trip_summary_panel_server("trip_summary_panel", selected_recid(), incl_poi = TRUE)
       
       showModal(
         modalDialog(title = "Trip Record Generator: Add Return Trip",
@@ -91,7 +91,7 @@ modal_new_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickreversetrip, { 
       
       # create trip summary panel ----
-      trip_summary_panel_server("trip_summary_panel", trip_record(), incl_poi = TRUE)
+      trip_summary_panel_server("trip_summary_panel", selected_recid(), incl_poi = TRUE)
       
       showModal(
         modalDialog(title = "Trip Record Generator: Add Reverse Trip",

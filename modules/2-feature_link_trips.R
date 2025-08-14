@@ -19,7 +19,7 @@ modal_link_trips_server <- function(id, thedata, selected_recid) {
       if(length(selected_recid())>=2){
         
         # trip summary panel
-        trip_summary_panel_server("trip_summary_panel", trip_record())
+        trip_summary_panel_server("trip_summary_panel", selected_recid())
         
         showModal(
           modalDialog(
@@ -37,7 +37,8 @@ modal_link_trips_server <- function(id, thedata, selected_recid) {
               actionButton(ns("pushlink"), label = 'Yes'),
               modalButton('No'),
               width=12
-            )
+            ),
+            size = "l"
           )) 
       }
       else{

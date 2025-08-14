@@ -45,7 +45,7 @@ modal_unlink_trip_server <- function(id, selected_recid) {
         
         
         # trip summary panel
-        trip_summary_panel_server("trip_summary_panel", trip_record)
+        trip_summary_panel_server("trip_summary_panel", selected_recid())
         
         showModal(
           modalDialog(

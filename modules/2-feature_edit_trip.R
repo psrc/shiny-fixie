@@ -34,10 +34,10 @@ modal_edit_trip_server <- function(id, selected_recid) {
         rval$test_dissmissflag <- get_data(view_name = "trip_error_flags", recid = selected_recid())
         
         # trip summary panel
-        trip_summary_panel_server("trip_summary_panel", rval$trip_record, incl_poi = TRUE)
+        trip_summary_panel_server("trip_summary_panel", selected_recid(), incl_poi = TRUE)
         
         # enable data validation ----
-        iv <- add_datavalidation(input)
+        iv <- editdata_datavalidation(input)
         
         # Trip Record Editor ---
         showModal(
@@ -168,7 +168,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickupdate, {
       
       # trip summary panel
-      trip_summary_panel_server("trip_summary_panel_update", rval$trip_record)
+      trip_summary_panel_server("trip_summary_panel_update", selected_recid())
       
       ## ---- print all comparison table ----
       
@@ -230,7 +230,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     observeEvent(input$clickdissmissflag, {
       
       # trip summary panel
-      trip_summary_panel_server("trip_summary_panel", rval$trip_record)
+      trip_summary_panel_server("trip_summary_panel", selected_recid())
       
       showModal(
         modalDialog(title = "Are you sure you want to dismiss this error flag?",

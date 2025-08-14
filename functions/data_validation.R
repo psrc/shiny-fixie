@@ -1,18 +1,6 @@
 
 # data validation object for trip editor ----
-add_datavalidation <- function(input){
-  
-  rval <- reactiveValues(depart_time_timestamp_date = NULL,
-                         depart_time_timestamp_time = NULL,
-                         arrival_time_timestamp_date = NULL,
-                         arrival_time_timestamp_time = NULL)
-  
-  observe({
-    rval$depart_time_timestamp_date <- input[["data_edit-depart_time_timestamp_date"]]
-    rval$depart_time_timestamp_time <- input[["data_edit-depart_time_timestamp_time"]]
-    rval$arrival_time_timestamp_date <- input[["data_edit-arrival_time_timestamp_date"]]
-    rval$arrival_time_timestamp_time <- input[["data_edit-arrival_time_timestamp_time"]]
-  })
+editdata_datavalidation <- function(input){
   
   # data validation: Create an InputValidator object
   iv <- InputValidator$new()
@@ -54,6 +42,37 @@ add_datavalidation <- function(input){
   observe({
     # grey out Preview Edits button if validation rules are not violated
     toggleState(id = "clickupdate", condition = iv$is_valid())
+  })
+  
+  return(iv)
+}
+
+addtrip_datavalidation <- function(input, trip_record, depart_timestamp_id, pushbutton_id){
+  
+  # data validation: Create an InputValidator object
+  iv <- InputValidator$new()
+
+  # data validation: Add validation rules
+  # iv$add_rule(depart_timestamp_id, function(value) {
+  #   prev_arrival_datetime <- as.POSIXct(trip_record[["arrival_time_timestamp"]])
+  #   browser()
+  #   
+  #   # if there are values in depart_datetime_r and arrival_datetime_r
+  #   if (!is.null(input[[depart_timestamp_id]]) & length(input[[depart_timestamp_id]])>0){
+  #     if(prev_arrival_datetime >= input[[depart_timestamp_id]]){
+  #       "Departure time must be later than previous trip arrival time"
+  #     }
+  #   }
+  #   
+  # })
+  
+  # data validation: Start displaying errors in the UI
+  iv$enable()
+  
+  # data validation: Don't proceed if any input is invalid
+  observe({
+    # grey out Preview Edits button if validation rules are not violated
+    toggleState(id = pushbutton_id, condition = iv$is_valid())
   })
   
   return(iv)

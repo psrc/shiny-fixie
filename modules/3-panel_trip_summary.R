@@ -7,26 +7,21 @@ trip_summary_panel_ui <- function(id) {
 }
 
 # person control panel
-trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
+trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALSE) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    # trip_summary_table <- get_trip_summary(trip_record)
-    output$trip_summary <-  DT::renderDT(
+    # browser()
+    output$trip_summary <- DT::renderDataTable(
       
-      # get trip summary table
-      trip_record %>%
-        select(hhid,pernum,person_id,tripnum,recid) %>%
-        left_join(
-          get_data(view_name = "trip_error_flags", recid = .[['recid']]) %>%
-            select(recid, error_flag),
-          by = "recid"),
+        # get trip summary table from data2fixie
+        get_data(recid = selected_recid) %>%
+          select(recid,person_id,tripnum,OriginPurpose,DestPurpose,Error),
       
-      rownames = FALSE,
-      selection = 'none',
-      options =list(ordering = F,
-                    dom = 't',
-                    pageLength =-1)
+      options =list(ordering = F, dom = 't'), 
+      # selection = 'single',
+      rownames = FALSE, 
+      server=TRUE
       
     )
     
@@ -42,6 +37,7 @@ trip_summary_panel_server <- function(id, trip_record, incl_poi = FALSE) {
     if(incl_poi){
       
       poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
+      trip_record <- get_trip_record(selected_recid)
       
       # get poi locations
       poi_latlong <-c(get_poi_geog("home_geog", hhid = trip_record['hhid']), 
