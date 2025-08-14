@@ -28,7 +28,6 @@ edit_interface_server <- function(id, selected_error_type) {
         select(-c("person_id")),
       
       options =list(ordering = F, dom = 't'), 
-      # selection = 'single',
       rownames = FALSE, 
       server=TRUE
       

@@ -63,7 +63,7 @@ get_all_error_flags <- function(){
   # get all error flags
   query <- glue("select error_flag from HHSurvey.trip_error_flags;")
   df <- get_query(sql = query, db_name = cleaning_database)
-  error_names <- unique(df[["error_flag"]])
+  error_names <- sort(unique(df[["error_flag"]]))
   error_list <- paste0("'",error_names,"'")
   
   # create named vector for dropdown selection that includes 
