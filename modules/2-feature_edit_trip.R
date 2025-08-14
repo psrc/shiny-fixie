@@ -47,92 +47,8 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         
                         # editor top panel: trip summary table and point of interest buttons ----
                         trip_summary_panel_ui(ns("trip_summary_panel")),
-                        
-                        
-                        ## timestamps ----
-                        fluidRow(
-                          column(6,
-                                 div(class = "modal-header", "Trip Origin"),
-                                 dateTimeInput(ns("data_edit-depart_time_timestamp"), df = rval$trip_record)
-                          ), # end column
-                          column(6,
-                                 div(class = "modal-header", "Trip Destination"),
-                                 dateTimeInput(ns("data_edit-arrival_time_timestamp"), df = rval$trip_record)
-                                 
-                          ) # end column
-                        ), # fluidRow
-                        
-                        ## purposes ----
-                        fluidRow(class = "bottom-spacing",
-                                 column(6, selectInputSingle(ns("data_edit-origin_purpose"), df = rval$trip_record) ),
-                                 column(6,
-                                        selectInputSingle(ns("data_edit-dest_purpose"), df = rval$trip_record),
-                                        textInputSimple(ns("data_edit-dest_purpose_other"), df = rval$trip_record)
-                                 ) # end column
-                        ), # fluidRow
-                        
-                        ## locations ----
-                        fluidRow(class = "bottom-spacing",
-                          column(6,
-                                 fluidRow(
-                                   column(4, numericInputSimple(ns("data_edit-origin_lat"), df = rval$trip_record)),
-                                   column(4, numericInputSimple(ns("data_edit-origin_lng"), df = rval$trip_record)),
-                                   column(4, 
-                                          class = "google-buttons",
-                                          actionButton_google_place("open_origin",
-                                                                    df = rval$trip_record,
-                                                                    lat_var_name = "origin_lat",
-                                                                    long_var_name = "origin_lng"))
-                                 )
-                          ), # end column
-                          column(6,
-                                 fluidRow(
-                                   column(4, numericInputSimple(ns("data_edit-dest_lat"), df = rval$trip_record)),
-                                   column(4, numericInputSimple(ns("data_edit-dest_lng"), df = rval$trip_record)),
-                                   column(4, 
-                                          class = "google-buttons",
-                                          actionButton_google_place("open_dest",
-                                                                    df = rval$trip_record,
-                                                                    lat_var_name = "dest_lat",
-                                                                    long_var_name = "dest_lng"))
-                                   ),     
-                          ) # end column
-                        ), # fluidRow
-                        
-                        ## distance ----
-                        fluidRow(class = "bottom-spacing",
-                                 column(6,
-                                        style = "display: flex;", 
-                                        div(numericInputSimple(ns("data_edit-distance_miles"), df = rval$trip_record, min = 0), 
-                                            style = "padding-right: 2rem;"),
-                                        div(class = "google-buttons",
-                                            actionButton_google_direction("get_directions", df = rval$trip_record))
-                                        )
-                                 ), # fluidRow
-                        
-
-                        ## mode type ----
-
-                        fluidRow(
-                          column(9,
-                                 div(class = "modal-header", "Travel Modes"),
-                                 column(7,
-                                        selectInputSingle(ns("data_edit-mode_1"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_2"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_3"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_4"), df = rval$trip_record)),
-                                 column(5,
-                                        textInputSimple(ns("data_edit-mode_other_specify"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_acc"), df = rval$trip_record),
-                                        selectInputSingle(ns("data_edit-mode_egr"), df = rval$trip_record))
-                          ), # end column
-                          column(3,
-                                 div(class = "modal-header", "Travelers"),
-                                 selectInputSingle(ns("data_edit-driver"), df = rval$trip_record),
-                                 selectInputSingle(ns("data_edit-travelers_hh"), df = rval$trip_record),
-                                 selectInputSingle(ns("data_edit-travelers_nonhh"), df = rval$trip_record)
-                                 ) # end column
-                          ), # fluidRow
+                        # trip editor: all input boxes
+                        trip_editor_input_block(id = ns("data_edit"), trip_record = rval$trip_record)
 
                       ), # end tagList
                       br(),
@@ -166,7 +82,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
     # ---- Show Preview Pane & Apply Changes ----
     observeEvent(input$clickupdate, {
-      
+      # browser()
       # trip summary panel
       trip_summary_panel_server("trip_summary_panel_update", selected_recid())
       
