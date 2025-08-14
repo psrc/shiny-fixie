@@ -23,7 +23,7 @@ modal_link_trips_server <- function(id, thedata, selected_recid) {
         
         showModal(
           modalDialog(
-            title = "Trip Linking Editor (still in testing)",
+            title = "Trip Linking Editor",
             
             "Are you sure you want to link these trips?",
             
@@ -49,7 +49,7 @@ modal_link_trips_server <- function(id, thedata, selected_recid) {
       sproc_link_trips(sort(selected_recid()))
     })
 
-    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "(Link selected trips)") })
+    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "Link selected trips") })
     
   })  # end moduleServer
 }

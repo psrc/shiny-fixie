@@ -30,10 +30,21 @@ sproc_insert_reverse_trip <- function(recid, reverse_startdatetime){
 # ---- Link trips ----
 sproc_link_trips <- function(recid){
   all_recids <- paste(recid, collapse = ",")
-  # browser()
-  # execute_query(glue("EXECUTE HHSurvey.link_trip_via_id @recid_list = '{all_recids}';"))
   
-  notification_confirm_action("(Not completed) Successfully linked trips")
+  # HHSurvey.link_trip throws error if trip linking results in looped purpose, or speed suggests a stop
+  tryCatch({
+    
+    execute_query(glue("EXECUTE HHSurvey.link_trip_via_id @recid_list = '{all_recids}';"))
+    notification_confirm_action("(Not completed) Successfully linked trips")
+    
+  }, error = function(e) {
+    
+    showNotification(
+      "Trip linking failed. All linked trips were filtered out because they would 
+      return to the same location, result in a looped purpose, or speed suggests a stop.",
+      
+      type = "error")
+  })
   
 }
 
