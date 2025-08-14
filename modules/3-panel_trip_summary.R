@@ -18,8 +18,8 @@ trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALS
         get_data(recid = selected_recid) %>%
           select(recid,person_id,tripnum,OriginPurpose,DestPurpose,Error),
       
-      options =list(ordering = F, dom = 't'), 
-      # selection = 'single',
+      options =list(ordering = F, dom = 't'),
+      selection = 'none',
       rownames = FALSE, 
       server=TRUE
       
