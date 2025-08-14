@@ -51,9 +51,9 @@ sproc_link_trips <- function(recid){
 # ---- Unlink trip ----
 sproc_unlink_trip <- function(recid){
   # browser()
-  # execute_query(glue("EXECUTE HHSurvey.unlink_via_id @ref_recid = {recid};"))
+  execute_query(glue("EXECUTE HHSurvey.unlink_via_id @ref_recid = {recid};"))
   
-  notification_confirm_action("(Not completed) Successfully unlinked trip")
+  notification_confirm_action("Successfully unlinked trip")
   
 }
 

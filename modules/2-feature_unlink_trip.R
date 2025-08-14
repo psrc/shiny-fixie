@@ -49,7 +49,7 @@ modal_unlink_trip_server <- function(id, selected_recid) {
         
         showModal(
           modalDialog(
-            title = "Trip Unlinking Editor (still in testing)",
+            title = "Trip Unlinking Editor",
             
             div("Are you sure you want to unlink this trip?"),
             
@@ -92,7 +92,7 @@ modal_unlink_trip_server <- function(id, selected_recid) {
       
     })
     
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "(Unlink trip)") }) 
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Unlink trip") }) 
     
   })  # end moduleServer
 }
