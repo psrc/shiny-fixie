@@ -11,6 +11,9 @@ modal_new_trip_server <- function(id, selected_recid) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
+    rval <- reactiveValues(blank_trip_record = NULL,
+                           insert_trip = NULL)
+    
     # create objects ----
     trip_record <- reactive(get_trip_record(selected_recid()))
     
@@ -34,7 +37,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                       footer = column(12,
                                       class = "trip-buttons-panel",
                                       modalButton('(Blank trip before)'),
-                                      modalButton('(Blank trip after)'),
+                                      actionButton(ns("clickblank"), "(Blank trip after)"),
                                       actionButton(ns("clickreversetrip"), "Reverse trip"),
                                       actionButton(ns("clickreturnhome"), "(Return home trip)"),
                                       modalButton('Cancel')
@@ -49,6 +52,97 @@ modal_new_trip_server <- function(id, selected_recid) {
       }
       
       }) # end observeEvent
+    
+    # blank trip ----
+    
+    observeEvent(input$clickblank, { 
+      
+      trip_summary_panel_server("trip_summary_panel", selected_recid(), incl_poi = TRUE)
+      
+      # generate blank trip from prev trip (used to infer values for some columns)
+      rval$blank_trip_record <- generate_blank_trip(selected_recid()) 
+      
+      # enable data validation ----
+      iv <- editdata_datavalidation(input)
+
+      # browser()
+      showModal(
+        modalDialog(title = "Trip Record Editor: Add Blank Trip",
+                    
+                    div("Adding reverse trip after this selected trip:"),
+                    
+                    # editor top panel: trip summary table and point of interest buttons ----
+                    trip_summary_panel_ui(ns("trip_summary_panel")),
+                    # trip editor: all input boxes
+                    trip_editor_input_block(id = ns("data_edit"), trip_record = rval$blank_trip_record),
+                    
+                    
+                    footer = div(
+                      # column(12,
+                      style = "display: flex; justify-content: space-between;",
+                      # elevate comment
+                      div(
+                        textInputSimple(ns("data_edit-psrc_comment"),
+                                        df = rval$trip_record,
+                                        label_name = "Add comment",
+                        ) # end div
+                      ),
+                      div(style = "margin-top: 30px;",
+                          actionButton(ns("clickupdate"), label = "Preview Trip"),
+                          modalButton('Cancel')
+                      ) # end div
+                    ),
+                    size = "l"))
+    })
+    
+    ## Show Preview Pane & Apply Changes ----
+    observeEvent(input$clickupdate, {
+      
+      # trip summary panel
+      trip_summary_panel_server("trip_summary_panel_update", selected_recid())
+      
+      # create compare table for visualization
+      compare_table <- generate_compare_table(input, rval$blank_trip_record)
+      # generate insert trip for database table update
+      rval$insert_trip <- generate_insert_trip(input, rval$blank_trip_record)
+      
+      output$print_cols <- show_compare_table(compare_table)
+      
+      ## Update Trip Record Preview ----
+      showModal(
+        modalDialog(title = "Insert Trip Preview",
+                    
+                    div("The new trip will be inserted after this trip:"),
+                    
+                    # editor top panel: trip summary table ----
+                    trip_summary_panel_ui(ns("trip_summary_panel_update")),
+                    
+                    div("New Trip Record:"),
+                    
+                    div(
+                      DTOutput(ns('print_cols'))
+                    ),
+                    
+                    footer = div(
+                      style = "display: flex; justify-content: space-between;",
+                      # push changes to database
+                      actionButton(ns("pushblank"), label = "Insert Trip"),
+                      modalButton('Close')
+                    ),
+                    easyClose = TRUE,
+                    size = "l"
+        )
+      )
+      
+    })
+    
+    # ---- Update Data in Database ----
+    observeEvent(input$pushblank, {
+      
+      # write update query
+      # sproc_insert_blank_trip(selected_recid(), rval$insert_values)
+      
+    })
     
     
     # return home ----
