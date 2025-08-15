@@ -34,7 +34,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                       footer = column(12,
                                       class = "trip-buttons-panel",
                                       modalButton('(Blank trip before)'),
-                                      modalButton('(Blank trip after)'),
+                                      actionButton(ns("clickblank"), "(Blank trip after)"),
                                       actionButton(ns("clickreversetrip"), "Reverse trip"),
                                       actionButton(ns("clickreturnhome"), "(Return home trip)"),
                                       modalButton('Cancel')
@@ -49,6 +49,35 @@ modal_new_trip_server <- function(id, selected_recid) {
       }
       
       }) # end observeEvent
+    
+    # blank trip ----
+    
+    observeEvent(input$clickblank, { 
+      
+      trip_summary_panel_server("trip_summary_panel", selected_recid(), incl_poi = TRUE)
+      
+      blank_trip_record <- get_trip_record(selected_recid()) %>% # get prev trip record (used to infer values for some columns)
+        generate_insert_trip()
+
+      
+      showModal(
+        modalDialog(title = "Trip Record Editor: Add Blank Trip",
+                    
+                    div("Adding reverse trip after this selected trip:"),
+                    
+                    # editor top panel: trip summary table and point of interest buttons ----
+                    trip_summary_panel_ui(ns("trip_summary_panel")),
+                    # trip editor: all input boxes
+                    trip_editor_input_block(id = ns("data_edit"), trip_record = blank_trip_record),
+                    
+                    
+                    footer = column(12,
+                                    class = "trip-buttons-panel",
+                                    actionButton(ns("pushaddblank"), 'Insert trip'),
+                                    modalButton('Cancel')
+                    ),
+                    size = "l"))
+    })
     
     
     # return home ----

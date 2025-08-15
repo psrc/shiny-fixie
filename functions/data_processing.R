@@ -70,6 +70,40 @@ generate_compare_table <- function(input, trip_record){
   
 }
 
+# generate inferred insert trip
+generate_insert_trip <- function(.data){
+  # TODO: replace this with smarter
+  null_cols <- c("recid", "tripid", "tripnum",
+                 "arrival_time_timestamp", "dest_lat", "dest_lng", "distance_miles",
+                 "dest_purpose", "dest_purpose_other", "psrc_comment",
+                 "travel_time",
+                 "hhmember1","hhmember2","hhmember3","hhmember4","hhmember5",
+                 "hhmember6","hhmember7","hhmember8","hhmember9","hhmember10",
+                 "hhmember11","hhmember12","hhmember13",
+                 "travelers_total",
+                 "speed_mph",
+                 "origin_geog","dest_geog",
+                 "dest_county","dest_city","dest_zip","dest_is_home","dest_is_work","modes",
+                 "psrc_inserted",
+                 "revision_code",
+                 "psrc_resolved")
+  # browser()
+
+  df <- .data %>%
+    # columns that must copy directly from prev trip:
+    #     hhid, person_id, pernum, traveldate, daynum, day_id   
+    # inherent columns that could need editing by analysts: 
+    #     travelers_hh,travelers_nonhh, mode_1, mode_2, mode_3, mode_4, driver, mode_acc, mode_egr, mode_other_specify
+    mutate(depart_time_timestamp = arrival_time_timestamp,
+           origin_lat = dest_lat,
+           origin_lng = dest_lng,
+           origin_purpose = dest_purpose) %>%
+    # # make all columns that cannot be inferred NA
+    mutate_at(vars(all_of(null_cols)), .funs = ~NA)
+  
+  return(df)
+}
+
 # generate updated trip record ----
 # generate_updated_trip <- function(input, trip_record){
 #   
