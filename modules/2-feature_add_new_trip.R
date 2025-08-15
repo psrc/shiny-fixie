@@ -132,7 +132,7 @@ modal_new_trip_server <- function(id, selected_recid) {
     observeEvent(input$pushblank, {
       
       # write update query
-      # sproc_insert_blank_trip(selected_recid(), rval$insert_values)
+      sproc_insert_blank_trip(selected_recid(), rval$blank_trip_record[['person_id']], rval$insert_trip)
       
     })
     

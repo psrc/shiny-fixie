@@ -57,7 +57,7 @@ sproc_unlink_trip <- function(recid){
   
 }
 
-# ---- Update data to database ----
+# ---- Edit data ----
 
 # Helper function to evaluate whether a string can be evaluated as a number 
 is_numeric_string <- function(x) {
@@ -96,7 +96,7 @@ build_set_clause <- function(column_names, values) {
 }
 
 sproc_update_data <- function(recid, person_id, edit_list){
-  browser()
+  
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
   sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
@@ -108,15 +108,18 @@ sproc_update_data <- function(recid, person_id, edit_list){
   
 }
 
+# ---- Insert Blank Trip ----
 
 sproc_insert_blank_trip <- function(recid, person_id, edit_list){
-  
   # build update query using proper data type formatting
-  all_variable_edits <- build_set_clause(names(edit_list), edit_list)
-  sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
-  execute_query(sql_query)
+  formatted_edit_list <- edit_list %>% mutate_all(~format_sql_value(.))
+  all_variable_edits <- paste(formatted_edit_list, collapse = ", ")
   
-  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
+  sql_query <- glue("INSERT INTO HHSurvey.trip VALUES ({all_variable_edits});")
+  # browser()
+  # execute_query(sql_query)
+  # 
+  # execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
   
   notification_confirm_action("Successfully updated trip")
   
