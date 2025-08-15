@@ -88,3 +88,22 @@ trip_editor_input_block <- function(id, trip_record){
   )
   
 }
+
+show_compare_table <- function(compare_table){
+  renderDT({
+    
+    datatable(compare_table,
+              options =list(ordering = F,
+                            dom = 't',
+                            pageLength = -1,
+                            # hide mod column
+                            columnDefs = list(list(targets = 4,visible = FALSE)))
+    ) %>%
+      formatStyle(
+        'mod',
+        target = 'row',
+        backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
+      )
+    
+  })
+}

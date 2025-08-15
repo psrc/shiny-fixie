@@ -66,7 +66,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
                         div(style = "margin-top: 30px;",
                           actionButton(ns("clickupdate"), label = "Preview Edits"),
                           actionButton(ns("clickdissmissflag"), label = "Dismiss Flag"),
-                          modalButton('(Unlink trip)'),
                           modalButton('Cancel')
                         ) # end div
                       ),
@@ -93,22 +92,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
       rval$edit_list <- compare_table[compare_table$mod == 1, "Updated Value"]
       names(rval$edit_list) <- compare_table[compare_table$mod == 1, "Variable"]
       
-      output$print_cols <- renderDT({
-        
-        datatable(compare_table,
-                  options =list(ordering = F,
-                                dom = 't',
-                                pageLength = -1,
-                                # hide mod column
-                                columnDefs = list(list(targets = 4,visible = FALSE)))
-        ) %>%
-          formatStyle(
-            'mod',
-            target = 'row',
-            backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
-          )
-        
-      })
+      output$print_cols <- show_compare_table(compare_table)
       
       ## Update Trip Record Preview ----
       showModal(

@@ -96,6 +96,20 @@ build_set_clause <- function(column_names, values) {
 }
 
 sproc_update_data <- function(recid, person_id, edit_list){
+  browser()
+  # build update query using proper data type formatting
+  all_variable_edits <- build_set_clause(names(edit_list), edit_list)
+  sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
+  execute_query(sql_query)
+  
+  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
+  
+  notification_confirm_action("Successfully updated trip")
+  
+}
+
+
+sproc_insert_blank_trip <- function(recid, person_id, edit_list){
   
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
