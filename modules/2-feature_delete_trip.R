@@ -54,7 +54,7 @@ modal_delete_trip_server <- function(id, selected_recid) {
       sproc_delete_trip(selected_recid())
       })
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Delete trip") }) 
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Delete Trip") }) 
                                              
   })  # end moduleServer
 }

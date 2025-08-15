@@ -92,7 +92,7 @@ modal_unlink_trip_server <- function(id, selected_recid) {
       
     })
     
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Unlink trip") }) 
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Unlink Trip") }) 
     
   })  # end moduleServer
 }

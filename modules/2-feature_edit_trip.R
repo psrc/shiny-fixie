@@ -157,7 +157,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
     
 
 
-    output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit trip") })
+    output$editbutton <- renderUI({  actionButton(ns("clickedit"), "Edit Trip") })
 
   })  # end moduleServer
 }

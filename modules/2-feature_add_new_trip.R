@@ -32,14 +32,13 @@ modal_new_trip_server <- function(id, selected_recid) {
                       # editor top panel: trip summary table and point of interest buttons ----
                       trip_summary_panel_ui(ns("trip_summary_panel")),
                       
-                      div("Select a type of trip to insert:"),
+                      div("Select a type of trip to insert below the selected trip:"),
                       
                       footer = column(12,
                                       class = "trip-buttons-panel",
-                                      modalButton('(Blank trip before)'),
-                                      actionButton(ns("clickblank"), "(Blank trip after)"),
-                                      actionButton(ns("clickreversetrip"), "Reverse trip"),
-                                      actionButton(ns("clickreturnhome"), "(Return home trip)"),
+                                      actionButton(ns("clickblank"), "(Blank Trip)"),
+                                      actionButton(ns("clickreversetrip"), "Reverse Trip"),
+                                      actionButton(ns("clickreturnhome"), "(Return Home Trip)"),
                                       modalButton('Cancel')
                       ),
                       size = "l"
@@ -162,7 +161,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     footer = column(12,
                                     class = "trip-buttons-panel",
-                                    modalButton('Preview new trip'),
+                                    modalButton('Add Return Home Trip'),
                                     modalButton('Cancel')
                     ),
                     size = "l"))
@@ -194,7 +193,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     footer = column(12,
                                     class = "trip-buttons-panel",
-                                    actionButton(ns("pushaddreverse"), 'Add reverse trip'),
+                                    actionButton(ns("pushaddreverse"), 'Add Reverse Trip'),
                                     modalButton('Cancel')
                     ),
                     size = "l"))
@@ -209,7 +208,7 @@ modal_new_trip_server <- function(id, selected_recid) {
       
       })
 
-    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Add new trip") })
+    output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Add New Trip") })
     
   })  # end moduleServer
   
