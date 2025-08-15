@@ -55,7 +55,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
                       footer = div(
                         # column(12,
                         style = "display: flex; justify-content: space-between;",
-                        # class = "trip-buttons-panel",
                         # elevate comment
                         div(
                           textInputSimple(ns("data_edit-psrc_comment"),
@@ -69,7 +68,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
                           modalButton('Cancel')
                         ) # end div
                       ),
-                      # easyClose = TRUE,
                       size = "l"
           ))}
       # if no row or multiple rows are selected

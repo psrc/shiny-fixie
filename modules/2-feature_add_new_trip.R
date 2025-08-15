@@ -77,17 +77,20 @@ modal_new_trip_server <- function(id, selected_recid) {
                     trip_editor_input_block(id = ns("data_edit"), trip_record = rval$blank_trip_record),
                     
                     
-                    footer = column(12,
-                                    class = "trip-buttons-panel",
-                                    # elevate comment
-                                    div(
-                                      textInputSimple(ns("data_edit-psrc_comment"),
-                                                      df = rval$trip_record,
-                                                      label_name = "Add comment",
-                                      ) # end div
-                                    ),
-                                    actionButton(ns("clickupdate"), label = "Preview Trip"),
-                                    modalButton('Cancel')
+                    footer = div(
+                      # column(12,
+                      style = "display: flex; justify-content: space-between;",
+                      # elevate comment
+                      div(
+                        textInputSimple(ns("data_edit-psrc_comment"),
+                                        df = rval$trip_record,
+                                        label_name = "Add comment",
+                        ) # end div
+                      ),
+                      div(style = "margin-top: 30px;",
+                          actionButton(ns("clickupdate"), label = "Preview Trip"),
+                          modalButton('Cancel')
+                      ) # end div
                     ),
                     size = "l"))
     })

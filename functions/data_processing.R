@@ -111,7 +111,7 @@ generate_insert_trip <- function(input, trip_record){
 
   trip <- NULL
   for(var_name in names(trip_record)){
-    message(paste("start:",var_name))
+    
     # edit columns
     if(var_name %in% tripeditor.cols){
 
