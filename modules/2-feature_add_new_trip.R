@@ -43,8 +43,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                                       modalButton('Cancel')
                       ),
                       size = "l"
-          )
-        )
+          ))
       }
       # if no row is selected
       else{
@@ -54,7 +53,6 @@ modal_new_trip_server <- function(id, selected_recid) {
       }) # end observeEvent
     
     # blank trip ----
-    
     observeEvent(input$clickblank, { 
       
       trip_summary_panel_server("trip_summary_panel", selected_recid(), incl_poi = TRUE)
@@ -75,7 +73,6 @@ modal_new_trip_server <- function(id, selected_recid) {
                     trip_summary_panel_ui(ns("trip_summary_panel")),
                     # trip editor: all input boxes
                     trip_editor_input_block(id = ns("data_edit"), trip_record = rval$blank_trip_record),
-                    
                     
                     footer = div(
                       # column(12,
@@ -118,10 +115,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                     trip_summary_panel_ui(ns("trip_summary_panel_update")),
                     
                     div("New Trip Record:"),
-                    
-                    div(
-                      DTOutput(ns('print_cols'))
-                    ),
+                    div( DTOutput(ns('print_cols')) ),
                     
                     footer = div(
                       style = "display: flex; justify-content: space-between;",
@@ -129,14 +123,13 @@ modal_new_trip_server <- function(id, selected_recid) {
                       actionButton(ns("pushblank"), label = "Insert Trip"),
                       modalButton('Close')
                     ),
-                    easyClose = TRUE,
                     size = "l"
         )
       )
       
     })
     
-    # ---- Update Data in Database ----
+    ## Update Data in Database ----
     observeEvent(input$pushblank, {
       
       # write update query
@@ -144,9 +137,7 @@ modal_new_trip_server <- function(id, selected_recid) {
       
     })
     
-    
     # return home ----
-    
     observeEvent(input$clickreturnhome, { 
       
       # create trip summary panel ----
@@ -166,10 +157,8 @@ modal_new_trip_server <- function(id, selected_recid) {
                                            label_name = "Enter the departure date and time for return home trip:",
                                            # show arrival time of previous trip as placeholder
                                            datetime_val = trip_record()[1,'arrival_time_timestamp'])
-                             
                       ) # end column
                     ),
-                    
                     
                     footer = column(12,
                                     class = "trip-buttons-panel",
@@ -181,7 +170,6 @@ modal_new_trip_server <- function(id, selected_recid) {
     
     
     # reverse trip ----
-    
     observeEvent(input$clickreversetrip, { 
       
       # create trip summary panel ----
@@ -201,8 +189,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                                            label_name = "Enter the departure date and time for reverse trip:",
                                            # show arrival time of previous trip as placeholder
                                            datetime_val = trip_record()[1,'arrival_time_timestamp'])
-                             
-                      ) # end column
+                             ) # end column
                     ),
                     
                     footer = column(12,
@@ -213,11 +200,11 @@ modal_new_trip_server <- function(id, selected_recid) {
                     size = "l"))
     })
     
+    ## Update reverse trip in Database ----
     observeEvent(input$pushaddreverse, {
       
-      reverse_datetime <- combine_datetime(input[["reverse_trip-depart_timestamp_date"]],input[["reverse_trip-depart_timestamp_time"]])
-      
-      # executes dismiss flag and show success message
+      reverse_datetime <- combine_datetime(input[["reverse_trip-depart_timestamp_date"]],
+                                           input[["reverse_trip-depart_timestamp_time"]])
       sproc_insert_reverse_trip(selected_recid(), reverse_datetime)
       
       })
@@ -225,4 +212,5 @@ modal_new_trip_server <- function(id, selected_recid) {
     output$editbutton <- renderUI({ actionButton(ns("clickedit"), "Add new trip") })
     
   })  # end moduleServer
+  
 }
