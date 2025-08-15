@@ -86,5 +86,5 @@ trip_editor_input_block <- function(id, trip_record){
       ) # end column
     ) # fluidRow
   )
-  browser()
+  
 }

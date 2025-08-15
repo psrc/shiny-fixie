@@ -12,7 +12,7 @@ get_var_value_list <- function(var_name, value_labels = codebook){
 
 # dropdown for single selection
 selectInputSingle <- function(inputId, df, label_name = NULL, ...) {
-  message("selectInputSingle")
+  
   var_str <- gsub("^.*-", "", inputId)
   if(is.null(label_name)){
     label_name = var_str
@@ -28,7 +28,7 @@ selectInputSingle <- function(inputId, df, label_name = NULL, ...) {
 
 # text input
 textInputSimple <- function(inputId, df, label_name = NULL, ...){
-  message("textInputSimple")
+  
   var_str <- gsub("^.*-", "", inputId)
   if(is.null(label_name)){
     label_name = var_str
@@ -58,7 +58,7 @@ numericInputSimple <- function(inputId, df, label_name = NULL, min = NA, max = N
 
 # datetime input - specialized for timestamp columns with proper date/time controls
 dateTimeInput <- function(inputId, df = NULL, label_name = NULL, datetime_val = NULL){
-  message(paste("dateTimeInput:",inputId))
+  
   # for trip editor when trip_record is provided
   if(!is.null(df)){
     

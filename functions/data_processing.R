@@ -74,7 +74,8 @@ generate_compare_table <- function(input, trip_record){
 generate_insert_trip <- function(.data){
   # TODO: replace this with smarter
   null_cols <- c("recid", "tripid", "tripnum",
-                 "arrival_time_timestamp", "dest_lat", "dest_lng", "distance_miles",
+                 # "arrival_time_timestamp", 
+                 "dest_lat", "dest_lng", "distance_miles",
                  "dest_purpose", "dest_purpose_other", "psrc_comment",
                  "travel_time",
                  "hhmember1","hhmember2","hhmember3","hhmember4","hhmember5",
