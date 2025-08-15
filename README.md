@@ -2,7 +2,7 @@
 
 Shiny App for PSRC household travel survey manual data cleaning
 
-- testing app published on PSRC shiny server
+- testing app published on PSRC shiny server: http://aws-linux:3838/shiny-fixie/
 - requirements to run app on local machine: 
   - connected to PSRC VPN 
   - have access to hhts_cleaning database
