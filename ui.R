@@ -39,7 +39,7 @@ shinyUI(
                # select error type
                div(error_dropdown_ui('dropdown_errortype')),
                
-               style = "display: flex;"
+               style = "display: flex; align-items: flex-end;"
              ) # end div
       ) # end column
     ),

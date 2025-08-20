@@ -62,7 +62,7 @@ edit_interface_server <- function(id, selected_error_type) {
           
           # trip editing panel
           column(4,
-                 fluidRow(
+                 fluidRow(style = "margin: 0 1rem;",
                    wellPanel(
                      
                      p("Select one trip to edit"),
