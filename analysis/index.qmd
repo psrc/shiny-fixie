@@ -1,0 +1,109 @@
+---
+title: Topsheet summary
+date: today
+---
+
+
+## Delivered data (08/15/2025)
+
+```{r}
+#| include: false
+source("data_processing.R")
+```
+
+### Number of Records
+```{r}
+all_datasets <- c("Trip","Trip_linked","Household","Person","Day","Vehicle","Location")
+
+data.frame(list(
+  `Number of records` = sapply(all_datasets, function(x) nrow(get(x))),
+  `Number of columns` = sapply(all_datasets, function(x) length(get(x)))
+  ))
+
+```
+
+### Missing Responses (values: 995 and -1)
+
+:::{.panel-tabset}
+
+```{r}
+
+get_n_missing <- function(table){
+
+  # 995
+  test <- table %>%
+    summarise_all(~sum(. %in% 995))
+  test_995 <- test %>%
+      select(where(~ all(. != 0, na.rm = TRUE)))
+  n_995 <- data.frame(t(test_995)) %>% rownames_to_column("variable")
+  colnames(n_995)[2] <- "995"
+
+  # -1
+  test <- table %>%
+    summarise_all(~sum(. %in% -1))
+  test_1 <- test %>%
+      select(where(~ all(. != 0, na.rm = TRUE)))
+  n_1 <- data.frame(t(test_1)) %>% rownames_to_column("variable")
+  colnames(n_1)[2] <- "-1"
+
+  # NA
+  test <- table %>%
+    summarise_all(~sum(is.na(.)))
+  test_na <- test %>%
+      select(where(~ all(. != 0, na.rm = TRUE)))
+  n_na <- data.frame(t(test_na)) %>% rownames_to_column("variable")
+  colnames(n_na)[2] <- "NA"
+
+  df <- n_995 %>%
+    merge(n_1, by="variable", all = TRUE) %>%
+    merge(n_na, by="variable", all = TRUE) %>%
+    select(where(~ !all(is.na(.)))) %>% # remove column if all NAs
+    replace_na(list("995" = 0, "-1" = 0, "NA" = 0))
+
+  return(df)
+}
+
+```
+
+#### Household
+```{r}
+get_n_missing(Household)
+```
+
+#### Person
+```{r}
+get_n_missing(Person)
+```
+
+#### Day
+```{r}
+get_n_missing(Day)
+```
+
+#### Trip
+```{r}
+get_n_missing(Trip)
+```
+
+#### Vehicle
+```{r}
+get_n_missing(Vehicle)
+```
+
+#### Location
+```{r}
+get_n_missing(Location)
+```
+
+:::
+
+## Error Flags
+```{r}
+
+error_flags <- get_query("SELECT * FROM HHSurvey.trip_error_flags", db_name = "hhts_cleaning")
+
+CreateTableOne(data = error_flags,
+               vars = c("error_flag")
+               )
+```
+
