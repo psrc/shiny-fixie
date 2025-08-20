@@ -3,7 +3,7 @@ get_var_value_list <- function(var_name, value_labels = codebook){
   
   val_list <- value_labels %>% filter(variable == var_name) %>%
     rowwise() %>%
-    mutate(value_label = paste0(value, ": ", final_label)) %>%
+    mutate(value_label = paste0(value, ": ", label)) %>%
     ungroup() %>%
     select(value, value_label)
   
