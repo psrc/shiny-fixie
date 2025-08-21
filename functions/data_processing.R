@@ -73,7 +73,8 @@ generate_compare_table <- function(input, trip_record){
 # generate inferred insert trip
 generate_blank_trip <- function(recid){
   # TODO: replace this with smarter
-  null_cols <- c("recid", "tripid", "tripnum",
+  # Note: tripnum is now handled in sproc_insert_blank_trip, so removed from null_cols
+  null_cols <- c("recid", "tripid",
                  # "arrival_time_timestamp", 
                  "dest_lat", "dest_lng", "distance_miles",
                  "dest_purpose", "dest_purpose_other",
