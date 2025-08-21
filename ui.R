@@ -16,7 +16,7 @@ shinyUI(
              overview_ui('tab_overview')
     ), # end tabPanel
     
-    tabPanel(title=HTML("Editor"),
+    tabPanel(title=HTML("Trip Editor"),
              div(error_dropdown_ui('dropdown_errortype'),
                  style = "display: flex; align-items: flex-end;"),
              
