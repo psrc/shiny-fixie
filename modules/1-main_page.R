@@ -53,19 +53,20 @@ edit_interface_server <- function(id, selected_error_type) {
     
     output$editplatform <- renderUI({
       tagList(
-        fluidRow(class = "page-format",
+        fluidRow(#class = "page-format",
           
           # person panel
-          column(8, 
+          column(6, 
                  person_panel_ui(ns("panel-person"))
                  ),
           
           # trip editing panel
-          column(4,
+          column(6,
                  fluidRow(style = "margin: 0 1rem;",
                    wellPanel(
                      
-                     p("Select one trip to edit"),
+                     div(p("Select one trip to edit"),),
+                     
                      
                      div(class = "trip-buttons-panel",
                          modal_new_trip_ui(ns('button_new')),
@@ -78,8 +79,9 @@ edit_interface_server <- function(id, selected_error_type) {
                    
                    wellPanel(
                      
-                     p("Select multiple consecutive trips to link"),
-                     modal_link_trips_ui(ns('button_link'))
+                     p("Select multiple trips to", style = "padding-right: 10px;"),
+                     modal_link_trips_ui(ns('button_link')),
+                     style = "display: flex;"
                      
                      ) # end wellpanel
                  )
