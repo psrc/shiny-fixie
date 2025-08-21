@@ -81,8 +81,9 @@ generate_blank_trip <- function(recid){
                  "hhmember1","hhmember2","hhmember3","hhmember4","hhmember5",
                  "hhmember6","hhmember7","hhmember8","hhmember9","hhmember10",
                  "hhmember11","hhmember12","hhmember13",
-                 "travelers_total",
-                 "speed_mph","day_id",
+                 # "travelers_total", 
+                 "mode_other_specify",
+                 "speed_mph",#"day_id",
                  "origin_geog","dest_geog",
                  "dest_county","dest_city","dest_zip","dest_is_home","dest_is_work","modes",
                  "psrc_inserted",
@@ -98,7 +99,8 @@ generate_blank_trip <- function(recid){
     mutate(depart_time_timestamp = arrival_time_timestamp,
            origin_lat = dest_lat,
            origin_lng = dest_lng,
-           origin_purpose = dest_purpose) %>%
+           origin_purpose = dest_purpose,
+           traveldate = as.character(traveldate)) %>%
     # # make all columns that cannot be inferred NA
     mutate_at(vars(all_of(null_cols)), .funs = ~NA)
   
@@ -132,6 +134,9 @@ generate_insert_trip <- function(input, trip_record){
     else if(var_name == "arrival_time_timestamp"){
       arrival_datetime <- combine_datetime(input[["data_edit-arrival_time_timestamp_date"]],input[["data_edit-arrival_time_timestamp_time"]])
       row <- as.data.frame(arrival_datetime)
+    }
+    else if(var_name == "psrc_inserted"){
+      row <- as.data.frame(1)
     }
     # not editable columns
     else{

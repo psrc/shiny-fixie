@@ -112,10 +112,13 @@ sproc_update_data <- function(recid, person_id, edit_list){
 
 sproc_insert_blank_trip <- function(recid, person_id, edit_list){
   # build update query using proper data type formatting
-  formatted_edit_list <- edit_list %>% mutate_all(~format_sql_value(.))
+  formatted_edit_list <- edit_list %>% mutate_all(~format_sql_value(.)) %>% 
+    select(-c("recid")) # remove key from list
+  all_column_names <- paste(names(formatted_edit_list), collapse = ", ")
   all_variable_edits <- paste(formatted_edit_list, collapse = ", ")
   
-  sql_query <- glue("INSERT INTO HHSurvey.trip VALUES ({all_variable_edits});")
+  # browser()
+  sql_query <- glue("INSERT INTO HHSurvey.trip ({all_column_names}) VALUES ({all_variable_edits});")
   # browser()
   # execute_query(sql_query)
   # 
