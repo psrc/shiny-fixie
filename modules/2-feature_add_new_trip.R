@@ -36,7 +36,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                       
                       footer = column(12,
                                       class = "trip-buttons-panel",
-                                      actionButton(ns("clickblank"), "(Blank Trip)"),
+                                      actionButton(ns("clickblank"), "Blank Trip"),
                                       actionButton(ns("clickreversetrip"), "Reverse Trip"),
                                       actionButton(ns("clickreturnhome"), "(Return Home Trip)"),
                                       modalButton('Cancel')

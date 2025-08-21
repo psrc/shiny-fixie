@@ -35,7 +35,7 @@ sproc_link_trips <- function(recid){
   tryCatch({
     
     execute_query(glue("EXECUTE HHSurvey.link_trip_via_id @recid_list = '{all_recids}';"))
-    notification_confirm_action("(Not completed) Successfully linked trips")
+    notification_confirm_action("Successfully linked trips")
     
   }, error = function(e) {
     
