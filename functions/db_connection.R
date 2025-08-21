@@ -129,3 +129,13 @@ get_poi_geog <- function(poi_geog, person_id=NULL, hhid=NULL){
   
   return(poi_coord)
 }
+
+get_error_flag_stat <- function(){
+  query <- glue("SELECT error_flag AS [Error Type], COUNT(*) AS [Flag Count]
+                 FROM HHSurvey.trip_error_flags
+                 GROUP BY error_flag
+                 ORDER BY error_flag;")
+  data <- get_query(sql = query, db_name = cleaning_database)
+  
+  return(data)
+}
