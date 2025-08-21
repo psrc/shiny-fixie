@@ -27,27 +27,23 @@ error_dropdown_server <- function(id) {
     
     output$errordropdown <- renderUI({
       
-      tagList(
-        # wellPanel(
-          div(
-          fluidRow(
-            column(9,
-              selectInput("dropdown_error_type",
-                          label = "Select Error Type:", 
-                          choices = rval$all_error_types, 
-                          width = "480px")
-              ),
-            column(3,
-              class = "google-buttons",
-              actionButton(ns("update_dropdown"), 
-                           label = icon("arrows-rotate"),
-                           style = 'margin-top:20px'
-                           )
-              )
-            )
+        fluidRow(
+          column(9,
+            selectInput("dropdown_error_type",
+                        label = "Select Error Type:", 
+                        choices = rval$all_error_types, 
+                        width = "480px")
+            ),
+          column(3,
+            class = "google-buttons",
+            actionButton(ns("update_dropdown"), 
+                         label = icon("arrows-rotate"),
+                         style = 'margin-top:20px'
+                         )
+            ),
+        style = 'margin-top:50px; flex-direction: row-reverse;'
+          )
           
-        ) # end wellPanel
-      ) # end tagList
       
     }) 
     

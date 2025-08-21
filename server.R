@@ -7,7 +7,7 @@ shinyServer(function(input, output) {
   # Main Panel
   
   # Dashboard Overview
-  # overview_server('tab_overview')
+  overview_server('tab_overview')
   
   # main user interface
   edit_interface_server('main_page', selected_error_type = reactive(input$dropdown_error_type))
