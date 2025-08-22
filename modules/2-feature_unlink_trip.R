@@ -35,6 +35,7 @@ modal_unlink_trip_server <- function(id, selected_recid) {
             filter(ArriveTime == min(ArriveTime)),
           
           rownames = FALSE,
+          class = list('row-border order-column'),
           selection = 'none',
           options =list(ordering = F,
                         dom = 't',

@@ -14,14 +14,16 @@ trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALS
     # browser()
     output$trip_summary <- DT::renderDataTable(
       
-        # get trip summary table from data2fixie
-        get_data(recid = selected_recid) %>%
-          select(recid,person_id,daynum,tripnum,OriginPurpose,DestPurpose,Error),
-      
-      options =list(ordering = F, dom = 't'),
+      # get trip summary table from data2fixie
+      get_data(recid = selected_recid) %>%
+        select(recid,person_id,daynum,tripnum,OriginPurpose,DestPurpose,Error),
+    
+      rownames = FALSE,
+      class = list('row-border order-column'),
       selection = 'none',
-      rownames = FALSE, 
-      server=TRUE
+      options =list(ordering = F,
+                    dom = 't',
+                    pageLength =-1)
       
     )
     

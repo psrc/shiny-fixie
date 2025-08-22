@@ -27,6 +27,7 @@ edit_interface_server <- function(id, selected_error_type) {
         mutate(Modes = str_replace(Modes, ",?Missing Response,?", "")) %>%
         select(-c("person_id")),
       
+      class = list('hover row-border order-column'),
       options =list(ordering = F, dom = 't'), 
       rownames = FALSE, 
       server=TRUE
