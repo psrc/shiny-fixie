@@ -167,11 +167,24 @@ get_vars_summary("person", c("disability_person","mobility_aides"))
 get_vars_summary("person", c("share_1","share_2","share_3","share_4","share_5","share_996"))
 ```
 
-
 ### Frequencies
 ```{r}
 get_vars_summary("person", c("walk_freq","bike_freq","transit_freq","tnc_freq","carshare_freq"))
 ```
+
+::: {.callout-note collapse=true}
+
+#### Typical travel methods -- Transit (e.g., bus, rail, ferry) vs How often the person used transit (e.g., bus, rail, ferry) in the past 30 days
+
+```{r}
+CreateTableOne(data = tables[['person']],
+               vars = c("transit_freq"),
+               factorVars = c("transit_freq"),
+               strata = "share_3"
+               )
+```
+
+:::
 
 ### Attitudes
 ```{r}

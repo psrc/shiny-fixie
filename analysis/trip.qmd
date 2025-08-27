@@ -85,7 +85,7 @@ CreateTableOne(data = tables[['trip_unlinked']],
 
 ## Trip Mode
 
-- number of responses for `mode_other_specify`: `{r} length(unique(tables[["person"]]$mode_other_specify))`
+- number of responses for `mode_other_specify`: `{r} length(unique(tables[["trip_unlinked"]]$mode_other_specify))`
 
 :::{.panel-tabset}
 
@@ -129,7 +129,8 @@ get_vars_summary("trip_unlinked", c("mode_4"))
 
 
 ## Trip Purpose
-- number of responses for `dest_purpose_other`: `{r} length(unique(tables[["person"]]$dest_purpose_other))`
+- number of responses for `dest_purpose_other`: `{r} length(unique(tables[["trip_unlinked"]]$dest_purpose_other))`
+
 
 :::{.panel-tabset}
 

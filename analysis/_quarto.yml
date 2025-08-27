@@ -16,6 +16,7 @@ book:
     - day.qmd
     - trip.qmd
     - vehicle.qmd
+    - all_location.qmd
 
 format:
   html:

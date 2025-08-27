@@ -5,8 +5,15 @@ library(psrcelmer)
 library(qdapTools)
 # summary table
 library(tableone)
+library(sf)
 
 codebook <- read_csv("value_labels.csv")
+
+# get PSRC layers
+county_layer <- st_transform(st_read_elmergeo('COUNTY_BACKGROUND'), 2926)
+city_layer <- st_transform(st_read_elmergeo('CITIES'), 2926)
+center_layer <- st_transform(st_read_elmergeo('URBAN_CENTERS'), 2926)
+rg_layer <- st_transform(st_read_elmergeo('REGIONAL_GEOGRAPHIES'), 2926)
 
 get_labels <- function(.data, varname, table_name, order=TRUE){
   
@@ -44,4 +51,28 @@ get_vars_summary <- function(table_name, summary_vars, order = TRUE){
                    includeNA = TRUE
     )
   )
+}
+
+# join county, city, center layers
+get_psrc_geographies <- function(data, id, lng, lat, prefix_name){
+  
+  gdf <- data %>% 
+    select(all_of(c(id,lng,lat))) %>%
+    st_as_sf(coords = c(lng, lat), crs = 4326) %>%
+    st_transform(2926)
+  
+  df <- gdf %>% 
+    st_join(county_layer %>% select(county_nm), join = st_intersects) %>%
+    st_join(city_layer %>% select(city_name), join = st_intersects) %>%
+    st_join(center_layer %>% select(name), join = st_intersects) %>%
+    st_join(rg_layer %>% select(class_desc), join = st_intersects) %>%
+    rename(county = county_nm,
+           city = city_name,
+           center = name,
+           rg = class_desc) %>%
+    rename_with(~ paste0(prefix_name, .), all_of(c("county","city","center", "rg")))
+  
+  st_geometry(df) <- NULL
+  
+  return(df)
 }

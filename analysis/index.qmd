@@ -67,22 +67,55 @@ get_n_missing <- function(table){
 
 #### Household
 ```{r}
+#| label: hh-missing
+#| tbl-cap: "Missing Responses"
+#| tbl-subcap: 
+#|   - "delivered data"
+#|   - "current cleaning data"
+#| layout-ncol: 2
+#| 
 get_n_missing(Household)
+
+get_n_missing(c_Household)
 ```
 
 #### Person
 ```{r}
+#| label: person-missing
+#| tbl-cap: "Missing Responses"
+#| tbl-subcap: 
+#|   - "delivered data"
+#|   - "current cleaning data"
+#| layout-ncol: 2
+
 get_n_missing(Person)
+get_n_missing(c_Person)
 ```
 
 #### Day
 ```{r}
+#| label: day-missing
+#| tbl-cap: "Missing Responses"
+#| tbl-subcap: 
+#|   - "delivered data"
+#|   - "current cleaning data"
+#| layout-ncol: 2
+
 get_n_missing(Day)
+get_n_missing(c_Day)
 ```
 
 #### Trip
 ```{r}
+#| label: trip-missing
+#| tbl-cap: "Missing Responses"
+#| tbl-subcap: 
+#|   - "delivered data"
+#|   - "current cleaning data"
+#| layout-ncol: 2
+
 get_n_missing(Trip)
+get_n_missing(c_Trip)
 ```
 
 #### Vehicle
