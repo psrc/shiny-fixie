@@ -84,9 +84,9 @@ generate_blank_trip <- function(recid){
                  "hhmember11","hhmember12","hhmember13",
                  # "travelers_total", 
                  "mode_other_specify",
-                 "speed_mph",#"day_id",
+                 "speed_mph",
                  "origin_geog","dest_geog",
-                 "dest_county","dest_city","dest_zip","dest_is_home","dest_is_work","modes",
+                 "dest_is_home","dest_is_work","modes",
                  "psrc_inserted",
                  "revision_code",
                  "psrc_resolved")
@@ -94,7 +94,7 @@ generate_blank_trip <- function(recid){
 
   df <- get_trip_record(recid = recid) %>%
     # columns that must copy directly from prev trip:
-    #     hhid, person_id, pernum, traveldate, daynum, day_id   
+    #     hhid, person_id, pernum, traveldate, daynum
     # inherent columns that could need editing by analysts: 
     #     travelers_hh,travelers_nonhh, mode_1, mode_2, mode_3, mode_4, driver, mode_acc, mode_egr, mode_other_specify
     mutate(depart_time_timestamp = arrival_time_timestamp,
