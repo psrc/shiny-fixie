@@ -103,7 +103,7 @@ generate_blank_trip <- function(recid){
            origin_lng = dest_lng,
            origin_purpose = dest_purpose,
            traveldate = as.character(traveldate)) %>%
-    # # make all columns that cannot be inferred NA
+    # make all columns that cannot be inferred NA
     mutate_at(vars(all_of(null_cols)), .funs = ~NA)
   
   return(df)
