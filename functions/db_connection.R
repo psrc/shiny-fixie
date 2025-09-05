@@ -61,16 +61,21 @@ get_trip_record <- function(recid, order_by = NULL){
 get_all_error_flags <- function(){
   
   # get all error flags
-  query <- glue("select error_flag from HHSurvey.trip_error_flags;")
+  query <- glue("select assignment from HHSurvey.person_error_assignment;")
   df <- get_query(sql = query, db_name = cleaning_database)
-  error_names <- sort(unique(df[["error_flag"]]))
+  error_names <- sort(unique(df[["assignment"]]))
   error_list <- paste0("'",error_names,"'")
   
   # create named vector for dropdown selection that includes 
   # "all error flags" and "all persons"options
   all_errors <- paste(error_list, collapse = ", ")
   full_list <- append(c('all_person_placeholder', 'all_error_placeholder', 'all_elevated_placeholder'), error_list)
-  names(full_list) <- append(c('all persons', 'all error flags', 'all elevated trips'), error_names)
+  
+  # assign labels with count for dropdown
+  append_names <- append(c('all persons', 'all error flags', 'all elevated trips'), error_names)
+  count <- sapply(full_list, function(x) return (length(get_error_flag_person_list(x))))
+  
+  names(full_list) <- paste0(append_names, " (",count, ")")
   
   return(full_list)
 }
@@ -80,7 +85,7 @@ get_error_flag_person_list <- function(error_type){
   
   if(error_type == 'all_error_placeholder'){
     # show all persons with error flag
-    query <- glue("select person_id from HHSurvey.trip_error_flags;")
+    query <- glue("select person_id from HHSurvey.person_error_assignment;")
     df <- get_query(sql = query, db_name = cleaning_database)
   }
   else if(error_type == 'all_person_placeholder'){
@@ -97,8 +102,8 @@ get_error_flag_person_list <- function(error_type){
   }
   else{
     # show persons by individual error
-    query <- glue("select person_id, error_flag from HHSurvey.trip_error_flags
-                 where error_flag in ({error_type});")
+    query <- glue("select person_id, assignment from HHSurvey.person_error_assignment
+                 where assignment in ({error_type});")
     df <- get_query(sql = query, db_name = cleaning_database)
   }
   
