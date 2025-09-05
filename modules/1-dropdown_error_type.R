@@ -32,7 +32,7 @@ error_dropdown_server <- function(id) {
             selectInput("dropdown_error_type",
                         label = "Select Error Type:", 
                         choices = rval$all_error_types, 
-                        selected = 'all_error_placeholder',
+                        selected = rval$all_error_types[[4]],
                         width = "480px")
             ),
           column(3,
