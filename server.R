@@ -13,8 +13,5 @@ shinyServer(function(input, output) {
   edit_interface_server('main_page', selected_error_type = reactive(input$dropdown_error_type))
   # dropdown to select error types and refresh button
   error_dropdown_server('dropdown_errortype')
-  error_dropdown_server('dropdown_errortype-J')
-  error_dropdown_server('dropdown_errortype-Mi')
-  error_dropdown_server('dropdown_errortype-Mo')
   
 })    
