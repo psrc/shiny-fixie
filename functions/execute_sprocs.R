@@ -111,21 +111,14 @@ sproc_update_data <- function(recid, person_id, edit_list){
 # ---- Insert Blank Trip ----
 
 sproc_insert_blank_trip <- function(recid, person_id, edit_list){
-  # First, get the next sequential tripnum for this person_id
-  next_tripnum_query <- glue("SELECT ISNULL(MAX(tripnum), 0) + 1 AS next_tripnum FROM HHSurvey.trip WHERE person_id = {person_id};")
-  next_tripnum_result <- get_query(sql = next_tripnum_query, db_name = cleaning_database)
-  next_tripnum <- next_tripnum_result$next_tripnum[1]
-  
-  # Add the calculated tripnum to the edit_list
-  edit_list$tripnum <- next_tripnum
   
   # build insert query using proper data type formatting
-  formatted_edit_list <- edit_list %>% mutate_all(~format_sql_value(.)) %>% 
-    select(-c("recid")) # remove key from list
+  formatted_edit_list <- edit_list %>% 
+    mutate_all(~format_sql_value(.))
+  
   all_column_names <- paste(names(formatted_edit_list), collapse = ", ")
   all_variable_edits <- paste(formatted_edit_list, collapse = ", ")
-  
-  # browser()
+
   sql_query <- glue("INSERT INTO HHSurvey.trip ({all_column_names}) VALUES ({all_variable_edits});")
   execute_query(sql_query)
   

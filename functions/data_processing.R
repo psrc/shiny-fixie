@@ -42,6 +42,7 @@ generate_compare_table <- function(input, trip_record){
     compare_table <- rbind(compare_table,
                            compare_var)
   }
+  
   ## ---- process datetime ----
   
   # updated timestamps
@@ -154,6 +155,9 @@ generate_insert_trip <- function(input, trip_record){
 
   }
   names(trip) <- names(trip_record)
-
+  
+  # remove primary key and history timestamps from insert trip
+  trip <- trip %>% select(-c("recid","valid_from","valid_to"))
+  
   return(trip)
 }
