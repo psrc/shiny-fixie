@@ -25,9 +25,11 @@ overview_server <- function(id) {
       
       rval$df_error_flags,
       
-      options =list(ordering = F, dom = 't'),
+      class = list('hover row-border order-column'),
       selection = 'none',
-      rownames = FALSE, 
+      options =list(dom = 't', pageLength = -1, 
+                    autoWidth = TRUE),
+      rownames = FALSE,
       server=TRUE
       
     )
@@ -35,21 +37,22 @@ overview_server <- function(id) {
     output$overview <- renderUI({
       
       tagList(
-        div("Welcome to Shiny Fixie!",
-            style = 'margin-top:50px'),
+        # div("Welcome to Shiny Fixie!",
+        #     style = 'margin-top:50px'),
         
         fluidRow(
-          h2("Current Error Flag Count:"),
+          h2("Current Error Flag Count:",
+                 style = 'margin-top:50px'),
           div(class = "google-buttons",
               actionButton(ns("update_table"), 
                            label = icon("arrows-rotate"),
-                           style = 'margin-top:20px; margin-left:20px;'
+                           style = 'margin-top:50px; margin-left:20px;'
               )),
           style = "display: flex;"
         ),
         
         fluidRow(
-          column(6,DT::DTOutput(ns("error_flags")))
+          column(6,DT::DTOutput(ns("error_flags")), class = "left-aligned-content")
         ))
       
     })

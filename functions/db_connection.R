@@ -135,7 +135,10 @@ get_error_flag_stat <- function(){
                  FROM HHSurvey.trip_error_flags
                  GROUP BY error_flag
                  ORDER BY error_flag;")
-  data <- get_query(sql = query, db_name = cleaning_database)
+  data <- get_query(sql = query, db_name = cleaning_database) %>%
+    bind_rows(summarise(., 
+                        `Error Type` = "Total",
+                        `Flag Count` = sum(`Flag Count`)))
   
   return(data)
 }
