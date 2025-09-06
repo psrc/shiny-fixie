@@ -11,10 +11,25 @@ sproc_delete_trip <- function(recid){
 
 # ---- Dismiss error flag ----
 sproc_dismiss_flag <- function(recid, person_id){
+  browser()
   
-  execute_query(glue("EXECUTE HHSurvey.shifixy_dismiss_flag @target_recid = {recid};"))
+  query <- glue("select recid from HHSurvey.trip_error_flags;")
+  df <- get_query(sql = query, db_name = cleaning_database)
   
-  notification_confirm_action("Successfully dismissed error flag")
+  if (recid %in% df$recid) {
+    
+    execute_query(glue("EXECUTE HHSurvey.shifixy_dismiss_flag @target_recid = {recid};"))
+    notification_confirm_action("Successfully dismissed error flag")
+    
+  }
+  # if person record has no error flag
+  else {
+    showNotification(
+      "[Dismiss Flag Failed] This trip has no error flag.",
+      duration = 7, 
+      type = "error")
+  }
+  
   
 }
 
@@ -99,12 +114,29 @@ sproc_update_data <- function(recid, person_id, edit_list){
   
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
-  sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
-  execute_query(sql_query)
   
-  execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
+  # check if there is edits made in the trip (if there's any elements other than "revision_code" in edit_list)
+  if (length(edit_list) > 1) {
+    
+    # update query to edit trip
+    sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
+    execute_query(sql_query)
+    
+    # execute after edit sprocs
+    execute_query(glue("EXECUTE HHSurvey.shifixy_after_edits @target_person_id = {person_id};"))
+    
+    notification_confirm_action("Successfully updated trip")
+    
+  }
+  # if no edits were made
+  else {
+    showNotification(
+      "[Trip Edit Failed] No edits were made",
+      duration = 7, 
+      type = "error")
+  }
   
-  notification_confirm_action("Successfully updated trip")
+  
   
 }
 
