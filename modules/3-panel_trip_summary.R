@@ -39,14 +39,8 @@ trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALS
     if(incl_poi){
       
       poi_ids <- c("open_home_geog", "open_work_geog", "open_school_geog")
-      trip_record <- get_trip_record(selected_recid)
-      
-      # get poi locations
-      poi_latlong <-c(get_poi_geog("home_geog", hhid = trip_record['hhid']), 
-                      get_poi_geog("work_geog", person_id = trip_record['person_id']), 
-                      get_poi_geog("school_geog", person_id = trip_record['person_id']))
-      names(poi_latlong) <- poi_ids
-      
+      # get poi locations: named list with matching poi_ids
+      poi_latlong <- get_poi_geog(selected_recid)
       # poi button icons
       poi_icons <- c("house", "briefcase", "school-flag")
       names(poi_icons) <- poi_ids
@@ -54,13 +48,14 @@ trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALS
       for (x in names(poi_latlong)) {
         
         # add poi button if valid location exists
-        if(poi_latlong[[x]] != "NA, NA"){
+        if(poi_latlong[[x]] != " ,"){
           
           poi_config <- poi_config %>% add_row(inputId = ns(x), 
                                                latlong = poi_latlong[[x]], 
                                                icon = poi_icons[[x]])
         }
       }
+      browser()
       
     }
     

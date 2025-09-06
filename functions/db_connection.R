@@ -113,26 +113,26 @@ get_error_flag_person_list <- function(error_type){
 }
 
 # --- get point of interest coordinates from person and household data tables----
-get_poi_geog <- function(poi_geog, person_id=NULL, hhid=NULL){
-  # get person-level data from database for edit platform
+
+
+
+get_poi_geog <- function(recid){
   
-  if(!is.null(person_id)){
-    # to get data for a person_id
-    query <- glue("select {poi_geog}.Long as lng, {poi_geog}.Lat as lat
-                   from HHSurvey.Person
-                   where person_id={person_id};")
-  }
-  else if(!is.null(hhid)){
-    # to get data for a trip
-    query <- glue("select {poi_geog}.Long as lng, {poi_geog}.Lat as lat
-                   from HHSurvey.Household
-                   where hhid={hhid};")
-  }
-  
+  # get all geogs: work_geog, school_geog, home_geog
+  # must match column names with poi_ids!!!
+  query <- glue("SELECT CONCAT(hh.home_lat, ' ,', hh.home_lng) as open_home_geog,
+                        CONCAT(p.work_lat, ' ,', p.work_lng) as open_work_geog, 
+                        CONCAT(p.school_loc_lat, ' ,', p.school_loc_lng) as open_school_geog
+                 FROM HHSurvey.Trip AS t
+                 LEFT JOIN HHSurvey.Person AS p ON t.person_id = p.person_id
+                 LEFT JOIN HHSurvey.Household AS hh ON p.hhid = hh.hhid
+                 WHERE t.recid={recid}")
   data <- get_query(sql = query, db_name = cleaning_database)
-  poi_coord <- paste(data[['lat']], data[['lng']], sep = ", ")
   
-  return(poi_coord)
+  named_list <- as.list(data)
+  
+  return(named_list)
+  
 }
 
 get_error_flag_stat <- function(){

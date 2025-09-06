@@ -15,7 +15,7 @@ actionButton_google_direction <- function(inputId, df){
 
 # link to google maps showing origin or destination locations
 actionButton_google_place <- function(inputId, df, lat_var_name, long_var_name){
-  
+  browser()
   latlong <- reactive({ paste0(df[1,c(lat_var_name)], ", ", df[1,c(long_var_name)]) })
   
   url <- paste0("https://www.google.com/maps/place/", latlong())
