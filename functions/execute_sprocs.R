@@ -115,8 +115,8 @@ sproc_update_data <- function(recid, person_id, edit_list){
   # build update query using proper data type formatting
   all_variable_edits <- build_set_clause(names(edit_list), edit_list)
   
-  # check if there is edits made in the trip (if there's any elements other than "revision_code" in edit_list)
-  if (length(edit_list) > 1) {
+  # check if there is edits made in the trip
+  if (length(edit_list) > 0) {
     
     # update query to edit trip
     # assign revision code to record: 15 is for manual cleaning
