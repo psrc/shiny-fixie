@@ -119,7 +119,8 @@ sproc_update_data <- function(recid, person_id, edit_list){
   if (length(edit_list) > 1) {
     
     # update query to edit trip
-    sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits} WHERE recid = {recid};")
+    # assign revision code to record: 15 is for manual cleaning
+    sql_query <- glue("UPDATE HHSurvey.trip SET {all_variable_edits}, revision_code = CONCAT(revision_code, '15,') WHERE recid = {recid};")
     execute_query(sql_query)
     
     # execute after edit sprocs

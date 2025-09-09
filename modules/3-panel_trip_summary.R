@@ -55,7 +55,6 @@ trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALS
                                                icon = poi_icons[[x]])
         }
       }
-      browser()
       
     }
     

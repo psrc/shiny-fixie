@@ -88,8 +88,6 @@ modal_edit_trip_server <- function(id, selected_recid) {
       compare_table <- generate_compare_table(input, rval$trip_record)
       rval$edit_list <- compare_table[compare_table$mod == 1, "Updated Value"]
       names(rval$edit_list) <- compare_table[compare_table$mod == 1, "Variable"]
-      # assign revision code to record: 15 is for manual cleaning
-      rval$edit_list[['revision_code']] <- 15
       
       output$print_cols <- show_compare_table(compare_table)
       
