@@ -1,6 +1,7 @@
 shinyUI(
   
   navbarPage(
+    useShinyjs(),
     id = "shiny-fixie",
     title = div(tags$img(src='RegionalGem2016.png',
                                 style="margin-top: -4px; padding-right: 20px;",
