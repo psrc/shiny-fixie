@@ -69,10 +69,10 @@ get_all_error_flags <- function(){
   # create named vector for dropdown selection that includes 
   # "all error flags" and "all persons"options
   all_errors <- paste(error_list, collapse = ", ")
-  full_list <- append(c('all_person_placeholder', 'all_error_placeholder', 'all_elevated_placeholder'), error_list)
+  full_list <- append(c('all_person_placeholder', 'all_error_placeholder'), error_list)
   
   # assign labels with count for dropdown
-  append_names <- append(c('all persons', 'all error flags', 'all elevated trips'), error_names)
+  append_names <- append(c('all persons', 'all error flags'), error_names)
   count <- sapply(full_list, function(x) return (length(get_error_flag_person_list(x))))
   
   names(full_list) <- paste0(append_names, " (",count, ")")
@@ -94,12 +94,12 @@ get_error_flag_person_list <- function(error_type){
     df <- get_query(sql = query, db_name = cleaning_database)
     
   }
-  else if(error_type == 'all_elevated_placeholder'){
-    # show all persons with elevated comments
-    query <- glue("SELECT DISTINCT person_id FROM HHSurvey.Trip WHERE psrc_comment IS NOT NULL AND psrc_comment<>'' ;")
-    df <- get_query(sql = query, db_name = cleaning_database)
-    
-  }
+  # else if(error_type == 'all_elevated_placeholder'){
+  #   # show all persons with elevated comments
+  #   query <- glue("SELECT DISTINCT person_id FROM HHSurvey.Trip WHERE psrc_comment IS NOT NULL AND psrc_comment<>'' ;")
+  #   df <- get_query(sql = query, db_name = cleaning_database)
+  #   
+  # }
   else{
     # show persons by individual error
     query <- glue("select person_id, assignment from HHSurvey.person_error_assignment
