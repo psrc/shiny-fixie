@@ -7,6 +7,13 @@ get_var_value_list <- function(var_name, value_labels = codebook){
     ungroup() %>%
     select(value, value_label)
   
+  # reorder missing response to first row
+  row_995 <- val_list %>% filter(value == 995)
+  remaining_df <- val_list %>% filter(value != 995)
+  
+  # Combine them, placing the 'row_to_move' first
+  val_list <- row_995 %>% add_row(remaining_df)
+  
   return(setNames(as.list(val_list$value), nm = val_list$value_label))
 }
 
