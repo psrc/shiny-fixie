@@ -37,10 +37,11 @@ editdata_datavalidation <- function(input){
   # driver value must be entered for drive modes
   iv$add_rule("data_edit-driver", function(value) {
     
+    all_modes <- c(input[["data_edit-mode_1"]], input[["data_edit-mode_2"]], 
+                   input[["data_edit-mode_3"]], input[["data_edit-mode_4"]])
     
     # if any of the modes are drive
-    if (any(c(input[["data_edit-mode_1"]], input[["data_edit-mode_2"]], 
-              input[["data_edit-mode_3"]], input[["data_edit-mode_4"]])) %in% drive_modes) {
+    if (intersect(all_modes , drive_modes)>0) {
       if(input[["data_edit-driver"]]==995){
         "The \"driver\" field must be specified for drive trips"
       }

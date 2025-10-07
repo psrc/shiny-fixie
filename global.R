@@ -41,6 +41,6 @@ tripeditor.cols <- c("mode_1","mode_2","mode_3","mode_4","mode_acc","mode_egr",
                      )
 
 # for validating driver field in trip editor: include any drive modes that would require "driver" entry
-drive_modes <- c(100,101)
+drive_modes <- c("100","101")
 
 
