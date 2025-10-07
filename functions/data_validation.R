@@ -39,7 +39,7 @@ editdata_datavalidation <- function(input){
     
     all_modes <- c(input[["data_edit-mode_1"]], input[["data_edit-mode_2"]], 
                    input[["data_edit-mode_3"]], input[["data_edit-mode_4"]])
-    browser()
+    
     # if any of the modes are drive
     if (length(intersect(all_modes , drive_modes))>0) {
       if(input[["data_edit-driver"]]==995){
