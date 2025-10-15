@@ -21,18 +21,36 @@ edit_interface_server <- function(id, selected_error_type) {
     edit_dt <- reactive({ get_data(person_id = personID(), order_by=c("person_id", "tripnum")) })
     
     output$thetable <- DT::renderDataTable(
-      
-      edit_dt() %>% 
-        # remove missing response pattern
-        mutate(Modes = str_replace(Modes, ",?Missing Response,?", "")) %>%
-        select(-c("person_id")),
-      
-      class = list('hover row-border order-column'),
-      options =list(ordering = F, dom = 't',pageLength = -1),
+      {
+        desired_cols <- c(
+          "recid", "daynum", "tripnum", "Error", "Modes", "DepartTime", "ArriveTime",
+          "Miles", "MPH", "TotalTravelers", "OriginPurpose", "DestPurpose",
+          "OtherPurpose", "DurationAtDest", "revision_code"
+        )
+
+        edit_dt() %>%
+          # remove missing response pattern
+          mutate(Modes = str_replace(Modes, ",?Missing Response,?", "")) %>%
+          select(-c("person_id")) %>%
+          # try to present columns in a consistent order while being resilient to missing fields
+          dplyr::select(dplyr::any_of(desired_cols), dplyr::everything())
+      },
+
+      class = list('display nowrap hover row-border order-column'),
+      options = list(
+        ordering = FALSE,
+        dom = 't',
+        paging = FALSE,
+        scrollY = '60vh',
+        scrollX = TRUE,
+        scrollCollapse = TRUE,
+        # When using FixedHeader with a fixed-top navbar, this offset prevents overlap (approx height)
+        fixedHeader = list(header = TRUE, headerOffset = 60)
+      ),
       rownames = FALSE,
-      server=TRUE
-      
-      )
+      server = TRUE,
+      extensions = c('FixedHeader')
+    )
     
     
     # data cleaning tools ----
@@ -90,7 +108,15 @@ edit_interface_server <- function(id, selected_error_type) {
           
         ), # end fluidrow
         
-        fluidRow(column(12, DT::dataTableOutput(ns("thetable"))))
+        fluidRow(
+          column(
+            12,
+            div(
+              DT::dataTableOutput(ns("thetable")),
+              style = "max-height: 70vh; overflow-y: auto;"
+            )
+          )
+        )
       
       ) # end taglist
     }) 
