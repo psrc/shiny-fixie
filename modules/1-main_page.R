@@ -20,37 +20,37 @@ edit_interface_server <- function(id, selected_error_type) {
     # person data from database
     edit_dt <- reactive({ get_data(person_id = personID(), order_by=c("person_id", "tripnum")) })
     
-    output$thetable <- DT::renderDataTable(
-      {
-        desired_cols <- c(
-          "recid", "daynum", "tripnum", "Error", "Modes", "DepartTime", "ArriveTime",
-          "Miles", "MPH", "TotalTravelers", "OriginPurpose", "DestPurpose",
-          "OtherPurpose", "DurationAtDest", "revision_code"
-        )
+    output$thetable <- DT::renderDataTable({
+      desired_cols <- c(
+        "recid", "daynum", "tripnum", "Error", "Modes", "DepartTime", "ArriveTime",
+        "Miles", "MPH", "TotalTravelers", "OriginPurpose", "DestPurpose",
+        "OtherPurpose", "DurationAtDest", "revision_code"
+      )
 
-        edit_dt() %>%
-          # remove missing response pattern
-          mutate(Modes = str_replace(Modes, ",?Missing Response,?", "")) %>%
-          select(-c("person_id")) %>%
-          # try to present columns in a consistent order while being resilient to missing fields
-          dplyr::select(dplyr::any_of(desired_cols), dplyr::everything())
-      },
+      df <- edit_dt() %>%
+        # remove missing response pattern
+        mutate(Modes = str_replace(Modes, ",?Missing Response,?", "")) %>%
+        select(-c("person_id")) %>%
+        # try to present columns in a consistent order while being resilient to missing fields
+        dplyr::select(dplyr::any_of(desired_cols), dplyr::everything())
 
-      class = list('display nowrap hover row-border order-column'),
-      options = list(
-        ordering = FALSE,
-        dom = 't',
-        paging = FALSE,
-        scrollY = '60vh',
-        scrollX = TRUE,
-        scrollCollapse = TRUE,
-        # When using FixedHeader with a fixed-top navbar, this offset prevents overlap (approx height)
-        fixedHeader = list(header = TRUE, headerOffset = 60)
-      ),
-      rownames = FALSE,
-      server = TRUE,
-      extensions = c('FixedHeader')
-    )
+      DT::datatable(
+        df,
+        class = 'display nowrap hover row-border order-column',
+        options = list(
+          ordering = FALSE,
+          dom = 't',
+          paging = FALSE,
+          scrollY = '60vh',
+          scrollX = TRUE,
+          scrollCollapse = TRUE,
+          # When using FixedHeader with a fixed-top navbar, this offset prevents overlap (approx height)
+          fixedHeader = list(header = TRUE, headerOffset = 60)
+        ),
+        rownames = FALSE,
+        extensions = c('FixedHeader')
+      )
+    }, server = TRUE)
     
     
     # data cleaning tools ----
