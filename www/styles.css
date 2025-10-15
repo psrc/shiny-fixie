@@ -142,3 +142,21 @@ i:hover {
 .purpose {
   align-self: flex-end;
 }
+
+/* Make DT FixedHeader appear above the scrollable body and cooperate with fixed-top navbar */
+table.dataTable thead th,
+table.dataTable thead td {
+  position: sticky;
+  top: 0;
+  z-index: 2; /* ensure header stays above body cells */
+}
+
+/* When used inside a modal or panel with scroll, keep headers visible */
+.dataTables_wrapper .dataTables_scrollHead {
+  overflow: visible !important;
+}
+
+/* Optional: tighten cell whitespace to fit more columns */
+table.dataTable tbody th, table.dataTable tbody td {
+  padding: 6px 8px;
+}

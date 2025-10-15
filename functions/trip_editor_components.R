@@ -91,19 +91,28 @@ trip_editor_input_block <- function(id, trip_record){
 
 show_compare_table <- function(compare_table){
   renderDT({
-    
-    datatable(compare_table,
-              options =list(ordering = F,
+              datatable(
+                     compare_table,
+                     options = list(
+                            ordering = FALSE,
                             dom = 't',
-                            pageLength = -1,
-                            # hide mod column
-                            columnDefs = list(list(targets = 4,visible = FALSE)))
-    ) %>%
-      formatStyle(
-        'mod',
-        target = 'row',
-        backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
-      )
-    
+                            paging = FALSE,
+                            scrollY = '50vh',
+                            scrollX = TRUE,
+                            scrollCollapse = TRUE,
+                            fixedHeader = TRUE,
+                            # hide mod column (assumed to be 4th index as before)
+                            columnDefs = list(list(targets = 4, visible = FALSE))
+                     ),
+                     class = 'display nowrap cell-border stripe',
+                     rownames = FALSE,
+                     escape = FALSE,
+                     extensions = c('FixedHeader')
+              ) %>%
+                     formatStyle(
+                            'mod',
+                            target = 'row',
+                            backgroundColor = styleEqual(c(0, 1), c('white', '#00A7A0'))
+                     )
   })
 }
