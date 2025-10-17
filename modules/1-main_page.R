@@ -28,7 +28,13 @@ edit_interface_server <- function(id, selected_error_type) {
         select(-c("person_id")),
       
       class = list('hover row-border order-column'),
-      options =list(ordering = F, dom = 't',pageLength = -1),
+      options =list(ordering = F, 
+                    dom = 't',
+                    pageLength = -1,
+                    scroller = TRUE,
+                    scrollY = '60vh',
+                    scrollCollapse = TRUE),
+      fillContainer = T,
       rownames = FALSE,
       server=TRUE
       
