@@ -50,7 +50,7 @@ modal_link_trips_server <- function(id, thedata, selected_recid) {
       sproc_link_trips(sort(selected_recid()))
     })
 
-    output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "Link Trips") })
+  output$linkbutton <- renderUI({ actionButton(ns("clicklink"), "Link") })
     
   })  # end moduleServer
 }

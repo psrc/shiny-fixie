@@ -142,3 +142,18 @@ i:hover {
 .purpose {
   align-self: flex-end;
 }
+
+/* --- Trip editor header additions --- */
+.person-summary-line {
+  font-size: 0.95rem;
+}
+
+.trip-buttons-panel.well {
+  border-radius: 6px;
+}
+
+@media (max-width: 992px) {
+  .leaflet-container {
+    height: 300px !important;
+  }
+}

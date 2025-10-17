@@ -16,6 +16,7 @@ library(DT)
 library(psrcelmer)
 library(rclipboard)
 library(shinyvalidate)
+library(leaflet)
 
 # Run Modules Files ---------------------------------------------------------------------------
 # This section runs the modules and unless the folder name changes, it doesn't need to be changed
