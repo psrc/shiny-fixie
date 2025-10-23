@@ -42,6 +42,15 @@ sproc_insert_reverse_trip <- function(recid, reverse_startdatetime){
   
 }
 
+# ---- Add return home trip ----
+sproc_insert_return_home_trip <- function(recid, return_startdatetime){
+  
+  execute_query(glue("EXECUTE HHSurvey.shifixy_insert_return_home @target_recid = {recid}, @startdatetime = '{return_startdatetime}';"))
+  
+  notification_confirm_action("Successfully inserted return home trip")
+  
+}
+
 # ---- Link trips ----
 sproc_link_trips <- function(recid){
   all_recids <- paste(recid, collapse = ",")

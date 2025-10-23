@@ -38,7 +38,7 @@ modal_new_trip_server <- function(id, selected_recid) {
                                       class = "trip-buttons-panel",
                                       actionButton(ns("clickblank"), "Blank Trip"),
                                       actionButton(ns("clickreversetrip"), "Reverse Trip"),
-                                      actionButton(ns("clickreturnhome"), "(Return Home Trip)"),
+                                      actionButton(ns("clickreturnhome"), "Return Home Trip"),
                                       modalButton('Cancel')
                       ),
                       size = "l"
@@ -161,11 +161,20 @@ modal_new_trip_server <- function(id, selected_recid) {
                     
                     footer = column(12,
                                     class = "trip-buttons-panel",
-                                    modalButton('Add Return Home Trip'),
+                                    actionButton(ns("pushaddreturnhome"), 'Add Return Home Trip'),
                                     modalButton('Cancel')
                     ),
                     size = "l"))
       })
+    
+    ## Update reverse trip in Database ----
+    observeEvent(input$pushaddreturnhome, {
+      
+      return_datetime <- combine_datetime(input[["reverse_trip-depart_timestamp_date"]],
+                                          input[["reverse_trip-depart_timestamp_time"]])
+      sproc_insert_return_home_trip(selected_recid(), reverse_datetime)
+      
+    })
     
     
     # reverse trip ----
