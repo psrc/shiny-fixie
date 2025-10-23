@@ -170,8 +170,8 @@ modal_new_trip_server <- function(id, selected_recid) {
     ## Update reverse trip in Database ----
     observeEvent(input$pushaddreturnhome, {
       
-      return_datetime <- combine_datetime(input[["reverse_trip-depart_timestamp_date"]],
-                                          input[["reverse_trip-depart_timestamp_time"]])
+      return_datetime <- combine_datetime(input[["return_home-depart_timestamp_date"]],
+                                          input[["return_home-depart_timestamp_time"]])
       sproc_insert_return_home_trip(selected_recid(), return_datetime)
       
     })
