@@ -172,7 +172,7 @@ modal_new_trip_server <- function(id, selected_recid) {
       
       return_datetime <- combine_datetime(input[["reverse_trip-depart_timestamp_date"]],
                                           input[["reverse_trip-depart_timestamp_time"]])
-      sproc_insert_return_home_trip(selected_recid(), reverse_datetime)
+      sproc_insert_return_home_trip(selected_recid(), return_datetime)
       
     })
     
