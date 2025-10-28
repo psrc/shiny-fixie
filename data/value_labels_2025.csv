@@ -93,30 +93,21 @@ trip_unlinked,mode_4,107,"Scooter, moped, skateboard"
 trip_unlinked,mode_4,108,Ferry or water taxi
 trip_unlinked,mode_acc,1,Walked or jogged
 trip_unlinked,mode_acc,2,Bicycle or e-bicycle
-trip_unlinked,mode_acc,8,"Transferred from another bus, shuttle, or vanpool"
-trip_unlinked,mode_acc,9,"Scooter, moped, skateboard"
-trip_unlinked,mode_acc,10,Transferred from other rail
-trip_unlinked,mode_acc,11,"Transferred from other transit (e.g., ferry, air)"
+trip_unlinked,mode_acc,5,Got dropped off
+trip_unlinked,mode_acc,8,Transferred from another mode
 trip_unlinked,mode_acc,12,"Uber/Lyft, taxi, or car service"
-trip_unlinked,mode_acc,13,Drove and parked my own household's vehicle (or motorcycle)
-trip_unlinked,mode_acc,14,Drove and parked another vehicle (or motorcycle)
-trip_unlinked,mode_acc,15,Got dropped off in my own household's vehicle (or motorcycle)
-trip_unlinked,mode_acc,16,Got dropped off in another vehicle (or motorcycle)
+trip_unlinked,mode_acc,17,Drove onto ferry
+trip_unlinked,mode_acc,18,Drove and parked
 trip_unlinked,mode_acc,97,Other
 trip_unlinked,mode_acc,995,Missing: Skip Logic
-trip_unlinked,mode_egr,1,Walked or jogged
-trip_unlinked,mode_egr,2,Bicycle or e-bicycle
-trip_unlinked,mode_egr,8,"Transferred to another bus, shuttle, or vanpool"
-trip_unlinked,mode_egr,9,"Scooter, moped, skateboard"
-trip_unlinked,mode_egr,10,Transferred to other rail
-trip_unlinked,mode_egr,11,"Transferred to other transit (e.g., ferry, air)"
-trip_unlinked,mode_egr,12,"Uber/Lyft, taxi, or car service"
-trip_unlinked,mode_egr,13,Drove my own household's vehicle (or motorcycle)
-trip_unlinked,mode_egr,14,Drove another vehicle (or motorcycle)
-trip_unlinked,mode_egr,15,Got picked up in my own household's vehicle (or motorcycle)
-trip_unlinked,mode_egr,16,Got picked up in another vehicle (or motorcycle)
-trip_unlinked,mode_egr,97,Other
-trip_unlinked,mode_egr,995,Missing: Skip Logic
+trip_unlinked,mode_egg,1,Walked or jogged
+trip_unlinked,mode_egg,2,Bicycle or e-bicycle
+trip_unlinked,mode_egg,8,Transferred from another mode
+trip_unlinked,mode_egg,12,"Uber/Lyft, taxi, or car service"
+trip_unlinked,mode_egg,17,Got picked up
+trip_unlinked,mode_egg,18,Drove my parked car
+trip_unlinked,mode_egg,97,Other
+trip_unlinked,mode_egg,995,Missing: Skip Logic
 trip_unlinked,origin_purpose,-1,Not imputable
 trip_unlinked,origin_purpose,1,Went home
 trip_unlinked,origin_purpose,10,Went to primary workplace
