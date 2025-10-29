@@ -40,7 +40,7 @@ error_dropdown_server <- function(id) {
           ),
         div(
           # refresh button: refresh error type dropdown
-          style = 'margin-top: 30px; margin-left: 5px;',
+          style = 'margin-top: 25px; margin-left: 5px;',
           actionButton_refresh(ns("refresh_dropdown"))
           )
         )
