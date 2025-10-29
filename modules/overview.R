@@ -43,7 +43,7 @@ overview_server <- function(id) {
         fluidRow(
           h2(style = 'margin-top:50px',
              "Current Error Flag Count"),
-          div(style = 'margin-top: 55px; margin-left: 0px;',
+          div(style = 'margin-top: 55px; margin-left: 5px;',
               # refresh button: refresh summary table
               actionButton_refresh(ns("refresh_table"))
               ),

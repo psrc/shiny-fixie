@@ -83,8 +83,11 @@ edit_interface_server <- function(id, selected_error_type) {
                      
                      div(class = "trip-buttons-panel",
                          p("Select one trip to edit"),
-                         # refresh button: refresh trip table
-                         actionButton_refresh(ns("refresh_table"))),
+                         div(
+                           style="margin-left: 5px",
+                           # refresh button: refresh trip table
+                           actionButton_refresh(ns("refresh_table")))
+                         ),
                      
                      div(class = "trip-buttons-panel",
                          # buttons: trip editing functions

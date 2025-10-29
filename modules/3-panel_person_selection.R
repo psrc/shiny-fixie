@@ -69,7 +69,7 @@ person_panel_server <- function(id, selected_error_type) {
                    style = "display: flex; margin-top: 30px; padding-left:0px;",
                    actionButton(class = "back-forth-buttons",
                                 inputId = ns("previous_person"),
-                                label = "Previous Person |"),
+                                label = "Previous Person"),
                    actionButton(class = "back-forth-buttons",
                                 inputId = ns("next_person"),
                                 label = "Next Person")
