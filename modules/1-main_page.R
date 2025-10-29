@@ -18,11 +18,14 @@ edit_interface_server <- function(id, selected_error_type) {
     # the trip table ----
     
     # person data from database
-    edit_dt <- reactive({ get_data(person_id = personID(), order_by=c("person_id", "tripnum")) })
+    rval <- reactiveValues(edit_dt = NULL)
+    observe({
+      rval$edit_dt <- get_data(person_id = personID(), order_by=c("person_id", "tripnum"))
+    })
     
     output$thetable <- DT::renderDataTable(
       
-      edit_dt() %>% 
+      rval$edit_dt %>% 
         # remove missing response pattern
         mutate(Modes = str_replace(Modes, ",?Missing Response,?", "")) %>%
         select(-c("person_id")),
@@ -40,10 +43,16 @@ edit_interface_server <- function(id, selected_error_type) {
       
       )
     
+    observeEvent(input$refresh_table, {
+      # clicking refresh button: update data in trip table
+      
+      rval$edit_dt <- get_data(person_id = personID(), order_by=c("person_id", "tripnum"))
+      
+    })  
     
     # data cleaning tools ----
     
-    selected_row_recid <- reactive({ edit_dt()[input$thetable_rows_selected, "recid"] })
+    selected_row_recid <- reactive({ rval$edit_dt[input$thetable_rows_selected, "recid"] })
     
     ## button to add new trip
     modal_new_trip_server("button_new", selected_recid = reactive(selected_row_recid()))
@@ -72,21 +81,25 @@ edit_interface_server <- function(id, selected_error_type) {
                  fluidRow(style = "margin: 0 1rem;",
                    wellPanel(
                      
-                     div(p("Select one trip to edit"),),
-                     
+                     div(class = "trip-buttons-panel",
+                         p("Select one trip to edit"),
+                         # refresh button: refresh trip table
+                         actionButton_refresh(ns("refresh_table"))),
                      
                      div(class = "trip-buttons-panel",
+                         # buttons: trip editing functions
                          modal_new_trip_ui(ns('button_new')),
                          modal_edit_trip_ui(ns('button_edit')),
                          modal_delete_trip_ui(ns('button_delete')),
                          modal_unlink_trip_ui(ns('button_unlink'))
-                         ) # end div
+                         )
                      
                      ), # end wellpanel
                    
                    wellPanel(
                      
                      p("Select multiple trips to", style = "padding-right: 10px;"),
+                     # buttons: trip linking function
                      modal_link_trips_ui(ns('button_link')),
                      style = "display: flex;"
                      

@@ -38,3 +38,11 @@ actionButton_google_poi <- function(inputId, latlong, icon){
                onclick =paste0("window.open('",url,"','_blank')"),
                style = "margin-bottom: .75rem;")
 }
+
+actionButton_refresh <- function(inputId){
+  # customized refresh button
+  
+  actionButton(class = "refresh-btn",
+               inputId = inputId,
+               label = icon("arrows-rotate", style="padding: 0; font-size: 100%;"))
+}

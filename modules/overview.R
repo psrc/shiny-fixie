@@ -16,8 +16,10 @@ overview_server <- function(id) {
       rval$df_error_flags <- get_error_flag_stat()
     })
     
-    # update error flag table
-    observeEvent(input$update_table, {
+    
+    observeEvent(input$refresh_table, {
+      # clicking refresh button: update error counts
+      
       rval$df_error_flags <- get_error_flag_stat()
     })
     
@@ -37,17 +39,14 @@ overview_server <- function(id) {
     output$overview <- renderUI({
       
       tagList(
-        # div("Welcome to Shiny Fixie!",
-        #     style = 'margin-top:50px'),
         
         fluidRow(
-          h2("Current Error Flag Count:",
-                 style = 'margin-top:50px'),
-          div(class = "google-buttons",
-              actionButton(ns("update_table"), 
-                           label = icon("arrows-rotate"),
-                           style = 'margin-top:50px; margin-left:20px;'
-              )),
+          h2(style = 'margin-top:50px',
+             "Current Error Flag Count"),
+          div(style = 'margin-top: 55px; margin-left: 0px;',
+              # refresh button: refresh summary table
+              actionButton_refresh(ns("refresh_table"))
+              ),
           style = "display: flex;"
         ),
         

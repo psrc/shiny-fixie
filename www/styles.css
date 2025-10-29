@@ -151,3 +151,12 @@ i:hover {
   box-shadow: none;
   padding-left:0px;
 }
+
+.refresh-btn {
+  padding: 0 0;
+  margin-left: 5px; 
+  margin-bottom: 5px; 
+  margin-top: -2px; 
+  width: 35px;
+  height: 30px;
+}

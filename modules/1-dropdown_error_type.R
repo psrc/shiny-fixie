@@ -6,7 +6,6 @@ error_dropdown_ui <- function(id) {
   )
 }
 
-# person control panel
 error_dropdown_server <- function(id) {
   moduleServer(id, function(input, output, session){
     ns <- session$ns
@@ -16,8 +15,9 @@ error_dropdown_server <- function(id) {
       rval$all_error_types <- get_all_error_flags()
     })
     
-    observeEvent(input$update_dropdown, {
-      # browser()
+    observeEvent(input$refresh_dropdown, {
+      # clicking refresh button: update error type list
+      
       rval$all_error_types <- get_all_error_flags()
       
       updateSelectInput(inputId = "dropdown_error_type",
@@ -26,24 +26,24 @@ error_dropdown_server <- function(id) {
     })
     
     output$errordropdown <- renderUI({
+      # error type selection panel
       
-        fluidRow(
-          column(9,
-            selectInput("dropdown_error_type",
-                        label = "Select Error Type:", 
-                        choices = rval$all_error_types, 
-                        selected = 'all_error_placeholder',
-                        width = "480px")
-            ),
-          column(3,
-            class = "google-buttons",
-            actionButton(ns("update_dropdown"), 
-                         label = icon("arrows-rotate"),
-                         style = 'margin-top:20px'
-                         )
-            ),
-        style = 'margin-top:50px; flex-direction: row-reverse;'
+      fluidRow(
+        style = 'margin-top:50px; display: flex;',
+        div(
+          # dropdown: select error type
+          selectInput("dropdown_error_type",
+                      label = "Select Error Type:", 
+                      choices = rval$all_error_types, 
+                      selected = 'all_error_placeholder',
+                      width = "480px")
+          ),
+        div(
+          # refresh button: refresh error type dropdown
+          style = 'margin-top: 30px;',
+          actionButton_refresh(ns("refresh_dropdown"))
           )
+        )
           
       
     }) 
