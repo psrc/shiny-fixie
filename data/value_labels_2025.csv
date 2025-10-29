@@ -100,14 +100,14 @@ trip_unlinked,mode_acc,17,Drove onto ferry
 trip_unlinked,mode_acc,18,Drove and parked
 trip_unlinked,mode_acc,97,Other
 trip_unlinked,mode_acc,995,Missing: Skip Logic
-trip_unlinked,mode_egg,1,Walked or jogged
-trip_unlinked,mode_egg,2,Bicycle or e-bicycle
-trip_unlinked,mode_egg,8,Transferred from another mode
-trip_unlinked,mode_egg,12,"Uber/Lyft, taxi, or car service"
-trip_unlinked,mode_egg,17,Got picked up
-trip_unlinked,mode_egg,18,Drove my parked car
-trip_unlinked,mode_egg,97,Other
-trip_unlinked,mode_egg,995,Missing: Skip Logic
+trip_unlinked,mode_egr,1,Walked or jogged
+trip_unlinked,mode_egr,2,Bicycle or e-bicycle
+trip_unlinked,mode_egr,8,Transferred from another mode
+trip_unlinked,mode_egr,12,"Uber/Lyft, taxi, or car service"
+trip_unlinked,mode_egr,17,Got picked up
+trip_unlinked,mode_egr,18,Drove my parked car
+trip_unlinked,mode_egr,97,Other
+trip_unlinked,mode_egr,995,Missing: Skip Logic
 trip_unlinked,origin_purpose,-1,Not imputable
 trip_unlinked,origin_purpose,1,Went home
 trip_unlinked,origin_purpose,10,Went to primary workplace
