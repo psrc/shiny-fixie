@@ -142,3 +142,12 @@ i:hover {
 .purpose {
   align-self: flex-end;
 }
+
+.back-forth-buttons {
+  color: blue; 
+  background-image: none; 
+  background-color: transparent; 
+  border: none; 
+  box-shadow: none;
+  padding-left:0px;
+}
