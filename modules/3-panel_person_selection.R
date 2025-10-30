@@ -26,32 +26,6 @@ person_panel_server <- function(id, selected_error_type) {
                      dom = 't')
       )
     
-    observeEvent(input$previous_person, {
-      # update person selection dropdown with previous option
-      
-      current_index <- which(person_list() == input$personID)
-      # find previous person
-      new_personID <- person_list()[max(1,current_index-1)]
-      
-      updateSelectInput(inputId = "personID",
-                        label = "Select Person:",
-                        choices = person_list(),
-                        selected = new_personID)
-    })
-    
-    observeEvent(input$next_person, {
-      # update person selection dropdown with next option
-      
-      current_index <- which(person_list() == input$personID)
-      # find next person
-      new_personID <- person_list()[min(length(person_list()),current_index+1)]
-      
-      updateSelectInput(inputId = "personID",
-                        label = "Select Person:",
-                        choices = person_list(),
-                        selected = new_personID)
-    })
-    
     output$personpanel <- renderUI({
       
       tagList(
@@ -84,6 +58,34 @@ person_panel_server <- function(id, selected_error_type) {
       ) # end tagList
       
     }) 
+    
+    
+    
+    observeEvent(input$previous_person, {
+      # update person selection dropdown with previous option
+      
+      current_index <- which(person_list() == input$personID)
+      # find previous person
+      new_personID <- person_list()[max(1,current_index-1)]
+      
+      updateSelectInput(inputId = "personID",
+                        label = "Select Person:",
+                        choices = person_list(),
+                        selected = new_personID)
+    })
+    
+    observeEvent(input$next_person, {
+      # update person selection dropdown with next option
+      
+      current_index <- which(person_list() == input$personID)
+      # find next person
+      new_personID <- person_list()[min(length(person_list()),current_index+1)]
+      
+      updateSelectInput(inputId = "personID",
+                        label = "Select Person:",
+                        choices = person_list(),
+                        selected = new_personID)
+    })
     
     return(reactive({input$personID}))
   })  # end moduleServer

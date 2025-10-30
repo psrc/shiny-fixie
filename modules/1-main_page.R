@@ -64,13 +64,6 @@ edit_interface_server <- function(id, selected_error_type) {
       
       )
     
-    observeEvent(input$refresh_table, {
-      # clicking refresh button: update data in trip table
-      
-      rval$edit_dt <- get_data(person_id = personID(), order_by=c("person_id", "tripnum"))
-      
-    })  
-    
     # platform layout ----
     output$editplatform <- renderUI({
       tagList(
@@ -121,6 +114,14 @@ edit_interface_server <- function(id, selected_error_type) {
       
       ) # end taglist
     }) 
+    
+    
+    observeEvent(input$refresh_table, {
+      # clicking refresh button: update data in trip table
+      
+      rval$edit_dt <- get_data(person_id = personID(), order_by=c("person_id", "tripnum"))
+      
+    })  
     
   }) 
 }
