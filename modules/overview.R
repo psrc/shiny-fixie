@@ -41,9 +41,9 @@ overview_server <- function(id) {
       tagList(
         
         fluidRow(
-          h2(style = 'margin-top:50px',
-             "Current Error Flag Count"),
-          div(style = 'margin-top: 55px; margin-left: 5px;',
+          style = 'margin-top: 50px; margin-left: 2px;',
+          h2("Current Error Flag Count"),
+          div(style = 'margin-top: 25px; margin-left: 5px;',
               # refresh button: refresh summary table
               actionButton_refresh(ns("refresh_table"))
               ),

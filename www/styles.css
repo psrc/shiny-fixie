@@ -149,7 +149,8 @@ i:hover {
   background-color: transparent; 
   border: none; 
   box-shadow: none;
-  padding-left:0px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .refresh-btn {

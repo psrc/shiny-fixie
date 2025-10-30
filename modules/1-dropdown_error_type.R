@@ -29,7 +29,7 @@ error_dropdown_server <- function(id) {
       # error type selection panel
       
       fluidRow(
-        style = 'margin-top:50px; display: flex;',
+        style = 'margin-top: 50px; margin-left: 2px; display: flex;',
         div(
           # dropdown: select error type
           selectInput("dropdown_error_type",
@@ -40,7 +40,7 @@ error_dropdown_server <- function(id) {
           ),
         div(
           # refresh button: refresh error type dropdown
-          style = 'margin-top: 25px; margin-left: 5px;',
+          style = 'margin-top: 32px; margin-left: 5px;',
           actionButton_refresh(ns("refresh_dropdown"))
           )
         )
