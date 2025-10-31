@@ -98,12 +98,10 @@ edit_interface_server <- function(id, selected_error_type) {
                      ), # end wellpanel
                    
                    wellPanel(
-                     
-                     p("Select multiple trips to", style = "padding-right: 10px;"),
+                     style = "display: flex;",
+                     p(style = "padding-right: 10px;", "Select multiple trips to"),
                      # buttons: trip linking function
-                     modal_link_trips_ui(ns('button_link')),
-                     style = "display: flex;"
-                     
+                     modal_link_trips_ui(ns('button_link'))
                      ) # end wellpanel
                  )
           ), # end column
