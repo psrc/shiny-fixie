@@ -12,6 +12,11 @@
   font-size: 14px;
 }
 
+.tables-font {
+  font-size: 14px;
+  margin-bottom: 2rem;
+}
+
 .modal-footer div button{
   background-color: #E3C9E3;
   border-color: #E3C9E3;
@@ -70,7 +75,10 @@ i {
 .google-buttons button {
   border-color: #BFE9E7;
   background-color:  #BFE9E7;
+  margin-top: 28px; 
+  padding: 2.5px 0px;
 }
+
 
 .google-buttons button:hover {
   background-color: #00716c;
@@ -132,6 +140,7 @@ i:hover {
 .modal-header {
   border-bottom: 1px solid #000000;
   margin-bottom: 2rem;
+  padding-bottom: 2px;
   font-weight: 600;
 }
 
@@ -160,4 +169,15 @@ i:hover {
   margin-top: -5px; 
   width: 35px;
   height: 30px;
+}
+
+.editor-align-datetime {
+  padding-left: 10px;
+  padding-right: 5px;
+}
+
+.editor-align {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 2rem;
 }

@@ -30,7 +30,6 @@ person_panel_server <- function(id, selected_error_type) {
       
       tagList(
         wellPanel(
-          style ='padding-left:25px; padding-right:25px;',
           
           fluidRow(
             column(6, selectInput(inputId = ns("personID"),
@@ -51,7 +50,8 @@ person_panel_server <- function(id, selected_error_type) {
             ), # end fluidRow
           
           fluidRow(
-            column(12, DT::DTOutput(ns("persontable")) )
+            style="font-size: 14px", 
+            DT::DTOutput(ns("persontable"))
             ) # end fluidRow
           
           ) # end wellPanel

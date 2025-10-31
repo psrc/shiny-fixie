@@ -110,7 +110,7 @@ edit_interface_server <- function(id, selected_error_type) {
           
         ), # end fluidrow
         
-        fluidRow(column(12, DT::dataTableOutput(ns("thetable"))))
+        fluidRow(div(class = "tables-font", DT::dataTableOutput(ns("thetable"))))
       
       ) # end taglist
     }) 

@@ -99,6 +99,7 @@ modal_edit_trip_server <- function(id, selected_recid) {
                     trip_summary_panel_ui(ns("trip_summary_panel_update")),
                     
                     div(
+                      class="tables-font",
                       DTOutput(ns('print_cols'))
                     ),
                     

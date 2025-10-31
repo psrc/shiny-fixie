@@ -65,7 +65,7 @@ trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALS
       if(nrow(poi_config)==0){
         
         div(
-          class = "bottom-spacing",
+          class = "tables-font",
           DT::DTOutput(ns("trip_summary"))
         )
         
@@ -76,7 +76,7 @@ trip_summary_panel_server <- function(id, selected_recid = NULL, incl_poi = FALS
         fluidRow(
           column(10,
                  # show trip table
-                 div(class = "bottom-spacing",
+                 div(class = "tables-font",
                      DT::DTOutput(ns("trip_summary")))
           ),
           column(2,
